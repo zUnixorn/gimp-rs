@@ -1,0 +1,1 @@
+#include <libgimp/gimp.h>
