@@ -5,7 +5,6 @@ use std::path::PathBuf;
 
 fn main() {
     println!("cargo:rustc-link-lib=gimp-2.0");
-    println!("cargo:rustc-link-lib=glib-2.0");
 
     println!("cargo:rerun-if-changed=wrapper.h");
 
