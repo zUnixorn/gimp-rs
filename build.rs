@@ -4,6 +4,8 @@ use std::path::PathBuf;
 
 
 fn main() {
+    println!("cargo:rustc-link-lib=babl-0.1");
+    println!("cargo:rustc-link-lib=gegl-0.4");
     println!("cargo:rustc-link-lib=gimp-2.0");
 
     println!("cargo:rerun-if-changed=wrapper.h");
@@ -11,13 +13,13 @@ fn main() {
     let bindings = bindgen::Builder::default()
         .header("wrapper.h")
 
-        .clang_arg("-I/usr/include/gimp-2.0")
+        .clang_arg("-I/usr/include/babl-0.1")
         .clang_arg("-I/usr/include/cairo")
+        .clang_arg("-I/usr/include/gdk-pixbuf-2.0")
         .clang_arg("-I/usr/include/gegl-0.4")
+        .clang_arg("-I/usr/include/gimp-2.0")
         .clang_arg("-I/usr/include/glib-2.0")
         .clang_arg("-I/usr/lib/glib-2.0/include")
-        .clang_arg("-I/usr/include/babl-0.1")
-        .clang_arg("-I/usr/include/gdk-pixbuf-2.0")
 
         .parse_callbacks(Box::new(IgnoreMacros::with_ignored()))
         .generate()
