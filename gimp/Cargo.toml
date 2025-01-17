@@ -1,0 +1,36 @@
+[package]
+name = "gimp"
+version = "0.1.0"
+edition = "2021"
+
+[package.metadata.docs.rs]
+all-features = true
+# For build.rs scripts
+rustc-args = ["--cfg", "docsrs"]
+# For rustdoc
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+libc = "0.2"
+bitflags = "2.2"
+glib = "0.20.7"
+gio = "0.20.7"
+babl = "0.1.2"
+gdk-pixbuf = "0.20.7"
+gegl = "0.2.0"
+cairo-rs = "0.20.7"
+pango = "0.20.7"
+
+glib-sys = "0.20.7"
+
+gobject-sys = "0.20.7"
+gio-sys = "0.20.8"
+babl-sys = "0.1.1"
+gdk-pixbuf-sys = "0.20.7"
+gegl-sys = "0.2.0"
+cairo-sys-rs = "0.20.7"
+pango-sys = "0.20.7"
+
+[dependencies.ffi]
+package = "gimp-sys"
+path = "./sys"

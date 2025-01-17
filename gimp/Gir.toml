@@ -1,0 +1,152 @@
+[options]
+library = "Gimp"
+version = "3.0"
+min_cfg_version = "3.0"
+target_path = "."
+girs_directories = ["../gir-files/", "../"]
+work_mode = "normal"
+single_version_file = true
+generate_safety_asserts = true
+deprecate_by_min_version = true
+
+generate = [
+        # "Gimp.*",
+	# "Gimp.Image",
+	"Gimp.ImageBaseType",
+	"Gimp.Precision",
+	"Gimp.Parasite",
+	"Gimp.ColorProfile",
+	"Gimp.ColorRenderingIntent",
+	"Gimp.ConvertDitherType",
+	"Gimp.ConvertPaletteType",
+	"Gimp.Channel",
+	"Gimp.Path",
+	"Gimp.Layer",
+	"Gimp.Metadata",
+	"Gimp.MetadataSaveFlags",
+	"Gimp.Item",
+	"Gimp.Drawable",
+	"Gimp.ChannelOps",
+	"Gimp.ChannelType",
+	"Gimp.OrientationType",
+	"Gimp.LayerMode",
+	"Gimp.Palette",
+	"Gimp.Selection",
+	"Gimp.PixbufTransparency",
+	"Gimp.Unit",
+	"Gimp.GridStyle",
+	"Gimp.MergeType",
+	"Gimp.RotationType",
+        # "Gimp.PlugIn",
+	"Gimp.Procedure",
+	"Gimp.PDBErrorHandler",
+	"Gimp.PDBProcType",
+	"Gimp.ProcedureConfig",
+	"Gimp.ValueArray",
+	"Gimp.Brush",
+	# "Gimp.Choice",
+	"Gimp.Font",
+	"Gimp.Gradient",
+	"Gimp.Pattern",
+	"Gimp.Resource",
+	"Gimp.IconType",
+	"Gimp.PDBStatusType",
+	"Gimp.ArgumentSync",
+	"Gimp.ProcedureSensitivityMask",
+	"Gimp.ImageProcedure",
+	"Gimp.RunMode",
+	"Gimp.AddMaskType",
+	"Gimp.LayerMask",
+]
+
+manual = [
+	"Gio.File",
+	"GLib.Bytes",
+	"GLib.Error",
+	"GLib.Quark",
+	"GLib.IOChannel",
+	"GObject.ParamFlags",
+	"GObject.ParamSpec",
+	"Gegl.Color",
+	"Gegl.Buffer",
+	"GdkPixbuf.Pixbuf",
+]
+
+[[object]]
+name = "Gimp.Choice"
+status = "generate"
+    [[object.function]]
+    name = "get_documentation"
+    ignore = true
+
+[[object]]
+name = "Gimp.Image"
+status = "generate"
+    [[object.function]]
+    name = "metadata_save_prepare"
+    ignore = true
+    [[object.function]]
+    name = "pick_color"
+    ignore = true
+    [[object.function]]
+    name = "set_selected_channels"
+    ignore = true
+    [[object.function]]
+    name = "set_selected_layers"
+    ignore = true
+    [[object.function]]
+    name = "set_selected_paths"
+    ignore = true
+
+[[object]]
+name = "Gimp.*"
+status = "generate"
+    [[object.function]]
+    name = "color_list_names"
+    ignore = true
+    [[object.function]]
+    name = "color_parse_css_substring"
+    ignore = true
+    [[object.function]]
+    name = "color_parse_hex_substring"
+    ignore = true
+    [[object.function]]
+    name = "color_parse_name_substring"
+    ignore = true
+    [[object.function]]
+    name = "edit_copy"
+    ignore = true
+    [[object.function]]
+    name = "edit_cut"
+    ignore = true
+    [[object.function]]
+    name = "edit_named_copy"
+    ignore = true
+    [[object.function]]
+    name = "edit_named_cut"
+    ignore = true
+    [[object.function]]
+    name = "enum_get_value"
+    ignore = true
+    [[object.function]]
+    name = "flags_get_first_value"
+    ignore = true
+    [[object.function]]
+    name = "color_array_copy"
+    ignore = true
+    [[object.function]]
+    name = "color_array_free"
+    ignore = true
+    [[object.function]]
+    name = "color_array_get_length"
+    ignore = true
+
+[[object]]
+name = "Gimp.PlugIn"
+status = "generate"
+    [[object.property]]
+    name = "read-channel"
+    ignore = true
+    [[object.property]]
+    name = "write-channel"
+    ignore = true
