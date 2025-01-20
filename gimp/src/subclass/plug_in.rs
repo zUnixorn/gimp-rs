@@ -103,23 +103,23 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     ///  may return [`None`] if you wish to disable localization or
     ///  set it up differently.
     #[allow(unused_variables)]
-    fn set_i18n(&self, procedure_name: &str) -> Option<SetI18N> {
+    fn set_i18n(&self, procedure_name: &str) -> Option<SetI18n> {
         unimplemented!()
     }
 }
 
-pub struct SetI18N {
+pub struct SetI18n {
     /// ## `gettext_domain`
     /// Gettext domain. If [`None`], it
     ///  defaults to the plug-in name as determined by the
     ///  directory the binary is called from.
-    gettext_domain: Option<String>,
+    pub gettext_domain: Option<String>,
     /// ## `catalog_dir`
     /// relative path to a
     ///  subdirectory of the plug-in folder containing the compiled
     ///  Gettext message catalogs. If [`None`], it defaults to
     ///  "locale/".
-    catalog_dir: Option<String>,
+    pub catalog_dir: Option<String>,
 }
 
 unsafe impl<T: PlugInImpl> IsSubclassable<T> for PlugIn {
@@ -167,7 +167,7 @@ unsafe extern "C" fn plug_in_set_i18n<T: PlugInImpl>(ptr: *mut ffi::GimpPlugIn, 
     let instance = &*(ptr as *mut T::Instance);
     let implementation = instance.imp();
 
-    let result: Option<SetI18N> = implementation.set_i18n(CStr::from_ptr(procedure_name).to_str().expect("procedure name is not valid utf-8"));
+    let result = implementation.set_i18n(CStr::from_ptr(procedure_name).to_str().expect("procedure name is not valid utf-8"));
     let use_gettext = result.is_some().into_glib();
 
     if let Some(config) = result {
