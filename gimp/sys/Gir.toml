@@ -18,3 +18,8 @@ external_libraries = [
     "Pango",
 ]
 
+# propably needs fixing with either a manual impl or in the Gimp-3.0.gir file
+ignore = [
+    "Gimp.MAX_MEMSIZE",
+    "Gimp.CpuAccelFlags",
+]

@@ -41,7 +41,6 @@ int main() {
     printf("%s;%zu;%zu\n", "GimpConvertPaletteType", sizeof(GimpConvertPaletteType), alignof(GimpConvertPaletteType));
     printf("%s;%zu;%zu\n", "GimpConvolveType", sizeof(GimpConvolveType), alignof(GimpConvolveType));
     printf("%s;%zu;%zu\n", "GimpCoreObjectArray", sizeof(GimpCoreObjectArray), alignof(GimpCoreObjectArray));
-    printf("%s;%zu;%zu\n", "GimpCpuAccelFlags", sizeof(GimpCpuAccelFlags), alignof(GimpCpuAccelFlags));
     printf("%s;%zu;%zu\n", "GimpDesaturateMode", sizeof(GimpDesaturateMode), alignof(GimpDesaturateMode));
     printf("%s;%zu;%zu\n", "GimpDisplayClass", sizeof(GimpDisplayClass), alignof(GimpDisplayClass));
     printf("%s;%zu;%zu\n", "GimpDodgeBurnType", sizeof(GimpDodgeBurnType), alignof(GimpDodgeBurnType));

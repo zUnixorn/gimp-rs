@@ -1,10 +1,7 @@
-use std::ffi::{c_char, CStr, CString};
-use glib::{GStr, GString};
+use std::ffi::{c_char, CStr};
 use glib::object::IsA;
-use glib::translate::ToGlibPtr;
-use glib::translate::IntoGlibPtr;
+use glib::translate::{IntoGlibPtr, ToGlibPtr};
 use glib::subclass::prelude::*;
-use glib_sys::{g_list_append, gpointer};
 use crate::PlugIn;
 use crate::Procedure;
 
@@ -60,7 +57,7 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     /// This method will be called before initializing, querying or running
     /// `procedure_name` (respectively with [vfunc`PlugIn`],
     /// [vfunc`PlugIn`] or with the ``run()`` function set in
-    /// `[`ImageProcedure::new()`][crate::ImageProcedure::new()]`).
+    /// ``gimp_image_procedure_new()``).
     ///
     /// By default, GIMP plug-ins look up gettext compiled message catalogs
     /// in the subdirectory `locale/` under the plug-in folder (same folder
@@ -124,7 +121,6 @@ unsafe extern "C" fn plug_in_create_procedure<T: PlugInImpl>(ptr: *mut ffi::Gimp
     let instance = &*(ptr as *mut T::Instance);
     let imp = instance.imp();
 
-    // TODO should invalid utf-8 procedure names just be skipped and logged or panic?
     imp.create_procedure(CStr::from_ptr(procedure_name).to_str().expect("procedure name is not valid utf-8")).into_glib_ptr() as *mut ffi::GimpProcedure
 }
 
@@ -132,11 +128,5 @@ unsafe extern "C" fn plug_in_query_procedures<T: PlugInImpl>(ptr: *mut ffi::Gimp
     let instance = &*(ptr as *mut T::Instance);
     let imp = instance.imp();
 
-    // TODO find a nice way, maybe with imp.query_procedures().to_glib_container().0
-    let mut list: *mut glib::ffi::GList = std::ptr::null_mut();
-    for procedure in imp.query_procedures() {
-        list = g_list_append(list, procedure.leak().as_ptr() as gpointer);
-    }
-
-    list
+    imp.query_procedures().to_glib_full()
 }

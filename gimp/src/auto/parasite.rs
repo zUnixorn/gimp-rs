@@ -8,7 +8,7 @@ use glib::{translate::*};
 
 glib::wrapper! {
     /// Arbitrary pieces of data which can be attached to various GIMP objects.
-    #[derive(Debug, Hash)]
+    #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Parasite(Boxed<ffi::GimpParasite>);
 
     match fn {
@@ -23,13 +23,6 @@ impl Parasite {
     //pub fn new(name: &str, flags: u32, data: /*Unimplemented*/Option<&CArray TypeId { ns_id: 0, id: 10 }>) -> Parasite {
     //    unsafe { TODO: call ffi:gimp_parasite_new() }
     //}
-
-    #[doc(alias = "gimp_parasite_compare")]
-     fn compare(&self, b: &Parasite) -> bool {
-        unsafe {
-            from_glib(ffi::gimp_parasite_compare(self.to_glib_none().0, b.to_glib_none().0))
-        }
-    }
 
     //#[doc(alias = "gimp_parasite_get_data")]
     //#[doc(alias = "get_data")]
@@ -110,27 +103,3 @@ impl Parasite {
         }
     }
 }
-
-// TODO fix this
-// impl PartialEq for Parasite {
-//     #[inline]
-//     fn eq(&self, other: &Self) -> bool {
-//         self.compare(other) == 0
-//     }
-// }
-//
-// impl Eq for Parasite {}
-//
-// impl PartialOrd for Parasite {
-//     #[inline]
-//     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-//         Some(self.cmp(other))
-//     }
-// }
-//
-// impl Ord for Parasite {
-//     #[inline]
-//     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-//         self.compare(other).cmp(&0)
-//     }
-// }

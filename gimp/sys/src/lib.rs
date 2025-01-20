@@ -157,21 +157,6 @@ pub type GimpConvolveType = c_int;
 pub const GIMP_CONVOLVE_BLUR: GimpConvolveType = 0;
 pub const GIMP_CONVOLVE_SHARPEN: GimpConvolveType = 1;
 
-// TODO fix this with manual implementation or similar
-pub type GimpCpuAccelFlags = u32;
-pub const GIMP_CPU_ACCEL_NONE: GimpCpuAccelFlags = 0;
-pub const GIMP_CPU_ACCEL_X86_MMX: GimpCpuAccelFlags = 2147483648;
-pub const GIMP_CPU_ACCEL_X86_3DNOW: GimpCpuAccelFlags = 1073741824;
-pub const GIMP_CPU_ACCEL_X86_MMXEXT: GimpCpuAccelFlags = 536870912;
-pub const GIMP_CPU_ACCEL_X86_SSE: GimpCpuAccelFlags = 268435456;
-pub const GIMP_CPU_ACCEL_X86_SSE2: GimpCpuAccelFlags = 134217728;
-pub const GIMP_CPU_ACCEL_X86_SSE3: GimpCpuAccelFlags = 33554432;
-pub const GIMP_CPU_ACCEL_X86_SSSE3: GimpCpuAccelFlags = 16777216;
-pub const GIMP_CPU_ACCEL_X86_SSE4_1: GimpCpuAccelFlags = 8388608;
-pub const GIMP_CPU_ACCEL_X86_SSE4_2: GimpCpuAccelFlags = 4194304;
-pub const GIMP_CPU_ACCEL_X86_AVX: GimpCpuAccelFlags = 2097152;
-pub const GIMP_CPU_ACCEL_PPC_ALTIVEC: GimpCpuAccelFlags = 67108864;
-
 pub type GimpDesaturateMode = c_int;
 pub const GIMP_DESATURATE_LIGHTNESS: GimpDesaturateMode = 0;
 pub const GIMP_DESATURATE_LUMA: GimpDesaturateMode = 1;
@@ -567,8 +552,6 @@ pub const GIMP_CONFIG_PARAM_RESTART: c_int = 4;
 pub const GIMP_CONFIG_PARAM_SERIALIZE: c_int = 1;
 pub const GIMP_MAJOR_VERSION: c_int = 3;
 pub const GIMP_MAX_IMAGE_SIZE: c_int = 524288;
-// TODO fix this with manual implementation or similar
-pub const GIMP_MAX_MEMSIZE: i64 = 4398046511104;
 pub const GIMP_MAX_RESOLUTION: c_double = 1048576.000000;
 pub const GIMP_MICRO_VERSION: c_int = 0;
 pub const GIMP_MINOR_VERSION: c_int = 0;
@@ -5088,7 +5071,7 @@ extern "C" {
     pub fn gimp_convolve_default(drawable: *mut GimpDrawable, num_strokes: size_t, strokes: *const c_double) -> gboolean;
     pub fn gimp_core_object_array_get_length(array: *mut *mut gobject::GObject) -> size_t;
     pub fn gimp_core_object_array_get_type() -> GType;
-    pub fn gimp_cpu_accel_get_support() -> GimpCpuAccelFlags;
+    //pub fn gimp_cpu_accel_get_support() -> /*Ignored*/GimpCpuAccelFlags;
     pub fn gimp_data_directory() -> *const c_char;
     pub fn gimp_data_directory_file(first_element: *const c_char, ...) -> *mut gio::GFile;
     pub fn gimp_debug_timer_end() -> c_double;

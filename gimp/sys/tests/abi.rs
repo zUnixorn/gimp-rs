@@ -91,9 +91,7 @@ struct Layout {
 
 #[derive(Copy, Clone, Debug, Default, Eq, PartialEq)]
 struct Results {
-    /// Number of successfully completed tests.
     passed: usize,
-    /// Total number of failed tests (including those that failed to compile).
     failed: usize,
 }
 
@@ -240,7 +238,6 @@ const RUST_LAYOUTS: &[(&str, Layout)] = &[
     ("GimpConvertPaletteType", Layout {size: size_of::<GimpConvertPaletteType>(), alignment: align_of::<GimpConvertPaletteType>()}),
     ("GimpConvolveType", Layout {size: size_of::<GimpConvolveType>(), alignment: align_of::<GimpConvolveType>()}),
     ("GimpCoreObjectArray", Layout {size: size_of::<GimpCoreObjectArray>(), alignment: align_of::<GimpCoreObjectArray>()}),
-    ("GimpCpuAccelFlags", Layout {size: size_of::<GimpCpuAccelFlags>(), alignment: align_of::<GimpCpuAccelFlags>()}),
     ("GimpDesaturateMode", Layout {size: size_of::<GimpDesaturateMode>(), alignment: align_of::<GimpDesaturateMode>()}),
     ("GimpDisplayClass", Layout {size: size_of::<GimpDisplayClass>(), alignment: align_of::<GimpDisplayClass>()}),
     ("GimpDodgeBurnType", Layout {size: size_of::<GimpDodgeBurnType>(), alignment: align_of::<GimpDodgeBurnType>()}),
@@ -464,18 +461,6 @@ const RUST_CONSTANTS: &[(&str, &str)] = &[
     ("(gint) GIMP_CONVERT_PALETTE_WEB", "1"),
     ("(gint) GIMP_CONVOLVE_BLUR", "0"),
     ("(gint) GIMP_CONVOLVE_SHARPEN", "1"),
-    ("(gint) GIMP_CPU_ACCEL_NONE", "0"),
-    ("(gint) GIMP_CPU_ACCEL_PPC_ALTIVEC", "67108864"),
-    ("(gint) GIMP_CPU_ACCEL_X86_3DNOW", "1073741824"),
-    ("(gint) GIMP_CPU_ACCEL_X86_AVX", "2097152"),
-    ("(gint) GIMP_CPU_ACCEL_X86_MMX", "2147483648"),
-    ("(gint) GIMP_CPU_ACCEL_X86_MMXEXT", "536870912"),
-    ("(gint) GIMP_CPU_ACCEL_X86_SSE", "268435456"),
-    ("(gint) GIMP_CPU_ACCEL_X86_SSE2", "134217728"),
-    ("(gint) GIMP_CPU_ACCEL_X86_SSE3", "33554432"),
-    ("(gint) GIMP_CPU_ACCEL_X86_SSE4_1", "8388608"),
-    ("(gint) GIMP_CPU_ACCEL_X86_SSE4_2", "4194304"),
-    ("(gint) GIMP_CPU_ACCEL_X86_SSSE3", "16777216"),
     ("(gint) GIMP_DESATURATE_AVERAGE", "2"),
     ("(gint) GIMP_DESATURATE_LIGHTNESS", "0"),
     ("(gint) GIMP_DESATURATE_LUMA", "1"),
@@ -644,7 +629,6 @@ const RUST_CONSTANTS: &[(&str, &str)] = &[
     ("(gint) GIMP_MASK_APPLY", "0"),
     ("(gint) GIMP_MASK_DISCARD", "1"),
     ("GIMP_MAX_IMAGE_SIZE", "524288"),
-    ("GIMP_MAX_MEMSIZE", "4398046511104"),
     ("GIMP_MAX_RESOLUTION", "1048576.000000"),
     ("(gint) GIMP_MESSAGE_BOX", "0"),
     ("(gint) GIMP_METADATA_COLORSPACE_ADOBERGB", "3"),

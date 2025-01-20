@@ -10,11 +10,8 @@ generate_safety_asserts = true
 deprecate_by_min_version = true
 
 generate = [
-        # "Gimp.*",
-	# "Gimp.Image",
 	"Gimp.ImageBaseType",
 	"Gimp.Precision",
-	"Gimp.Parasite",
 	"Gimp.ColorProfile",
 	"Gimp.ColorRenderingIntent",
 	"Gimp.ConvertDitherType",
@@ -37,14 +34,11 @@ generate = [
 	"Gimp.GridStyle",
 	"Gimp.MergeType",
 	"Gimp.RotationType",
-        # "Gimp.PlugIn",
-	"Gimp.Procedure",
 	"Gimp.PDBErrorHandler",
 	"Gimp.PDBProcType",
 	"Gimp.ProcedureConfig",
 	"Gimp.ValueArray",
 	"Gimp.Brush",
-	# "Gimp.Choice",
 	"Gimp.Font",
 	"Gimp.Gradient",
 	"Gimp.Pattern",
@@ -53,7 +47,6 @@ generate = [
 	"Gimp.PDBStatusType",
 	"Gimp.ArgumentSync",
 	"Gimp.ProcedureSensitivityMask",
-	"Gimp.ImageProcedure",
 	"Gimp.RunMode",
 	"Gimp.AddMaskType",
 	"Gimp.LayerMask",
@@ -71,6 +64,30 @@ manual = [
 	"Gegl.Buffer",
 	"GdkPixbuf.Pixbuf",
 ]
+
+[[object]]
+name = "Gimp.Procedure"
+status = "generate"
+manual_traits = ["ProcedureExtManual"]
+    [[object.function]]
+    name = "set_sensitivity_mask"
+    ignore = true
+
+[[object]]
+name = "Gimp.ImageProcedure"
+status = "generate"
+manual_traits = ["ImageProcedureExtManual"]
+    [[object.function]]
+    name = "new"
+    ignore = true
+
+[[object]]
+name = "Gimp.Parasite"
+status = "generate"
+#manual_traits = ["ParasiteExtManual"]
+    [[object.function]]
+    name = "compare"
+    ignore = true
 
 [[object]]
 name = "Gimp.Choice"
