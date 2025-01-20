@@ -1,10 +1,13 @@
 use std::ffi::{c_char, CStr};
 use glib::object::IsA;
-use glib::translate::{IntoGlibPtr, ToGlibPtr};
+use glib::translate::{IntoGlib, IntoGlibPtr, ToGlibPtr};
 use glib::subclass::prelude::*;
+use glib_sys::gboolean;
+use macros::object_subclass_impl;
 use crate::PlugIn;
 use crate::Procedure;
 
+#[object_subclass_impl]
 pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     /// This method must be overridden by all plug-ins and return a newly
     /// allocated [`Procedure`][crate::Procedure] named `name`.
@@ -38,7 +41,9 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     /// # Returns
     ///
     /// the names of the procedures registered by `self`.
-    fn init_procedures(&self) -> Vec<String>;
+    fn init_procedures(&self) -> Vec<String> {
+        unimplemented!()
+    }
     /// This method can be overridden by all plug-ins to return a newly allocated
     /// list of allocated strings naming the procedures registered by this
     /// plug-in. See documentation of [vfunc`PlugIn`] for
@@ -47,10 +52,14 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     /// # Returns
     ///
     /// the names of the procedures registered by `self`.
-    fn query_procedures(&self) -> Vec<String>;
+    fn query_procedures(&self) -> Vec<String> {
+        unimplemented!()
+    }
     /// This method can be overridden by a plug-in which needs to perform some
     /// actions upon quitting.
-    fn quit(&self);
+    fn quit(&self) {
+        unimplemented!()
+    }
     /// This method can be overridden by all plug-ins to customize
     /// internationalization of the plug-in.
     ///
@@ -67,10 +76,10 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     ///
     /// If you wish to disable localization or localize with another system,
     /// simply set the method to [`None`], or possibly implement this method
-    /// to do something useful for your usage while returning [`false`].
+    /// to do something useful for your usage while returning [`None`].
     ///
     /// If you wish to tweak the `gettext_domain` or the `catalog_dir`, return
-    /// [`true`] and allocate appropriate `gettext_domain` and/or `catalog_dir`
+    /// [`Some`] and allocate appropriate `gettext_domain` and/or `catalog_dir`
     /// (these use the default if set [`None`]).
     ///
     /// Note that `catalog_dir` must be a relative path, encoded as UTF-8,
@@ -90,21 +99,27 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     ///
     /// # Returns
     ///
-    /// [`true`] if this plug-in will use Gettext localization. You
-    ///  may return [`false`] if you wish to disable localization or
+    /// [`Some`] if this plug-in will use Gettext localization. You
+    ///  may return [`None`] if you wish to disable localization or
     ///  set it up differently.
-    ///
+    #[allow(unused_variables)]
+    fn set_i18n(&self, procedure_name: &str) -> Option<SetI18N> {
+        unimplemented!()
+    }
+}
+
+pub struct SetI18N {
     /// ## `gettext_domain`
     /// Gettext domain. If [`None`], it
     ///  defaults to the plug-in name as determined by the
     ///  directory the binary is called from.
-    ///
+    gettext_domain: Option<String>,
     /// ## `catalog_dir`
     /// relative path to a
     ///  subdirectory of the plug-in folder containing the compiled
     ///  Gettext message catalogs. If [`None`], it defaults to
     ///  "locale/".
-    fn set_i18n(&self, procedure_name: String, gettext_domain: String, catalog_dir: String) -> bool;
+    catalog_dir: Option<String>,
 }
 
 unsafe impl<T: PlugInImpl> IsSubclassable<T> for PlugIn {
@@ -113,20 +128,52 @@ unsafe impl<T: PlugInImpl> IsSubclassable<T> for PlugIn {
 
         let klass = class.as_mut();
         klass.create_procedure = Some(plug_in_create_procedure::<T>);
-        klass.query_procedures = Some(plug_in_query_procedures::<T>);
+        klass.query_procedures = T::HAS_QUERY_PROCEDURES.then_some(plug_in_query_procedures::<T>);
+        klass.init_procedures = T::HAS_INIT_PROCEDURES.then_some(plug_in_init_procedures::<T>);
+        klass.quit = T::HAS_QUIT.then_some(plug_in_quit::<T>);
+        klass.set_i18n = T::HAS_SET_I18N.then_some(plug_in_set_i18n::<T>);
     }
 }
 
 unsafe extern "C" fn plug_in_create_procedure<T: PlugInImpl>(ptr: *mut ffi::GimpPlugIn, procedure_name: *const c_char) -> *mut ffi::GimpProcedure {
     let instance = &*(ptr as *mut T::Instance);
-    let imp = instance.imp();
+    let implementation = instance.imp();
 
-    imp.create_procedure(CStr::from_ptr(procedure_name).to_str().expect("procedure name is not valid utf-8")).into_glib_ptr() as *mut ffi::GimpProcedure
+    implementation.create_procedure(CStr::from_ptr(procedure_name).to_str().expect("procedure name is not valid utf-8")).into_glib_ptr() as *mut ffi::GimpProcedure
 }
 
 unsafe extern "C" fn plug_in_query_procedures<T: PlugInImpl>(ptr: *mut ffi::GimpPlugIn) -> *mut glib::ffi::GList {
     let instance = &*(ptr as *mut T::Instance);
-    let imp = instance.imp();
+    let implementation = instance.imp();
 
-    imp.query_procedures().to_glib_full()
+    implementation.query_procedures().to_glib_full()
+}
+
+unsafe extern "C" fn plug_in_init_procedures<T: PlugInImpl>(ptr: *mut ffi::GimpPlugIn) -> *mut glib::ffi::GList {
+    let instance = &*(ptr as *mut T::Instance);
+    let implementation = instance.imp();
+
+    implementation.init_procedures().to_glib_full()
+}
+
+unsafe extern "C" fn plug_in_quit<T: PlugInImpl>(ptr: *mut ffi::GimpPlugIn) {
+    let instance = &*(ptr as *mut T::Instance);
+    let implementation = instance.imp();
+
+    implementation.quit();
+}
+
+unsafe extern "C" fn plug_in_set_i18n<T: PlugInImpl>(ptr: *mut ffi::GimpPlugIn, procedure_name: *const c_char, gettext_domain: *mut *mut c_char, catalog_dir: *mut *mut c_char) -> gboolean {
+    let instance = &*(ptr as *mut T::Instance);
+    let implementation = instance.imp();
+
+    let result: Option<SetI18N> = implementation.set_i18n(CStr::from_ptr(procedure_name).to_str().expect("procedure name is not valid utf-8"));
+    let use_gettext = result.is_some().into_glib();
+
+    if let Some(config) = result {
+        *gettext_domain = config.gettext_domain.to_glib_full();
+        *catalog_dir = config.catalog_dir.to_glib_full();
+    }
+
+    use_gettext
 }

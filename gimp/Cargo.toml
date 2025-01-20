@@ -32,3 +32,6 @@ pango-sys = "0.20.7"
 [dependencies.ffi]
 package = "gimp-sys"
 path = "./sys"
+
+[dependencies.macros]
+path = "macros"
