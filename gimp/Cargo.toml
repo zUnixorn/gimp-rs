@@ -5,9 +5,7 @@ edition = "2021"
 
 [package.metadata.docs.rs]
 all-features = true
-# For build.rs scripts
 rustc-args = ["--cfg", "docsrs"]
-# For rustdoc
 rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
