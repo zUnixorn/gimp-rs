@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0
-// This code is directly copied from the kernel crate: https://rust.docs.kernel.org/src/macros/vtable.rs.html
+// This code copied from the kernel crate: https://rust.docs.kernel.org/src/macros/vtable.rs.html with some things renamed
 
 use proc_macro::{Delimiter, Group, TokenStream, TokenTree};
 use std::collections::HashSet;
@@ -20,7 +20,7 @@ pub fn object_subclass_impl(_attr: TokenStream, ts: TokenStream) -> TokenStream 
             },
             _ => None,
         })
-        .expect("#[vtable] attribute should only be applied to trait or impl block");
+        .expect("#[object_subclass_impl] attribute should only be applied to trait or impl block");
 
     // Retrieve the main body. The main body should be the last token tree.
     let body = match tokens.pop() {
@@ -56,9 +56,9 @@ pub fn object_subclass_impl(_attr: TokenStream, ts: TokenStream) -> TokenStream 
     let mut const_items;
     if is_trait {
         const_items = "
-                /// A marker to prevent implementors from forgetting to use [`#[vtable]`](vtable)
+                /// A marker to prevent implementors from forgetting to use [`#[object_subclass_impl]`](object_subclass_impl)
                 /// attribute when implementing this trait.
-                const USE_VTABLE_ATTR: ();
+                const USE_OBJECT_SUBCLASS_IMPL_MACRO: ();
         "
             .to_owned();
 
@@ -79,7 +79,7 @@ pub fn object_subclass_impl(_attr: TokenStream, ts: TokenStream) -> TokenStream 
             consts.insert(gen_const_name);
         }
     } else {
-        const_items = "const USE_VTABLE_ATTR: () = ();".to_owned();
+        const_items = "const USE_OBJECT_SUBCLASS_IMPL_MACRO: () = ();".to_owned();
 
         for f in functions {
             let gen_const_name = format!("HAS_{}", f.to_uppercase());
