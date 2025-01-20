@@ -3,7 +3,7 @@ use glib::object::IsA;
 use glib::translate::{IntoGlib, IntoGlibPtr, ToGlibPtr};
 use glib::subclass::prelude::*;
 use glib_sys::gboolean;
-use macros::object_subclass_impl;
+use gimp_macros::object_subclass_impl;
 use crate::PlugIn;
 use crate::Procedure;
 
