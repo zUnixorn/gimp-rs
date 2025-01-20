@@ -24,14 +24,16 @@ jobs:
         uses: Swatinem/rust-cache@v2
       - name: Setup pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v5      
       - name: Clean docs folder
-        run: cd gimp && cargo +nightly doc --all-features
+        run: cargo clean --doc
+        working-directory: gimp
+      - name: Build docs
+        run: cargo +nightly doc --all-features
+        working-directory: gimp
         env:
           RUSTFLAGS: "--cfg docsrs"
           RUSTDOCFLAGS: "--cfg docsrs"
-      - name: Build docs
-        run: cd gimp && cargo doc
       - name: Add redirect
         run: echo '<meta http-equiv="refresh" content="0;url=aoc/index.html">' > gimp/target/doc/index.html
       - name: Remove lock file
