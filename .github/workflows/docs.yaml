@@ -35,7 +35,7 @@ jobs:
           RUSTFLAGS: "--cfg docsrs"
           RUSTDOCFLAGS: "--cfg docsrs"
       - name: Add redirect
-        run: echo '<meta http-equiv="refresh" content="0;url=aoc/index.html">' > gimp/target/doc/index.html
+        run: echo '<meta http-equiv="refresh" content="0;url=gimp/index.html">' > gimp/target/doc/index.html
       - name: Remove lock file
         run: rm gimp/target/doc/.lock
       - name: Upload artifact
