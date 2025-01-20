@@ -26,7 +26,10 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
       - name: Clean docs folder
-        run: cd gimp && RUSTFLAGS='--cfg docsrs' RUSTDOCFLAGS='--cfg docsrs' cargo +nightly doc --all-features
+        run: cd gimp && cargo +nightly doc --all-features
+        env:
+          RUSTFLAGS: "--cfg docsrs"
+          RUSTDOCFLAGS: "--cfg docsrs"
       - name: Build docs
         run: cd gimp && cargo doc
       - name: Add redirect
