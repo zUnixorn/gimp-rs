@@ -60,8 +60,8 @@ pub mod private {
     pub(crate) use build_error;
 }
 
-/// Generates the necessary main for plugins like the GIMP_MAIN C macro in libgimp
-/// The macro takes a type which subclasses [`PlugIn`] and implements [`PlugInImpl`]
+/// Generates the necessary main for plugins like the `GIMP_MAIN` macro in libgimp
+/// The macro takes a type which subclasses [`crate::PlugIn`] and implements [`crate::subclass::plug_in::PlugInImpl`]
 #[macro_export]
 macro_rules! main {
     ($plug_in:ty) => {
