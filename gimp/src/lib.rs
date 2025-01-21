@@ -12,6 +12,7 @@ macro_rules! assert_initialized_main_thread {
 mod auto;
 mod procedure;
 mod image_procedure;
+mod macros;
 pub mod prelude;
 pub mod subclass;
 

@@ -4,6 +4,7 @@ use glib::translate::{IntoGlib, IntoGlibPtr, ToGlibPtr};
 use glib::subclass::prelude::*;
 use glib_sys::gboolean;
 use gimp_macros::object_subclass_impl;
+use crate::macros::private::build_error;
 use crate::PlugIn;
 use crate::Procedure;
 
@@ -42,7 +43,7 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     ///
     /// the names of the procedures registered by `self`.
     fn init_procedures(&self) -> Vec<String> {
-        unimplemented!()
+        build_error!("Use the `object_subclass_impl` macro to implement this trait")
     }
     /// This method can be overridden by all plug-ins to return a newly allocated
     /// list of allocated strings naming the procedures registered by this
@@ -53,12 +54,12 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     ///
     /// the names of the procedures registered by `self`.
     fn query_procedures(&self) -> Vec<String> {
-        unimplemented!()
+        build_error!("Use the `object_subclass_impl` macro to implement this trait")
     }
     /// This method can be overridden by a plug-in which needs to perform some
     /// actions upon quitting.
     fn quit(&self) {
-        unimplemented!()
+        build_error!("Use the `object_subclass_impl` macro to implement this trait")
     }
     /// This method can be overridden by all plug-ins to customize
     /// internationalization of the plug-in.
@@ -104,7 +105,7 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     ///  set it up differently.
     #[allow(unused_variables)]
     fn set_i18n(&self, procedure_name: &str) -> Option<SetI18n> {
-        unimplemented!()
+        build_error!("Use the `object_subclass_impl` macro to implement this trait")
     }
 }
 
