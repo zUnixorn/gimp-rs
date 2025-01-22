@@ -11,8 +11,22 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 [[package]]
 name = "babl"
 version = "0.1.0"
+source = "git+ssh://git@github.com/zUnixorn/babl-rs.git#fdd4cfe098fd86612d0a4ce908718c1830e8f642"
 dependencies = [
- "babl-sys",
+ "babl-sys 0.0.1 (git+ssh://git@github.com/zUnixorn/babl-rs.git)",
+ "bitflags",
+ "glib",
+ "glib-sys",
+ "gobject-sys",
+ "libc",
+]
+
+[[package]]
+name = "babl"
+version = "0.1.0"
+source = "git+https://github.com/zUnixorn/babl-rs.git#fdd4cfe098fd86612d0a4ce908718c1830e8f642"
+dependencies = [
+ "babl-sys 0.0.1 (git+https://github.com/zUnixorn/babl-rs.git)",
  "bitflags",
  "glib",
  "glib-sys",
@@ -23,6 +37,18 @@ dependencies = [
 [[package]]
 name = "babl-sys"
 version = "0.0.1"
+source = "git+ssh://git@github.com/zUnixorn/babl-rs.git#fdd4cfe098fd86612d0a4ce908718c1830e8f642"
+dependencies = [
+ "glib-sys",
+ "gobject-sys",
+ "libc",
+ "system-deps",
+]
+
+[[package]]
+name = "babl-sys"
+version = "0.0.1"
+source = "git+https://github.com/zUnixorn/babl-rs.git#fdd4cfe098fd86612d0a4ce908718c1830e8f642"
 dependencies = [
  "glib-sys",
  "gobject-sys",
@@ -166,9 +192,10 @@ dependencies = [
 [[package]]
 name = "gegl"
 version = "0.1.0"
+source = "git+https://github.com/zUnixorn/gegl-rs.git#801eada68da18193bf1ecd48a02e0c446a8b6559"
 dependencies = [
- "babl",
- "babl-sys",
+ "babl 0.1.0 (git+ssh://git@github.com/zUnixorn/babl-rs.git)",
+ "babl-sys 0.0.1 (git+ssh://git@github.com/zUnixorn/babl-rs.git)",
  "bitflags",
  "gegl-sys",
  "glib",
@@ -180,8 +207,9 @@ dependencies = [
 [[package]]
 name = "gegl-sys"
 version = "0.0.1"
+source = "git+https://github.com/zUnixorn/gegl-rs.git#801eada68da18193bf1ecd48a02e0c446a8b6559"
 dependencies = [
- "babl-sys",
+ "babl-sys 0.0.1 (git+ssh://git@github.com/zUnixorn/babl-rs.git)",
  "glib-sys",
  "gobject-sys",
  "libc",
@@ -192,8 +220,8 @@ dependencies = [
 name = "gimp"
 version = "0.1.0"
 dependencies = [
- "babl",
- "babl-sys",
+ "babl 0.1.0 (git+https://github.com/zUnixorn/babl-rs.git)",
+ "babl-sys 0.0.1 (git+https://github.com/zUnixorn/babl-rs.git)",
  "bitflags",
  "cairo-rs",
  "cairo-sys-rs",
@@ -221,7 +249,7 @@ version = "0.1.0"
 name = "gimp-sys"
 version = "0.0.1"
 dependencies = [
- "babl-sys",
+ "babl-sys 0.0.1 (git+https://github.com/zUnixorn/babl-rs.git)",
  "cairo-sys-rs",
  "gdk-pixbuf-sys",
  "gegl-sys",

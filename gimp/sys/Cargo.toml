@@ -26,10 +26,10 @@ cairo-sys-rs = "0.20.7"
 pango-sys = "0.20.7"
 
 [dependencies.gegl-sys]
-git = "ssh://git@github.com/zUnixorn/gegl-rs.git"
+git = "https://github.com/zUnixorn/gegl-rs.git"
 
 [dependencies.babl-sys]
-git = "ssh://git@github.com/zUnixorn/babl-rs.git"
+git = "https://github.com/zUnixorn/babl-rs.git"
 
 [build-dependencies]
 system-deps = "7"
