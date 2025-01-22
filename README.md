@@ -1,4 +1,4 @@
-[Documentation](https://zunixorn.github.io/gimp-rs/)
+# [Documentation](https://zunixorn.github.io/gimp-rs/)
 
 # TODO
 * Implement all virtual methods for interfaces and classes as traits in the subclass module
