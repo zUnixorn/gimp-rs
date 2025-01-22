@@ -3,23 +3,10 @@
 // from ../gir-files
 // DO NOT EDIT
 
-use crate::{ffi,Image,OrientationType,Parasite,RotationType};
+use crate::{ffi,ColorTag,Image,OrientationType,Parasite,RotationType};
 use glib::{prelude::*,translate::*};
 
 glib::wrapper! {
-    /// Functions to manipulate items.
-    ///
-    /// This is an Abstract Base Class, you cannot instantiate it.
-    ///
-    /// ## Properties
-    ///
-    ///
-    /// #### `id`
-    ///  Readable | Writeable | Construct Only
-    ///
-    /// # Implements
-    ///
-    /// [`ItemExt`][trait@crate::prelude::ItemExt]
     #[doc(alias = "GimpItem")]
     pub struct Item(Object<ffi::GimpItem, ffi::GimpItemClass>);
 
@@ -32,22 +19,6 @@ impl Item {
         pub const NONE: Option<&'static Item> = None;
     
 
-    /// Returns a [`Item`][crate::Item] representing `item_id`. Since [`Item`][crate::Item] is an
-    /// abstract class, the real object type will actually be the proper
-    /// subclass.
-    ///
-    /// Note: in most use cases, you should not need to retrieve a [`Item`][crate::Item]
-    /// by its ID, which is mostly internal data and not reusable across
-    /// sessions. Use the appropriate functions for your use case instead.
-    /// ## `item_id`
-    /// The item id.
-    ///
-    /// # Returns
-    ///
-    /// a [`Item`][crate::Item] for `item_id` or
-    ///  [`None`] if `item_id` does not represent a valid item.
-    ///  The object belongs to libgimp and you must not modify
-    ///  or unref it.
     #[doc(alias = "gimp_item_get_by_id")]
     #[doc(alias = "get_by_id")]
     pub fn by_id(item_id: i32) -> Option<Item> {
@@ -57,18 +28,6 @@ impl Item {
         }
     }
 
-    /// Returns whether the item ID is a channel.
-    ///
-    /// This procedure returns [`true`] if the specified item ID is a channel.
-    ///
-    /// *Note*: in most use cases, you should not use this function. See
-    /// [func`Gimp`.id_is_layer] for a discussion on alternatives.
-    /// ## `item_id`
-    /// The item ID.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item ID is a channel, FALSE otherwise.
     #[doc(alias = "gimp_item_id_is_channel")]
     pub fn id_is_channel(item_id: i32) -> bool {
         assert_initialized_main_thread!();
@@ -77,18 +36,6 @@ impl Item {
         }
     }
 
-    /// Returns whether the item ID is a drawable.
-    ///
-    /// This procedure returns [`true`] if the specified item ID is a drawable.
-    ///
-    /// *Note*: in most use cases, you should not use this function. See
-    /// [func`Gimp`.id_is_layer] for a discussion on alternatives.
-    /// ## `item_id`
-    /// The item ID.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item ID is a drawable, FALSE otherwise.
     #[doc(alias = "gimp_item_id_is_drawable")]
     pub fn id_is_drawable(item_id: i32) -> bool {
         assert_initialized_main_thread!();
@@ -97,19 +44,6 @@ impl Item {
         }
     }
 
-    /// Returns whether the item ID is a group layer.
-    ///
-    /// This procedure returns [`true`] if the specified item ID is a group
-    /// layer.
-    ///
-    /// *Note*: in most use cases, you should not use this function. See
-    /// [func`Gimp`.id_is_layer] for a discussion on alternatives.
-    /// ## `item_id`
-    /// The item ID.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a group layer, FALSE otherwise.
     #[doc(alias = "gimp_item_id_is_group_layer")]
     pub fn id_is_group_layer(item_id: i32) -> bool {
         assert_initialized_main_thread!();
@@ -118,38 +52,6 @@ impl Item {
         }
     }
 
-    /// Returns whether the item ID is a layer.
-    ///
-    /// This procedure returns [`true`] if the specified item ID is a layer.
-    ///
-    /// *Note*: in most use cases, you should not use this function. If the
-    /// goal is to verify the accurate type for a [class`Gimp`], you
-    /// should either use [method`Gimp`.is_layer] or the specific
-    /// type-checking methods for the used language.
-    ///
-    /// For instance, in C:
-    ///
-    /// **⚠️ The following code is in C ⚠️**
-    ///
-    /// ```C
-    /// if (GIMP_IS_LAYER (item))
-    ///   do_something ();
-    /// ```
-    ///
-    /// Or in the Python binding, you could run:
-    ///
-    /// **⚠️ The following code is in py3 ⚠️**
-    ///
-    /// ```py3
-    /// if isinstance(item, Gimp.Layer):
-    ///   do_something()
-    /// ```
-    /// ## `item_id`
-    /// The item ID.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a layer, FALSE otherwise.
     #[doc(alias = "gimp_item_id_is_layer")]
     pub fn id_is_layer(item_id: i32) -> bool {
         assert_initialized_main_thread!();
@@ -158,19 +60,6 @@ impl Item {
         }
     }
 
-    /// Returns whether the item ID is a layer mask.
-    ///
-    /// This procedure returns [`true`] if the specified item ID is a layer
-    /// mask.
-    ///
-    /// *Note*: in most use cases, you should not use this function. See
-    /// [func`Gimp`.id_is_layer] for a discussion on alternatives.
-    /// ## `item_id`
-    /// The item.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item ID is a layer mask, FALSE otherwise.
     #[doc(alias = "gimp_item_id_is_layer_mask")]
     pub fn id_is_layer_mask(item_id: i32) -> bool {
         assert_initialized_main_thread!();
@@ -179,18 +68,6 @@ impl Item {
         }
     }
 
-    /// Returns whether the item ID is a path.
-    ///
-    /// This procedure returns [`true`] if the specified item ID is a path.
-    ///
-    /// *Note*: in most use cases, you should not use this function. See
-    /// [func`Gimp`.id_is_layer] for a discussion on alternatives.
-    /// ## `item_id`
-    /// The item ID.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item ID is a path, FALSE otherwise.
     #[doc(alias = "gimp_item_id_is_path")]
     pub fn id_is_path(item_id: i32) -> bool {
         assert_initialized_main_thread!();
@@ -199,19 +76,6 @@ impl Item {
         }
     }
 
-    /// Returns whether the item ID is a selection.
-    ///
-    /// This procedure returns [`true`] if the specified item ID is a
-    /// selection.
-    ///
-    /// *Note*: in most use cases, you should not use this function. See
-    /// [func`Gimp`.id_is_layer] for a discussion on alternatives.
-    /// ## `item_id`
-    /// The item ID.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item ID is a selection, FALSE otherwise.
     #[doc(alias = "gimp_item_id_is_selection")]
     pub fn id_is_selection(item_id: i32) -> bool {
         assert_initialized_main_thread!();
@@ -220,19 +84,6 @@ impl Item {
         }
     }
 
-    /// Returns whether the item ID is a text layer.
-    ///
-    /// This procedure returns [`true`] if the specified item ID is a text
-    /// layer.
-    ///
-    /// *Note*: in most use cases, you should not use this function. See
-    /// [func`Gimp`.id_is_layer] for a discussion on alternatives.
-    /// ## `item_id`
-    /// The item ID.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a text layer, FALSE otherwise.
     #[doc(alias = "gimp_item_id_is_text_layer")]
     pub fn id_is_text_layer(item_id: i32) -> bool {
         assert_initialized_main_thread!();
@@ -241,20 +92,6 @@ impl Item {
         }
     }
 
-    /// Returns [`true`] if the item ID is valid.
-    ///
-    /// This procedure checks if the given item ID is valid and refers to an
-    /// existing item.
-    ///
-    /// *Note*: in most use cases, you should not use this function. If you
-    /// got a [class`Gimp`] from the API, you should trust it is valid.
-    /// This function is mostly for internal usage.
-    /// ## `item_id`
-    /// The item ID to check.
-    ///
-    /// # Returns
-    ///
-    /// Whether the item ID is valid.
     #[doc(alias = "gimp_item_id_is_valid")]
     pub fn id_is_valid(item_id: i32) -> bool {
         assert_initialized_main_thread!();
@@ -264,22 +101,7 @@ impl Item {
     }
 }
 
-/// Trait containing all [`struct@Item`] methods.
-///
-/// # Implementors
-///
-/// [`Drawable`][struct@crate::Drawable], [`Item`][struct@crate::Item], [`Path`][struct@crate::Path]
 pub trait ItemExt: IsA<Item> + 'static {
-    /// Add a parasite to an item.
-    ///
-    /// This procedure attaches a parasite to an item. It has no return
-    /// values.
-    /// ## `parasite`
-    /// The parasite to attach to the item.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_item_attach_parasite")]
     fn attach_parasite(&self, parasite: &Parasite) -> bool {
         unsafe {
@@ -287,17 +109,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Delete a item.
-    ///
-    /// This procedure deletes the specified item. This must not be done if
-    /// the image containing this item was already deleted or if the item
-    /// was already removed from the image. The only case in which this
-    /// procedure is useful is if you want to get rid of a item which has
-    /// not yet been added to an image.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_item_delete")]
     fn delete(&self) -> bool {
         unsafe {
@@ -305,16 +116,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Removes a parasite from an item.
-    ///
-    /// This procedure detaches a parasite from an item. It has no return
-    /// values.
-    /// ## `name`
-    /// The name of the parasite to detach from the item.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_item_detach_parasite")]
     fn detach_parasite(&self, name: &str) -> bool {
         unsafe {
@@ -322,16 +123,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns the item's list of children.
-    ///
-    /// This procedure returns the list of items which are children of the
-    /// specified item. The order is topmost to bottommost.
-    ///
-    /// # Returns
-    ///
-    ///
-    ///  The item's list of children.
-    ///  The returned value must be freed with `g_free()`.
     #[doc(alias = "gimp_item_get_children")]
     #[doc(alias = "get_children")]
     fn children(&self) -> Vec<Item> {
@@ -340,19 +131,14 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_item_get_color_tag")]
-    //#[doc(alias = "get_color_tag")]
-    //fn color_tag(&self) -> /*Ignored*/ColorTag {
-    //    unsafe { TODO: call ffi:gimp_item_get_color_tag() }
-    //}
+    #[doc(alias = "gimp_item_get_color_tag")]
+    #[doc(alias = "get_color_tag")]
+    fn color_tag(&self) -> ColorTag {
+        unsafe {
+            from_glib(ffi::gimp_item_get_color_tag(self.as_ref().to_glib_none().0))
+        }
+    }
 
-    /// Returns whether the item is expanded.
-    ///
-    /// This procedure returns [`true`] if the specified item is expanded.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is expanded, FALSE otherwise.
     #[doc(alias = "gimp_item_get_expanded")]
     #[doc(alias = "get_expanded")]
     fn is_expanded(&self) -> bool {
@@ -361,12 +147,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Note: in most use cases, you should not need an item's ID which is
-    /// mostly internal data and not reusable across sessions.
-    ///
-    /// # Returns
-    ///
-    /// the item ID.
     #[doc(alias = "gimp_item_get_id")]
     #[doc(alias = "get_id")]
     fn id(&self) -> i32 {
@@ -375,13 +155,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns the item's image.
-    ///
-    /// This procedure returns the item's image.
-    ///
-    /// # Returns
-    ///
-    /// The item's image.
     #[doc(alias = "gimp_item_get_image")]
     #[doc(alias = "get_image")]
     fn image(&self) -> Option<Image> {
@@ -390,13 +163,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Get the 'lock content' state of the specified item.
-    ///
-    /// This procedure returns the specified item's lock content state.
-    ///
-    /// # Returns
-    ///
-    /// Whether the item's contents are locked.
     #[doc(alias = "gimp_item_get_lock_content")]
     #[doc(alias = "get_lock_content")]
     fn is_lock_content(&self) -> bool {
@@ -405,13 +171,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Get the 'lock position' state of the specified item.
-    ///
-    /// This procedure returns the specified item's lock position state.
-    ///
-    /// # Returns
-    ///
-    /// Whether the item's position is locked.
     #[doc(alias = "gimp_item_get_lock_position")]
     #[doc(alias = "get_lock_position")]
     fn is_lock_position(&self) -> bool {
@@ -420,13 +179,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Get the 'lock visibility' state of the specified item.
-    ///
-    /// This procedure returns the specified item's lock visibility state.
-    ///
-    /// # Returns
-    ///
-    /// Whether the item's visibility is locked.
     #[doc(alias = "gimp_item_get_lock_visibility")]
     #[doc(alias = "get_lock_visibility")]
     fn is_lock_visibility(&self) -> bool {
@@ -435,14 +187,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Get the name of the specified item.
-    ///
-    /// This procedure returns the specified item's name.
-    ///
-    /// # Returns
-    ///
-    /// The item name.
-    ///  The returned value must be freed with `g_free()`.
     #[doc(alias = "gimp_item_get_name")]
     #[doc(alias = "get_name")]
     fn name(&self) -> Option<glib::GString> {
@@ -451,15 +195,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Look up a parasite in an item
-    ///
-    /// Finds and returns the parasite that is attached to an item.
-    /// ## `name`
-    /// The name of the parasite to find.
-    ///
-    /// # Returns
-    ///
-    /// The found parasite.
     #[doc(alias = "gimp_item_get_parasite")]
     #[doc(alias = "get_parasite")]
     fn parasite(&self, name: &str) -> Option<Parasite> {
@@ -468,15 +203,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// List all parasites.
-    ///
-    /// Returns a list of all parasites currently attached the an item.
-    ///
-    /// # Returns
-    ///
-    ///
-    ///  The names of currently attached parasites.
-    ///  The returned value must be freed with `g_strfreev()`.
     #[doc(alias = "gimp_item_get_parasite_list")]
     #[doc(alias = "get_parasite_list")]
     fn parasite_list(&self) -> Vec<glib::GString> {
@@ -485,13 +211,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns the item's parent item.
-    ///
-    /// This procedure returns the item's parent item, if any.
-    ///
-    /// # Returns
-    ///
-    /// The item's parent item.
     #[doc(alias = "gimp_item_get_parent")]
     #[doc(alias = "get_parent")]
 #[must_use]
@@ -501,15 +220,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Get the tattoo of the specified item.
-    ///
-    /// This procedure returns the specified item's tattoo. A tattoo is a
-    /// unique and permanent identifier attached to a item that can be used
-    /// to uniquely identify a item within an image even between sessions.
-    ///
-    /// # Returns
-    ///
-    /// The item tattoo.
     #[doc(alias = "gimp_item_get_tattoo")]
     #[doc(alias = "get_tattoo")]
     fn tattoo(&self) -> u32 {
@@ -518,13 +228,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Get the visibility of the specified item.
-    ///
-    /// This procedure returns the specified item's visibility.
-    ///
-    /// # Returns
-    ///
-    /// The item visibility.
     #[doc(alias = "gimp_item_get_visible")]
     #[doc(alias = "get_visible")]
     fn is_visible(&self) -> bool {
@@ -533,13 +236,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns whether the item is a channel.
-    ///
-    /// This procedure returns TRUE if the specified item is a channel.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a channel, FALSE otherwise.
     #[doc(alias = "gimp_item_is_channel")]
     fn is_channel(&self) -> bool {
         unsafe {
@@ -547,13 +243,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns whether the item is a drawable.
-    ///
-    /// This procedure returns TRUE if the specified item is a drawable.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a drawable, FALSE otherwise.
     #[doc(alias = "gimp_item_is_drawable")]
     fn is_drawable(&self) -> bool {
         unsafe {
@@ -561,14 +250,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns whether the item is a group item.
-    ///
-    /// This procedure returns [`true`] if the specified item is a group item
-    /// which can have children.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a group, FALSE otherwise.
     #[doc(alias = "gimp_item_is_group")]
     fn is_group(&self) -> bool {
         unsafe {
@@ -576,14 +257,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns whether the item is a group layer.
-    ///
-    /// This procedure returns TRUE if the specified item is a group
-    /// layer.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a group layer, FALSE otherwise.
     #[doc(alias = "gimp_item_is_group_layer")]
     fn is_group_layer(&self) -> bool {
         unsafe {
@@ -591,13 +264,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns whether the item is a layer.
-    ///
-    /// This procedure returns TRUE if the specified item is a layer.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a layer, FALSE otherwise.
     #[doc(alias = "gimp_item_is_layer")]
     fn is_layer(&self) -> bool {
         unsafe {
@@ -605,14 +271,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns whether the item is a layer mask.
-    ///
-    /// This procedure returns TRUE if the specified item is a layer
-    /// mask.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a layer mask, FALSE otherwise.
     #[doc(alias = "gimp_item_is_layer_mask")]
     fn is_layer_mask(&self) -> bool {
         unsafe {
@@ -620,13 +278,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns whether the item is a path.
-    ///
-    /// This procedure returns TRUE if the specified item is a path.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a path, FALSE otherwise.
     #[doc(alias = "gimp_item_is_path")]
     fn is_path(&self) -> bool {
         unsafe {
@@ -634,13 +285,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns whether the item is a selection.
-    ///
-    /// This procedure returns TRUE if the specified item is a selection.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a selection, FALSE otherwise.
     #[doc(alias = "gimp_item_is_selection")]
     fn is_selection(&self) -> bool {
         unsafe {
@@ -648,14 +292,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns whether the item is a text layer.
-    ///
-    /// This procedure returns TRUE if the specified item is a text
-    /// layer.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the item is a text layer, FALSE otherwise.
     #[doc(alias = "gimp_item_is_text_layer")]
     fn is_text_layer(&self) -> bool {
         unsafe {
@@ -663,14 +299,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns TRUE if the item is valid.
-    ///
-    /// This procedure checks if the given item is valid and refers to an
-    /// existing item.
-    ///
-    /// # Returns
-    ///
-    /// Whether the item is valid.
     #[doc(alias = "gimp_item_is_valid")]
     fn is_valid(&self) -> bool {
         unsafe {
@@ -678,17 +306,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Returns the item's list of children.
-    ///
-    /// This procedure returns the list of items which are children of the
-    /// specified item. The order is topmost to bottommost.
-    ///
-    /// # Returns
-    ///
-    ///
-    ///  The item's list of children.
-    ///  The returned list must be freed with `g_list_free()`. Item
-    ///  elements belong to libgimp and must not be unrefed.
     #[doc(alias = "gimp_item_list_children")]
     fn list_children(&self) -> Vec<Item> {
         unsafe {
@@ -696,20 +313,13 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_item_set_color_tag")]
-    //fn set_color_tag(&self, color_tag: /*Ignored*/ColorTag) -> bool {
-    //    unsafe { TODO: call ffi:gimp_item_set_color_tag() }
-    //}
+    #[doc(alias = "gimp_item_set_color_tag")]
+    fn set_color_tag(&self, color_tag: ColorTag) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_item_set_color_tag(self.as_ref().to_glib_none().0, color_tag.into_glib()))
+        }
+    }
 
-    /// Sets the expanded state of the item.
-    ///
-    /// This procedure expands or collapses the item.
-    /// ## `expanded`
-    /// TRUE to expand the item, FALSE to collapse the item.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_item_set_expanded")]
     fn set_expanded(&self, expanded: bool) -> bool {
         unsafe {
@@ -717,15 +327,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Set the 'lock content' state of the specified item.
-    ///
-    /// This procedure sets the specified item's lock content state.
-    /// ## `lock_content`
-    /// The new item 'lock content' state.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_item_set_lock_content")]
     fn set_lock_content(&self, lock_content: bool) -> bool {
         unsafe {
@@ -733,15 +334,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Set the 'lock position' state of the specified item.
-    ///
-    /// This procedure sets the specified item's lock position state.
-    /// ## `lock_position`
-    /// The new item 'lock position' state.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_item_set_lock_position")]
     fn set_lock_position(&self, lock_position: bool) -> bool {
         unsafe {
@@ -749,15 +341,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Set the 'lock visibility' state of the specified item.
-    ///
-    /// This procedure sets the specified item's lock visibility state.
-    /// ## `lock_visibility`
-    /// The new item 'lock visibility' state.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_item_set_lock_visibility")]
     fn set_lock_visibility(&self, lock_visibility: bool) -> bool {
         unsafe {
@@ -765,15 +348,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Set the name of the specified item.
-    ///
-    /// This procedure sets the specified item's name.
-    /// ## `name`
-    /// The new item name.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_item_set_name")]
     fn set_name(&self, name: &str) -> bool {
         unsafe {
@@ -781,17 +355,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Set the tattoo of the specified item.
-    ///
-    /// This procedure sets the specified item's tattoo. A tattoo is a
-    /// unique and permanent identifier attached to a item that can be used
-    /// to uniquely identify a item within an image even between sessions.
-    /// ## `tattoo`
-    /// The new item tattoo.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_item_set_tattoo")]
     fn set_tattoo(&self, tattoo: u32) -> bool {
         unsafe {
@@ -799,15 +362,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Set the visibility of the specified item.
-    ///
-    /// This procedure sets the specified item's visibility.
-    /// ## `visible`
-    /// The new item visibility.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_item_set_visible")]
     fn set_visible(&self, visible: bool) -> bool {
         unsafe {
@@ -815,47 +369,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Transform the specified item in 2d.
-    ///
-    /// This procedure transforms the specified item.
-    ///
-    /// The transformation is done by scaling by the x and y scale factors
-    /// about the point (source_x, source_y), then rotating around the same
-    /// point, then translating that point to the new position (dest_x,
-    /// dest_y).
-    ///
-    /// If a selection exists and the item is a drawable, the portion of the
-    /// drawable which lies under the selection is cut from the drawable and
-    /// made into a floating selection which is then transformed as
-    /// specified. The return value is the ID of the transformed floating
-    /// selection.
-    ///
-    /// If there is no selection or the item is not a drawable, the entire
-    /// item will be transformed according to the specified parameters.
-    /// The return value will be equal to the item ID supplied as input.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// `gimp_context_set_interpolation()`,
-    /// `gimp_context_set_transform_direction()`,
-    /// `gimp_context_set_transform_resize()`.
-    /// ## `source_x`
-    /// X coordinate of the transformation center.
-    /// ## `source_y`
-    /// Y coordinate of the transformation center.
-    /// ## `scale_x`
-    /// Amount to scale in x direction.
-    /// ## `scale_y`
-    /// Amount to scale in y direction.
-    /// ## `angle`
-    /// The angle of rotation (radians).
-    /// ## `dest_x`
-    /// X coordinate of where the center goes.
-    /// ## `dest_y`
-    /// Y coordinate of where the center goes.
-    ///
-    /// # Returns
-    ///
-    /// The transformed item.
     #[doc(alias = "gimp_item_transform_2d")]
 #[must_use]
     fn transform_2d(&self, source_x: f64, source_y: f64, scale_x: f64, scale_y: f64, angle: f64, dest_x: f64, dest_y: f64) -> Option<Item> {
@@ -864,36 +377,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Flip the specified item around a given line.
-    ///
-    /// This procedure flips the specified item.
-    ///
-    /// If a selection exists and the item is a drawable, the portion of the
-    /// drawable which lies under the selection is cut from the drawable and
-    /// made into a floating selection which is then flipped. The axis to
-    /// flip around is specified by specifying two points from that line.
-    /// The return value is the ID of the flipped floating selection.
-    ///
-    /// If there is no selection or the item is not a drawable, the entire
-    /// item will be flipped around the specified axis. The return value
-    /// will be equal to the item ID supplied as input.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// `gimp_context_set_interpolation()`,
-    /// `gimp_context_set_transform_direction()`,
-    /// `gimp_context_set_transform_resize()`.
-    /// ## `x0`
-    /// horz. coord. of one end of axis.
-    /// ## `y0`
-    /// vert. coord. of one end of axis.
-    /// ## `x1`
-    /// horz. coord. of other end of axis.
-    /// ## `y1`
-    /// vert. coord. of other end of axis.
-    ///
-    /// # Returns
-    ///
-    /// The flipped item.
     #[doc(alias = "gimp_item_transform_flip")]
 #[must_use]
     fn transform_flip(&self, x0: f64, y0: f64, x1: f64, y1: f64) -> Option<Item> {
@@ -902,34 +385,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Flip the specified item either vertically or horizontally.
-    ///
-    /// This procedure flips the specified item.
-    ///
-    /// If a selection exists and the item is a drawable, the portion of the
-    /// drawable which lies under the selection is cut from the drawable and
-    /// made into a floating selection which is then flipped. If auto_center
-    /// is set to TRUE, the flip is around the selection's center.
-    /// Otherwise, the coordinate of the axis needs to be specified. The
-    /// return value is the ID of the flipped floating selection.
-    ///
-    /// If there is no selection or the item is not a drawable, the entire
-    /// item will be flipped around its center if auto_center is set to
-    /// TRUE, otherwise the coordinate of the axis needs to be specified.
-    /// The return value will be equal to the item ID supplied as input.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// `gimp_context_set_transform_resize()`.
-    /// ## `flip_type`
-    /// Type of flip.
-    /// ## `auto_center`
-    /// Whether to automatically position the axis in the selection center.
-    /// ## `axis`
-    /// coord. of flip axis.
-    ///
-    /// # Returns
-    ///
-    /// The flipped item.
     #[doc(alias = "gimp_item_transform_flip_simple")]
 #[must_use]
     fn transform_flip_simple(&self, flip_type: OrientationType, auto_center: bool, axis: f64) -> Option<Item> {
@@ -938,49 +393,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Transform the specified item in 2d.
-    ///
-    /// This procedure transforms the specified item.
-    ///
-    /// The transformation is done by assembling a 3x3 matrix from the
-    /// coefficients passed.
-    ///
-    /// If a selection exists and the item is a drawable, the portion of the
-    /// drawable which lies under the selection is cut from the drawable and
-    /// made into a floating selection which is then transformed as
-    /// specified. The return value is the ID of the transformed floating
-    /// selection.
-    ///
-    /// If there is no selection or the item is not a drawable, the entire
-    /// item will be transformed according to the specified matrix.
-    /// The return value will be equal to the item ID supplied as input.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// `gimp_context_set_interpolation()`,
-    /// `gimp_context_set_transform_direction()`,
-    /// `gimp_context_set_transform_resize()`.
-    /// ## `coeff_0_0`
-    /// coefficient (0,0) of the transformation matrix.
-    /// ## `coeff_0_1`
-    /// coefficient (0,1) of the transformation matrix.
-    /// ## `coeff_0_2`
-    /// coefficient (0,2) of the transformation matrix.
-    /// ## `coeff_1_0`
-    /// coefficient (1,0) of the transformation matrix.
-    /// ## `coeff_1_1`
-    /// coefficient (1,1) of the transformation matrix.
-    /// ## `coeff_1_2`
-    /// coefficient (1,2) of the transformation matrix.
-    /// ## `coeff_2_0`
-    /// coefficient (2,0) of the transformation matrix.
-    /// ## `coeff_2_1`
-    /// coefficient (2,1) of the transformation matrix.
-    /// ## `coeff_2_2`
-    /// coefficient (2,2) of the transformation matrix.
-    ///
-    /// # Returns
-    ///
-    /// The transformed item.
     #[doc(alias = "gimp_item_transform_matrix")]
 #[must_use]
     fn transform_matrix(&self, coeff_0_0: f64, coeff_0_1: f64, coeff_0_2: f64, coeff_1_0: f64, coeff_1_1: f64, coeff_1_2: f64, coeff_2_0: f64, coeff_2_1: f64, coeff_2_2: f64) -> Option<Item> {
@@ -989,53 +401,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Perform a possibly non-affine transformation on the specified item.
-    ///
-    /// This procedure performs a possibly non-affine transformation on the
-    /// specified item by allowing the corners of the original bounding box
-    /// to be arbitrarily remapped to any values.
-    ///
-    /// The 4 coordinates specify the new locations of each corner of the
-    /// original bounding box. By specifying these values, any affine
-    /// transformation (rotation, scaling, translation) can be affected.
-    /// Additionally, these values can be specified such that the resulting
-    /// transformed item will appear to have been projected via a
-    /// perspective transform.
-    ///
-    /// If a selection exists and the item is a drawable, the portion of the
-    /// drawable which lies under the selection is cut from the drawable and
-    /// made into a floating selection which is then transformed as
-    /// specified. The return value is the ID of the transformed floating
-    /// selection.
-    ///
-    /// If there is no selection or the item is not a drawable, the entire
-    /// item will be transformed according to the specified mapping.
-    /// The return value will be equal to the item ID supplied as input.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// `gimp_context_set_interpolation()`,
-    /// `gimp_context_set_transform_direction()`,
-    /// `gimp_context_set_transform_resize()`.
-    /// ## `x0`
-    /// The new x coordinate of upper-left corner of original bounding box.
-    /// ## `y0`
-    /// The new y coordinate of upper-left corner of original bounding box.
-    /// ## `x1`
-    /// The new x coordinate of upper-right corner of original bounding box.
-    /// ## `y1`
-    /// The new y coordinate of upper-right corner of original bounding box.
-    /// ## `x2`
-    /// The new x coordinate of lower-left corner of original bounding box.
-    /// ## `y2`
-    /// The new y coordinate of lower-left corner of original bounding box.
-    /// ## `x3`
-    /// The new x coordinate of lower-right corner of original bounding box.
-    /// ## `y3`
-    /// The new y coordinate of lower-right corner of original bounding box.
-    ///
-    /// # Returns
-    ///
-    /// The transformed item.
     #[doc(alias = "gimp_item_transform_perspective")]
 #[must_use]
     fn transform_perspective(&self, x0: f64, y0: f64, x1: f64, y1: f64, x2: f64, y2: f64, x3: f64, y3: f64) -> Option<Item> {
@@ -1044,41 +409,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Rotate the specified item about given coordinates through the
-    /// specified angle.
-    ///
-    /// This function rotates the specified item.
-    ///
-    /// If a selection exists and the item is a drawable, the portion of the
-    /// drawable which lies under the selection is cut from the drawable and
-    /// made into a floating selection which is then rotated by the
-    /// specified amount. If auto_center is set to TRUE, the rotation is
-    /// around the selection's center. Otherwise, the coordinate of the
-    /// center point needs to be specified. The return value is the ID of
-    /// the rotated floating selection.
-    ///
-    /// If there is no selection or the item is not a drawable, the entire
-    /// item will be rotated around its center if auto_center is set to
-    /// TRUE, otherwise the coordinate of the center point needs to be
-    /// specified.
-    /// The return value will be equal to the item ID supplied as input.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// `gimp_context_set_interpolation()`,
-    /// `gimp_context_set_transform_direction()`,
-    /// `gimp_context_set_transform_resize()`.
-    /// ## `angle`
-    /// The angle of rotation (radians).
-    /// ## `auto_center`
-    /// Whether to automatically rotate around the selection center.
-    /// ## `center_x`
-    /// The hor. coordinate of the center of rotation.
-    /// ## `center_y`
-    /// The vert. coordinate of the center of rotation.
-    ///
-    /// # Returns
-    ///
-    /// The rotated item.
     #[doc(alias = "gimp_item_transform_rotate")]
 #[must_use]
     fn transform_rotate(&self, angle: f64, auto_center: bool, center_x: f64, center_y: f64) -> Option<Item> {
@@ -1087,39 +417,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Rotate the specified item about given coordinates through the
-    /// specified angle.
-    ///
-    /// This function rotates the specified item.
-    ///
-    /// If a selection exists and the item is a drawable, the portion of the
-    /// drawable which lies under the selection is cut from the drawable and
-    /// made into a floating selection which is then rotated by the
-    /// specified amount. If auto_center is set to TRUE, the rotation is
-    /// around the selection's center. Otherwise, the coordinate of the
-    /// center point needs to be specified. The return value is the ID of
-    /// the rotated floating selection.
-    ///
-    /// If there is no selection or the item is not a drawable, the entire
-    /// item will be rotated around its center if auto_center is set to
-    /// TRUE, otherwise the coordinate of the center point needs to be
-    /// specified.
-    /// The return value will be equal to the item ID supplied as input.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// `gimp_context_set_transform_resize()`.
-    /// ## `rotate_type`
-    /// Type of rotation.
-    /// ## `auto_center`
-    /// Whether to automatically rotate around the selection center.
-    /// ## `center_x`
-    /// The hor. coordinate of the center of rotation.
-    /// ## `center_y`
-    /// The vert. coordinate of the center of rotation.
-    ///
-    /// # Returns
-    ///
-    /// The rotated item.
     #[doc(alias = "gimp_item_transform_rotate_simple")]
 #[must_use]
     fn transform_rotate_simple(&self, rotate_type: RotationType, auto_center: bool, center_x: f64, center_y: f64) -> Option<Item> {
@@ -1128,38 +425,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Scale the specified item.
-    ///
-    /// This procedure scales the specified item.
-    ///
-    /// The 2 coordinates specify the new locations of the top-left and
-    /// bottom-roght corners of the original bounding box.
-    ///
-    /// If a selection exists and the item is a drawable, the portion of the
-    /// drawable which lies under the selection is cut from the drawable and
-    /// made into a floating selection which is then scaled as specified.
-    /// The return value is the ID of the scaled floating selection.
-    ///
-    /// If there is no selection or the item is not a drawable, the entire
-    /// item will be scaled according to the specified coordinates.
-    /// The return value will be equal to the item ID supplied as input.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// `gimp_context_set_interpolation()`,
-    /// `gimp_context_set_transform_direction()`,
-    /// `gimp_context_set_transform_resize()`.
-    /// ## `x0`
-    /// The new x coordinate of the upper-left corner of the scaled region.
-    /// ## `y0`
-    /// The new y coordinate of the upper-left corner of the scaled region.
-    /// ## `x1`
-    /// The new x coordinate of the lower-right corner of the scaled region.
-    /// ## `y1`
-    /// The new y coordinate of the lower-right corner of the scaled region.
-    ///
-    /// # Returns
-    ///
-    /// The scaled item.
     #[doc(alias = "gimp_item_transform_scale")]
 #[must_use]
     fn transform_scale(&self, x0: f64, y0: f64, x1: f64, y1: f64) -> Option<Item> {
@@ -1168,36 +433,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Shear the specified item about its center by the specified
-    /// magnitude.
-    ///
-    /// This procedure shears the specified item.
-    ///
-    /// The shear type parameter indicates whether the shear will be applied
-    /// horizontally or vertically. The magnitude can be either positive or
-    /// negative and indicates the extent (in pixels) to shear by.
-    ///
-    /// If a selection exists and the item is a drawable, the portion of the
-    /// drawable which lies under the selection is cut from the drawable and
-    /// made into a floating selection which is then sheared as specified.
-    /// The return value is the ID of the sheared floating selection.
-    ///
-    /// If there is no selection or the item is not a drawable, the entire
-    /// item will be sheared according to the specified parameters.
-    /// The return value will be equal to the item ID supplied as input.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// `gimp_context_set_interpolation()`,
-    /// `gimp_context_set_transform_direction()`,
-    /// `gimp_context_set_transform_resize()`.
-    /// ## `shear_type`
-    /// Type of shear.
-    /// ## `magnitude`
-    /// The magnitude of the shear.
-    ///
-    /// # Returns
-    ///
-    /// The sheared item.
     #[doc(alias = "gimp_item_transform_shear")]
 #[must_use]
     fn transform_shear(&self, shear_type: OrientationType, magnitude: f64) -> Option<Item> {
@@ -1206,20 +441,6 @@ pub trait ItemExt: IsA<Item> + 'static {
         }
     }
 
-    /// Translate the item by the specified offsets.
-    ///
-    /// This procedure translates the item by the amounts specified in the
-    /// off_x and off_y arguments. These can be negative, and are considered
-    /// offsets from the current position. The offsets will be rounded to
-    /// the nearest pixel unless the item is a path.
-    /// ## `off_x`
-    /// Offset in x direction.
-    /// ## `off_y`
-    /// Offset in y direction.
-    ///
-    /// # Returns
-    ///
-    /// The translated item.
     #[doc(alias = "gimp_item_transform_translate")]
 #[must_use]
     fn transform_translate(&self, off_x: f64, off_y: f64) -> Option<Item> {

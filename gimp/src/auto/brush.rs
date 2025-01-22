@@ -3,15 +3,10 @@
 // from ../gir-files
 // DO NOT EDIT
 
-use crate::{ffi,Resource};
+use crate::{ffi,BrushGeneratedShape,Resource};
 use glib::{translate::*};
 
 glib::wrapper! {
-    /// Installable object used by painting and stroking tools.
-    ///
-    /// # Implements
-    ///
-    /// [`ResourceExt`][trait@crate::prelude::ResourceExt]
     #[doc(alias = "GimpBrush")]
     pub struct Brush(Object<ffi::GimpBrush, ffi::GimpBrushClass>) @extends Resource;
 
@@ -21,15 +16,6 @@ glib::wrapper! {
 }
 
 impl Brush {
-    /// Create a new generated brush having default parameters.
-    ///
-    /// Creates a new, parametric brush.
-    /// ## `name`
-    /// The requested name of the new brush.
-    ///
-    /// # Returns
-    ///
-    /// The brush.
     #[doc(alias = "gimp_brush_new")]
     pub fn new(name: &str) -> Brush {
         assert_initialized_main_thread!();
@@ -38,17 +24,6 @@ impl Brush {
         }
     }
 
-    /// Gets the rotation angle of a generated brush.
-    ///
-    /// Gets the angle of rotation for a generated brush. Returns an error
-    /// when called for a non-parametric brush.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `angle`
-    /// The rotation angle of the brush in degree.
     #[doc(alias = "gimp_brush_get_angle")]
     #[doc(alias = "get_angle")]
     pub fn angle(&self) -> Option<f64> {
@@ -59,18 +34,6 @@ impl Brush {
         }
     }
 
-    /// Gets the aspect ratio of a generated brush.
-    ///
-    /// Gets the aspect ratio of a generated brush. Returns an error when
-    /// called for a non-parametric brush. The aspect ratio is a double
-    /// between 0.0 and 1000.0.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `aspect_ratio`
-    /// The aspect ratio of the brush.
     #[doc(alias = "gimp_brush_get_aspect_ratio")]
     #[doc(alias = "get_aspect_ratio")]
     pub fn aspect_ratio(&self) -> Option<f64> {
@@ -81,25 +44,14 @@ impl Brush {
         }
     }
 
-    //#[doc(alias = "gimp_brush_get_buffer")]
-    //#[doc(alias = "get_buffer")]
-    //pub fn buffer(&self, max_width: i32, max_height: i32, format: /*Ignored*/&babl::Object) -> Option<gegl::Buffer> {
-    //    unsafe { TODO: call ffi:gimp_brush_get_buffer() }
-    //}
+    #[doc(alias = "gimp_brush_get_buffer")]
+    #[doc(alias = "get_buffer")]
+    pub fn buffer(&self, max_width: i32, max_height: i32, format: &babl::Object) -> Option<gegl::Buffer> {
+        unsafe {
+            from_glib_full(ffi::gimp_brush_get_buffer(self.to_glib_none().0, max_width, max_height, format.to_glib_none().0))
+        }
+    }
 
-    /// Gets the hardness of a generated brush.
-    ///
-    /// Gets the hardness of a generated brush. The hardness of a brush is
-    /// the amount its intensity fades at the outside edge, as a double
-    /// between 0.0 and 1.0. Returns an error when called for a
-    /// non-parametric brush.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `hardness`
-    /// The hardness of the brush.
     #[doc(alias = "gimp_brush_get_hardness")]
     #[doc(alias = "get_hardness")]
     pub fn hardness(&self) -> Option<f64> {
@@ -110,27 +62,6 @@ impl Brush {
         }
     }
 
-    /// Gets information about the brush.
-    ///
-    /// Gets information about the brush: brush extents (width and height),
-    /// color depth and mask depth (bpp). The color bpp is zero when the
-    /// brush is parametric versus raster.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `width`
-    /// The brush width.
-    ///
-    /// ## `height`
-    /// The brush height.
-    ///
-    /// ## `mask_bpp`
-    /// The brush mask bpp.
-    ///
-    /// ## `color_bpp`
-    /// The brush color bpp.
     #[doc(alias = "gimp_brush_get_info")]
     #[doc(alias = "get_info")]
     pub fn info(&self) -> Option<(i32, i32, i32, i32)> {
@@ -144,23 +75,14 @@ impl Brush {
         }
     }
 
-    //#[doc(alias = "gimp_brush_get_mask")]
-    //#[doc(alias = "get_mask")]
-    //pub fn mask(&self, max_width: i32, max_height: i32, format: /*Ignored*/&babl::Object) -> Option<gegl::Buffer> {
-    //    unsafe { TODO: call ffi:gimp_brush_get_mask() }
-    //}
+    #[doc(alias = "gimp_brush_get_mask")]
+    #[doc(alias = "get_mask")]
+    pub fn mask(&self, max_width: i32, max_height: i32, format: &babl::Object) -> Option<gegl::Buffer> {
+        unsafe {
+            from_glib_full(ffi::gimp_brush_get_mask(self.to_glib_none().0, max_width, max_height, format.to_glib_none().0))
+        }
+    }
 
-    /// Gets the radius of a generated brush.
-    ///
-    /// Gets the radius of a generated brush. Returns an error when called
-    /// for a non-parametric brush.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `radius`
-    /// The radius of the brush in pixels.
     #[doc(alias = "gimp_brush_get_radius")]
     #[doc(alias = "get_radius")]
     pub fn radius(&self) -> Option<f64> {
@@ -171,22 +93,16 @@ impl Brush {
         }
     }
 
-    //#[doc(alias = "gimp_brush_get_shape")]
-    //#[doc(alias = "get_shape")]
-    //pub fn shape(&self) -> Option</*Ignored*/BrushGeneratedShape> {
-    //    unsafe { TODO: call ffi:gimp_brush_get_shape() }
-    //}
+    #[doc(alias = "gimp_brush_get_shape")]
+    #[doc(alias = "get_shape")]
+    pub fn shape(&self) -> Option<BrushGeneratedShape> {
+        unsafe {
+            let mut shape = std::mem::MaybeUninit::uninit();
+            let ret = from_glib(ffi::gimp_brush_get_shape(self.to_glib_none().0, shape.as_mut_ptr()));
+            if ret { Some(from_glib(shape.assume_init())) } else { None }
+        }
+    }
 
-    /// Gets the brush spacing, the stamping frequency.
-    ///
-    /// Returns the spacing setting for the brush. Spacing is an integer
-    /// between 0 and 1000 which represents a percentage of the maximum of
-    /// the width and height of the mask. Both parametric and raster brushes
-    /// have a spacing.
-    ///
-    /// # Returns
-    ///
-    /// The brush spacing.
     #[doc(alias = "gimp_brush_get_spacing")]
     #[doc(alias = "get_spacing")]
     pub fn spacing(&self) -> i32 {
@@ -195,17 +111,6 @@ impl Brush {
         }
     }
 
-    /// Gets the number of spikes for a generated brush.
-    ///
-    /// Gets the number of spikes for a generated brush. Returns an error
-    /// when called for a non-parametric brush.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `spikes`
-    /// The number of spikes on the brush.
     #[doc(alias = "gimp_brush_get_spikes")]
     #[doc(alias = "get_spikes")]
     pub fn spikes(&self) -> Option<i32> {
@@ -216,13 +121,6 @@ impl Brush {
         }
     }
 
-    /// Whether the brush is generated (parametric versus raster).
-    ///
-    /// Returns TRUE when brush is parametric.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the brush is generated.
     #[doc(alias = "gimp_brush_is_generated")]
     pub fn is_generated(&self) -> bool {
         unsafe {
@@ -230,20 +128,6 @@ impl Brush {
         }
     }
 
-    /// Sets the rotation angle of a generated brush.
-    ///
-    /// Sets the rotation angle for a generated brush. Sets the angle modulo
-    /// 180, in the range [-180.0, 180.0]. Returns the clamped value.
-    /// Returns an error when brush is non-parametric or not editable.
-    /// ## `angle_in`
-    /// The desired brush rotation angle in degrees.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `angle_out`
-    /// The brush rotation angle actually assigned.
     #[doc(alias = "gimp_brush_set_angle")]
     pub fn set_angle(&self, angle_in: f64) -> Option<f64> {
         unsafe {
@@ -253,20 +137,6 @@ impl Brush {
         }
     }
 
-    /// Sets the aspect ratio of a generated brush.
-    ///
-    /// Sets the aspect ratio for a generated brush. Clamps aspect ratio to
-    /// [0.0, 1000.0]. Returns the clamped value. Returns an error when
-    /// brush is non-parametric or not editable.
-    /// ## `aspect_ratio_in`
-    /// The desired brush aspect ratio.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `aspect_ratio_out`
-    /// The brush aspect ratio actually assigned.
     #[doc(alias = "gimp_brush_set_aspect_ratio")]
     pub fn set_aspect_ratio(&self, aspect_ratio_in: f64) -> Option<f64> {
         unsafe {
@@ -276,20 +146,6 @@ impl Brush {
         }
     }
 
-    /// Sets the hardness of a generated brush.
-    ///
-    /// Sets the hardness for a generated brush. Clamps hardness to [0.0,
-    /// 1.0]. Returns the clamped value. Returns an error when brush is
-    /// non-parametric or not editable.
-    /// ## `hardness_in`
-    /// The desired brush hardness.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `hardness_out`
-    /// The brush hardness actually assigned.
     #[doc(alias = "gimp_brush_set_hardness")]
     pub fn set_hardness(&self, hardness_in: f64) -> Option<f64> {
         unsafe {
@@ -299,20 +155,6 @@ impl Brush {
         }
     }
 
-    /// Sets the radius of a generated brush.
-    ///
-    /// Sets the radius for a generated brush. Clamps radius to [0.0,
-    /// 32767.0]. Returns the clamped value. Returns an error when brush is
-    /// non-parametric or not editable.
-    /// ## `radius_in`
-    /// The desired brush radius in pixel.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `radius_out`
-    /// The brush radius actually assigned.
     #[doc(alias = "gimp_brush_set_radius")]
     pub fn set_radius(&self, radius_in: f64) -> Option<f64> {
         unsafe {
@@ -322,23 +164,15 @@ impl Brush {
         }
     }
 
-    //#[doc(alias = "gimp_brush_set_shape")]
-    //pub fn set_shape(&self, shape_in: /*Ignored*/BrushGeneratedShape) -> Option</*Ignored*/BrushGeneratedShape> {
-    //    unsafe { TODO: call ffi:gimp_brush_set_shape() }
-    //}
+    #[doc(alias = "gimp_brush_set_shape")]
+    pub fn set_shape(&self, shape_in: BrushGeneratedShape) -> Option<BrushGeneratedShape> {
+        unsafe {
+            let mut shape_out = std::mem::MaybeUninit::uninit();
+            let ret = from_glib(ffi::gimp_brush_set_shape(self.to_glib_none().0, shape_in.into_glib(), shape_out.as_mut_ptr()));
+            if ret { Some(from_glib(shape_out.assume_init())) } else { None }
+        }
+    }
 
-    /// Sets the brush spacing.
-    ///
-    /// Set the spacing for the brush. The spacing must be an integer
-    /// between 0 and 1000. Both parametric and raster brushes have a
-    /// spacing. Returns an error when the brush is not editable. Create a
-    /// new or copied brush or to get an editable brush.
-    /// ## `spacing`
-    /// The brush spacing.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_brush_set_spacing")]
     pub fn set_spacing(&self, spacing: i32) -> bool {
         unsafe {
@@ -346,20 +180,6 @@ impl Brush {
         }
     }
 
-    /// Sets the number of spikes for a generated brush.
-    ///
-    /// Sets the number of spikes for a generated brush. Clamps spikes to
-    /// [2,20]. Returns the clamped value. Returns an error when brush is
-    /// non-parametric or not editable.
-    /// ## `spikes_in`
-    /// The desired number of spikes.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `spikes_out`
-    /// The number of spikes actually assigned.
     #[doc(alias = "gimp_brush_set_spikes")]
     pub fn set_spikes(&self, spikes_in: i32) -> Option<i32> {
         unsafe {
@@ -369,16 +189,6 @@ impl Brush {
         }
     }
 
-    /// Returns the brush with the given name.
-    ///
-    /// Return an existing brush having the given name. Returns [`None`] when
-    /// no brush exists of that name.
-    /// ## `name`
-    /// The name of the brush.
-    ///
-    /// # Returns
-    ///
-    /// The brush.
     #[doc(alias = "gimp_brush_get_by_name")]
     #[doc(alias = "get_by_name")]
     pub fn by_name(name: &str) -> Option<Brush> {

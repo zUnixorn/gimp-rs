@@ -7,11 +7,6 @@ use crate::{ffi,Resource};
 use glib::{translate::*};
 
 glib::wrapper! {
-    /// Installable object used by fill and clone tools.
-    ///
-    /// # Implements
-    ///
-    /// [`ResourceExt`][trait@crate::prelude::ResourceExt]
     #[doc(alias = "GimpPattern")]
     pub struct Pattern(Object<ffi::GimpPattern, ffi::GimpPatternClass>) @extends Resource;
 
@@ -21,29 +16,14 @@ glib::wrapper! {
 }
 
 impl Pattern {
-    //#[doc(alias = "gimp_pattern_get_buffer")]
-    //#[doc(alias = "get_buffer")]
-    //pub fn buffer(&self, max_width: i32, max_height: i32, format: /*Ignored*/&babl::Object) -> Option<gegl::Buffer> {
-    //    unsafe { TODO: call ffi:gimp_pattern_get_buffer() }
-    //}
+    #[doc(alias = "gimp_pattern_get_buffer")]
+    #[doc(alias = "get_buffer")]
+    pub fn buffer(&self, max_width: i32, max_height: i32, format: &babl::Object) -> Option<gegl::Buffer> {
+        unsafe {
+            from_glib_full(ffi::gimp_pattern_get_buffer(self.to_glib_none().0, max_width, max_height, format.to_glib_none().0))
+        }
+    }
 
-    /// Gets information about the pattern.
-    ///
-    /// Gets information about the pattern: the pattern extents (width and
-    /// height) and bytes per pixel.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `width`
-    /// The pattern width.
-    ///
-    /// ## `height`
-    /// The pattern height.
-    ///
-    /// ## `bpp`
-    /// The pattern bpp.
     #[doc(alias = "gimp_pattern_get_info")]
     #[doc(alias = "get_info")]
     pub fn info(&self) -> Option<(i32, i32, i32)> {
@@ -56,16 +36,6 @@ impl Pattern {
         }
     }
 
-    /// Returns the pattern with the given name.
-    ///
-    /// Returns an existing pattern having the given name. Returns [`None`]
-    /// when no pattern exists of that name.
-    /// ## `name`
-    /// The name of the pattern.
-    ///
-    /// # Returns
-    ///
-    /// The pattern.
     #[doc(alias = "gimp_pattern_get_by_name")]
     #[doc(alias = "get_by_name")]
     pub fn by_name(name: &str) -> Option<Pattern> {

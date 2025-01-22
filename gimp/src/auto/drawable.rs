@@ -3,17 +3,10 @@
 // from ../gir-files
 // DO NOT EDIT
 
-use crate::{ffi,Item,PixbufTransparency};
+use crate::{ffi,DesaturateMode,DrawableFilter,FillType,ForegroundExtractMode,GradientType,HistogramChannel,HueRange,ImageType,Item,OffsetType,PixbufTransparency,TransferMode};
 use glib::{prelude::*,translate::*};
 
 glib::wrapper! {
-    /// Functions to manipulate drawables.
-    ///
-    /// This is an Abstract Base Class, you cannot instantiate it.
-    ///
-    /// # Implements
-    ///
-    /// [`DrawableExt`][trait@crate::prelude::DrawableExt], [`ItemExt`][trait@crate::prelude::ItemExt]
     #[doc(alias = "GimpDrawable")]
     pub struct Drawable(Object<ffi::GimpDrawable, ffi::GimpDrawableClass>) @extends Item;
 
@@ -26,18 +19,6 @@ impl Drawable {
         pub const NONE: Option<&'static Drawable> = None;
     
 
-    /// Returns a [`Drawable`][crate::Drawable] representing `drawable_id`. This function
-    /// calls [`Item::by_id()`][crate::Item::by_id()] and returns the item if it is drawable
-    /// or [`None`] otherwise.
-    /// ## `drawable_id`
-    /// The drawable id.
-    ///
-    /// # Returns
-    ///
-    /// a [`Drawable`][crate::Drawable] for
-    ///  `drawable_id` or [`None`] if `drawable_id` does not represent a
-    ///  valid drawable. The object belongs to libgimp and you must
-    ///  not modify or unref it.
     #[doc(alias = "gimp_drawable_get_by_id")]
     #[doc(alias = "get_by_id")]
     pub fn by_id(drawable_id: i32) -> Option<Drawable> {
@@ -48,35 +29,19 @@ impl Drawable {
     }
 }
 
-/// Trait containing all [`struct@Drawable`] methods.
-///
-/// # Implementors
-///
-/// [`Channel`][struct@crate::Channel], [`Drawable`][struct@crate::Drawable], [`Layer`][struct@crate::Layer]
 pub trait DrawableExt: IsA<Drawable> + 'static {
-    //#[doc(alias = "gimp_drawable_append_filter")]
-    //fn append_filter(&self, filter: /*Ignored*/&DrawableFilter) {
-    //    unsafe { TODO: call ffi:gimp_drawable_append_filter() }
-    //}
+    #[doc(alias = "gimp_drawable_append_filter")]
+    fn append_filter(&self, filter: &DrawableFilter) {
+        unsafe {
+            ffi::gimp_drawable_append_filter(self.as_ref().to_glib_none().0, filter.to_glib_none().0);
+        }
+    }
 
     //#[doc(alias = "gimp_drawable_append_new_filter")]
-    //fn append_new_filter(&self, operation_name: &str, name: &str, mode: LayerMode, opacity: f64, : /*Unknown conversion*//*Unimplemented*/Basic: VarArgs) -> /*Ignored*/Option<DrawableFilter> {
+    //fn append_new_filter(&self, operation_name: &str, name: &str, mode: LayerMode, opacity: f64, : /*Unknown conversion*//*Unimplemented*/Basic: VarArgs) -> Option<DrawableFilter> {
     //    unsafe { TODO: call ffi:gimp_drawable_append_new_filter() }
     //}
 
-    /// Modify brightness/contrast in the specified drawable.
-    ///
-    /// This procedures allows the brightness and contrast of the specified
-    /// drawable to be modified. Both 'brightness' and 'contrast' parameters
-    /// are defined between -1.0 and 1.0.
-    /// ## `brightness`
-    /// Brightness adjustment.
-    /// ## `contrast`
-    /// Contrast adjustment.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_brightness_contrast")]
     fn brightness_contrast(&self, brightness: f64, contrast: f64) -> bool {
         unsafe {
@@ -84,27 +49,13 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_drawable_color_balance")]
-    //fn color_balance(&self, transfer_mode: /*Ignored*/TransferMode, preserve_lum: bool, cyan_red: f64, magenta_green: f64, yellow_blue: f64) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_color_balance() }
-    //}
+    #[doc(alias = "gimp_drawable_color_balance")]
+    fn color_balance(&self, transfer_mode: TransferMode, preserve_lum: bool, cyan_red: f64, magenta_green: f64, yellow_blue: f64) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_drawable_color_balance(self.as_ref().to_glib_none().0, transfer_mode.into_glib(), preserve_lum.into_glib(), cyan_red, magenta_green, yellow_blue))
+        }
+    }
 
-    /// Render the drawable as a grayscale image seen through a colored
-    /// glass.
-    ///
-    /// Desaturates the drawable, then tints it with the specified color.
-    /// This tool is only valid on RGB color images. It will not operate on
-    /// grayscale drawables.
-    /// ## `hue`
-    /// Hue in degrees.
-    /// ## `saturation`
-    /// Saturation in percent.
-    /// ## `lightness`
-    /// Lightness in percent.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_colorize_hsl")]
     fn colorize_hsl(&self, hue: f64, saturation: f64, lightness: f64) -> bool {
         unsafe {
@@ -112,40 +63,36 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_drawable_curves_explicit")]
-    //fn curves_explicit(&self, channel: /*Ignored*/HistogramChannel, values: &[f64]) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_curves_explicit() }
-    //}
+    #[doc(alias = "gimp_drawable_curves_explicit")]
+    fn curves_explicit(&self, channel: HistogramChannel, values: &[f64]) -> bool {
+        let num_values = values.len() as _;
+        unsafe {
+            from_glib(ffi::gimp_drawable_curves_explicit(self.as_ref().to_glib_none().0, channel.into_glib(), num_values, values.to_glib_none().0))
+        }
+    }
 
-    //#[doc(alias = "gimp_drawable_curves_spline")]
-    //fn curves_spline(&self, channel: /*Ignored*/HistogramChannel, points: &[f64]) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_curves_spline() }
-    //}
+    #[doc(alias = "gimp_drawable_curves_spline")]
+    fn curves_spline(&self, channel: HistogramChannel, points: &[f64]) -> bool {
+        let num_points = points.len() as _;
+        unsafe {
+            from_glib(ffi::gimp_drawable_curves_spline(self.as_ref().to_glib_none().0, channel.into_glib(), num_points, points.to_glib_none().0))
+        }
+    }
 
-    //#[doc(alias = "gimp_drawable_desaturate")]
-    //fn desaturate(&self, desaturate_mode: /*Ignored*/DesaturateMode) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_desaturate() }
-    //}
+    #[doc(alias = "gimp_drawable_desaturate")]
+    fn desaturate(&self, desaturate_mode: DesaturateMode) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_drawable_desaturate(self.as_ref().to_glib_none().0, desaturate_mode.into_glib()))
+        }
+    }
 
-    //#[doc(alias = "gimp_drawable_edit_bucket_fill")]
-    //fn edit_bucket_fill(&self, fill_type: /*Ignored*/FillType, x: f64, y: f64) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_edit_bucket_fill() }
-    //}
+    #[doc(alias = "gimp_drawable_edit_bucket_fill")]
+    fn edit_bucket_fill(&self, fill_type: FillType, x: f64, y: f64) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_drawable_edit_bucket_fill(self.as_ref().to_glib_none().0, fill_type.into_glib(), x, y))
+        }
+    }
 
-    /// Clear selected area of drawable.
-    ///
-    /// This procedure clears the specified drawable. If the drawable has an
-    /// alpha channel, the cleared pixels will become transparent. If the
-    /// drawable does not have an alpha channel, cleared pixels will be set
-    /// to the background color. This procedure only affects regions within
-    /// a selection if there is a selection active.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// [`context_set_background()`][crate::context_set_background()].
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_edit_clear")]
     fn edit_clear(&self) -> bool {
         unsafe {
@@ -153,36 +100,20 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_drawable_edit_fill")]
-    //fn edit_fill(&self, fill_type: /*Ignored*/FillType) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_edit_fill() }
-    //}
+    #[doc(alias = "gimp_drawable_edit_fill")]
+    fn edit_fill(&self, fill_type: FillType) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_drawable_edit_fill(self.as_ref().to_glib_none().0, fill_type.into_glib()))
+        }
+    }
 
-    //#[doc(alias = "gimp_drawable_edit_gradient_fill")]
-    //fn edit_gradient_fill(&self, gradient_type: /*Ignored*/GradientType, offset: f64, supersample: bool, supersample_max_depth: i32, supersample_threshold: f64, dither: bool, x1: f64, y1: f64, x2: f64, y2: f64) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_edit_gradient_fill() }
-    //}
+    #[doc(alias = "gimp_drawable_edit_gradient_fill")]
+    fn edit_gradient_fill(&self, gradient_type: GradientType, offset: f64, supersample: bool, supersample_max_depth: i32, supersample_threshold: f64, dither: bool, x1: f64, y1: f64, x2: f64, y2: f64) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_drawable_edit_gradient_fill(self.as_ref().to_glib_none().0, gradient_type.into_glib(), offset, supersample.into_glib(), supersample_max_depth, supersample_threshold, dither.into_glib(), x1, y1, x2, y2))
+        }
+    }
 
-    /// Stroke the specified item
-    ///
-    /// This procedure strokes the specified item, painting along its
-    /// outline (e.g. along a path, or along a channel's boundary), with the
-    /// active paint method and brush, or using a plain line with
-    /// configurable properties.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// [`context_set_opacity()`][crate::context_set_opacity()], [`context_set_paint_mode()`][crate::context_set_paint_mode()],
-    /// [`context_set_paint_method()`][crate::context_set_paint_method()], `gimp_context_set_stroke_method()`,
-    /// [`context_set_foreground()`][crate::context_set_foreground()], [`context_set_brush()`][crate::context_set_brush()] and all
-    /// brush property settings, [`context_set_gradient()`][crate::context_set_gradient()] and all
-    /// gradient property settings, [`context_set_line_width()`][crate::context_set_line_width()] and all
-    /// line property settings, [`context_set_antialias()`][crate::context_set_antialias()].
-    /// ## `item`
-    /// The item to stroke.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_edit_stroke_item")]
     fn edit_stroke_item(&self, item: &impl IsA<Item>) -> bool {
         unsafe {
@@ -190,24 +121,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Stroke the current selection
-    ///
-    /// This procedure strokes the current selection, painting along the
-    /// selection boundary with the active paint method and brush, or using
-    /// a plain line with configurable properties. The paint is applied to
-    /// the specified drawable regardless of the active selection.
-    ///
-    /// This procedure is affected by the following context setters:
-    /// [`context_set_opacity()`][crate::context_set_opacity()], [`context_set_paint_mode()`][crate::context_set_paint_mode()],
-    /// [`context_set_paint_method()`][crate::context_set_paint_method()], `gimp_context_set_stroke_method()`,
-    /// [`context_set_foreground()`][crate::context_set_foreground()], [`context_set_brush()`][crate::context_set_brush()] and all
-    /// brush property settings, [`context_set_gradient()`][crate::context_set_gradient()] and all
-    /// gradient property settings, [`context_set_line_width()`][crate::context_set_line_width()] and all
-    /// line property settings, [`context_set_antialias()`][crate::context_set_antialias()].
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_edit_stroke_selection")]
     fn edit_stroke_selection(&self) -> bool {
         unsafe {
@@ -215,21 +128,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Equalize the contents of the specified drawable.
-    ///
-    /// This procedure equalizes the contents of the specified drawable.
-    /// Each intensity channel is equalized independently. The equalized
-    /// intensity is given as inten' = (255 - inten). The 'mask_only' option
-    /// specifies whether to adjust only the area of the image within the
-    /// selection bounds, or the entire image based on the histogram of the
-    /// selected area. If there is no selection, the entire image is
-    /// adjusted based on the histogram for the entire image.
-    /// ## `mask_only`
-    /// Equalization option.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_equalize")]
     fn equalize(&self, mask_only: bool) -> bool {
         unsafe {
@@ -237,19 +135,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Extract a color model component.
-    ///
-    /// Extract a color model component.
-    /// ## `component`
-    /// Component (RGB Red (0), RGB Green (1), RGB Blue (2), Hue (3), HSV Saturation (4), HSV Value (5), HSL Saturation (6), HSL Lightness (7), CMYK Cyan (8), CMYK Magenta (9), CMYK Yellow (10), CMYK Key (11), Y'CbCr Y' (12), Y'CbCr Cb (13), Y'CbCr Cr (14), LAB L (15), LAB A (16), LAB B (17), LCH C(ab) (18), LCH H(ab) (19), Alpha (20)).
-    /// ## `invert`
-    /// Invert the extracted component.
-    /// ## `linear`
-    /// Use linear output instead of gamma corrected.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_extract_component")]
     fn extract_component(&self, component: i32, invert: bool, linear: bool) -> bool {
         unsafe {
@@ -257,26 +142,20 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_drawable_fill")]
-    //fn fill(&self, fill_type: /*Ignored*/FillType) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_fill() }
-    //}
+    #[doc(alias = "gimp_drawable_fill")]
+    fn fill(&self, fill_type: FillType) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_drawable_fill(self.as_ref().to_glib_none().0, fill_type.into_glib()))
+        }
+    }
 
-    //#[doc(alias = "gimp_drawable_foreground_extract")]
-    //fn foreground_extract(&self, mode: /*Ignored*/ForegroundExtractMode, mask: &impl IsA<Drawable>) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_foreground_extract() }
-    //}
+    #[doc(alias = "gimp_drawable_foreground_extract")]
+    fn foreground_extract(&self, mode: ForegroundExtractMode, mask: &impl IsA<Drawable>) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_drawable_foreground_extract(self.as_ref().to_glib_none().0, mode.into_glib(), mask.as_ref().to_glib_none().0))
+        }
+    }
 
-    /// Free the specified drawable's shadow data (if it exists).
-    ///
-    /// This procedure is intended as a memory saving device. If any shadow
-    /// memory has been allocated, it will be freed automatically when the
-    /// drawable is removed from the image, or when the plug-in procedure
-    /// which allocated it returns.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_free_shadow")]
     fn free_shadow(&self) -> bool {
         unsafe {
@@ -284,13 +163,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Returns the bytes per pixel.
-    ///
-    /// This procedure returns the number of bytes per pixel.
-    ///
-    /// # Returns
-    ///
-    /// Bytes per pixel.
     #[doc(alias = "gimp_drawable_get_bpp")]
     #[doc(alias = "get_bpp")]
     fn bpp(&self) -> i32 {
@@ -299,16 +171,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Returns a [`gegl::Buffer`][crate::gegl::Buffer] of a specified drawable. The buffer can be used
-    /// like any other GEGL buffer. Its data will we synced back with the core
-    /// drawable when the buffer gets destroyed, or when [`Buffer::flush()`][crate::gegl::Buffer::flush()]
-    /// is called.
-    ///
-    /// # Returns
-    ///
-    /// The [`gegl::Buffer`][crate::gegl::Buffer].
-    ///
-    /// See Also: [`shadow_buffer()`][Self::shadow_buffer()]
     #[doc(alias = "gimp_drawable_get_buffer")]
     #[doc(alias = "get_buffer")]
     fn buffer(&self) -> Option<gegl::Buffer> {
@@ -317,25 +179,22 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_drawable_get_filters")]
-    //#[doc(alias = "get_filters")]
-    //fn filters(&self) -> /*Ignored*/Vec<DrawableFilter> {
-    //    unsafe { TODO: call ffi:gimp_drawable_get_filters() }
-    //}
+    #[doc(alias = "gimp_drawable_get_filters")]
+    #[doc(alias = "get_filters")]
+    fn filters(&self) -> Vec<DrawableFilter> {
+        unsafe {
+            FromGlibPtrContainer::from_glib_container(ffi::gimp_drawable_get_filters(self.as_ref().to_glib_none().0))
+        }
+    }
 
-    //#[doc(alias = "gimp_drawable_get_format")]
-    //#[doc(alias = "get_format")]
-    //fn format(&self) -> /*Ignored*/Option<babl::Object> {
-    //    unsafe { TODO: call ffi:gimp_drawable_get_format() }
-    //}
+    #[doc(alias = "gimp_drawable_get_format")]
+    #[doc(alias = "get_format")]
+    fn format(&self) -> Option<babl::Object> {
+        unsafe {
+            from_glib_none(ffi::gimp_drawable_get_format(self.as_ref().to_glib_none().0))
+        }
+    }
 
-    /// Returns the height of the drawable.
-    ///
-    /// This procedure returns the specified drawable's height in pixels.
-    ///
-    /// # Returns
-    ///
-    /// Height of drawable.
     #[doc(alias = "gimp_drawable_get_height")]
     #[doc(alias = "get_height")]
     fn height(&self) -> i32 {
@@ -344,21 +203,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Returns the offsets for the drawable.
-    ///
-    /// This procedure returns the specified drawable's offsets. This only
-    /// makes sense if the drawable is a layer since channels are anchored.
-    /// The offsets of a channel will be returned as 0.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
-    ///
-    /// ## `offset_x`
-    /// x offset of drawable.
-    ///
-    /// ## `offset_y`
-    /// y offset of drawable.
     #[doc(alias = "gimp_drawable_get_offsets")]
     #[doc(alias = "get_offsets")]
     fn offsets(&self) -> Option<(i32, i32)> {
@@ -370,17 +214,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Gets the value of the pixel at the specified coordinates.
-    ///
-    /// This procedure gets the pixel value at the specified coordinates.
-    /// ## `x_coord`
-    /// The x coordinate.
-    /// ## `y_coord`
-    /// The y coordinate.
-    ///
-    /// # Returns
-    ///
-    /// The pixel color.
     #[doc(alias = "gimp_drawable_get_pixel")]
     #[doc(alias = "get_pixel")]
     fn pixel(&self, x_coord: i32, y_coord: i32) -> Option<gegl::Color> {
@@ -389,14 +222,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Returns a [`gegl::Buffer`][crate::gegl::Buffer] of a specified drawable's shadow tiles. The
-    /// buffer can be used like any other GEGL buffer. Its data will we
-    /// synced back with the core drawable's shadow tiles when the buffer
-    /// gets destroyed, or when [`Buffer::flush()`][crate::gegl::Buffer::flush()] is called.
-    ///
-    /// # Returns
-    ///
-    /// The [`gegl::Buffer`][crate::gegl::Buffer].
     #[doc(alias = "gimp_drawable_get_shadow_buffer")]
     #[doc(alias = "get_shadow_buffer")]
     fn shadow_buffer(&self) -> Option<gegl::Buffer> {
@@ -405,27 +230,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Retrieves a thumbnail pixbuf for the drawable identified by
-    /// `self`. The thumbnail will be not larger than the requested
-    /// size.
-    /// ## `src_x`
-    /// the x coordinate of the area
-    /// ## `src_y`
-    /// the y coordinate of the area
-    /// ## `src_width`
-    /// the width of the area
-    /// ## `src_height`
-    /// the height of the area
-    /// ## `dest_width`
-    /// the requested thumbnail width (<= 1024 pixels)
-    /// ## `dest_height`
-    /// the requested thumbnail height (<= 1024 pixels)
-    /// ## `alpha`
-    /// how to handle an alpha channel
-    ///
-    /// # Returns
-    ///
-    /// a new [`gdk_pixbuf::Pixbuf`][crate::gdk_pixbuf::Pixbuf]
     #[doc(alias = "gimp_drawable_get_sub_thumbnail")]
     #[doc(alias = "get_sub_thumbnail")]
     fn sub_thumbnail(&self, src_x: i32, src_y: i32, src_width: i32, src_height: i32, dest_width: i32, dest_height: i32, alpha: PixbufTransparency) -> Option<gdk_pixbuf::Pixbuf> {
@@ -434,34 +238,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Retrieves thumbnail data for the drawable identified by `self`.
-    /// The thumbnail will be not larger than the requested size.
-    /// ## `src_x`
-    /// the x coordinate of the area
-    /// ## `src_y`
-    /// the y coordinate of the area
-    /// ## `src_width`
-    /// the width of the area
-    /// ## `src_height`
-    /// the height of the area
-    /// ## `dest_width`
-    /// the requested thumbnail width (<= 1024 pixels)
-    /// ## `dest_height`
-    /// the requested thumbnail height (<= 1024 pixels)
-    ///
-    /// # Returns
-    ///
-    /// thumbnail data or [`None`] if
-    ///  `self` is invalid.
-    ///
-    /// ## `actual_width`
-    /// the width of the returned thumbnail
-    ///
-    /// ## `actual_height`
-    /// the height of the returned thumbnail
-    ///
-    /// ## `bpp`
-    /// the bytes per pixel of the returned thumbnail data
     #[doc(alias = "gimp_drawable_get_sub_thumbnail_data")]
     #[doc(alias = "get_sub_thumbnail_data")]
     fn sub_thumbnail_data(&self, src_x: i32, src_y: i32, src_width: i32, src_height: i32, dest_width: i32, dest_height: i32) -> (glib::Bytes, i32, i32, i32) {
@@ -474,19 +250,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Retrieves a thumbnail pixbuf for the drawable identified by
-    /// `self`. The thumbnail will be not larger than the requested
-    /// size.
-    /// ## `width`
-    /// the requested thumbnail width (<= 1024 pixels)
-    /// ## `height`
-    /// the requested thumbnail height (<= 1024 pixels)
-    /// ## `alpha`
-    /// how to handle an alpha channel
-    ///
-    /// # Returns
-    ///
-    /// a new [`gdk_pixbuf::Pixbuf`][crate::gdk_pixbuf::Pixbuf]
     #[doc(alias = "gimp_drawable_get_thumbnail")]
     #[doc(alias = "get_thumbnail")]
     fn thumbnail(&self, width: i32, height: i32, alpha: PixbufTransparency) -> Option<gdk_pixbuf::Pixbuf> {
@@ -495,26 +258,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Retrieves thumbnail data for the drawable identified by `self`.
-    /// The thumbnail will be not larger than the requested size.
-    /// ## `width`
-    /// the requested thumbnail width (<= 1024 pixels)
-    /// ## `height`
-    /// the requested thumbnail height (<= 1024 pixels)
-    ///
-    /// # Returns
-    ///
-    /// thumbnail data or [`None`] if
-    ///  `self` is invalid.
-    ///
-    /// ## `actual_width`
-    /// the resulting thumbnail's actual width
-    ///
-    /// ## `actual_height`
-    /// the resulting thumbnail's actual height
-    ///
-    /// ## `bpp`
-    /// the bytes per pixel of the returned thubmnail data
     #[doc(alias = "gimp_drawable_get_thumbnail_data")]
     #[doc(alias = "get_thumbnail_data")]
     fn thumbnail_data(&self, width: i32, height: i32) -> (Option<glib::Bytes>, i32, i32, i32) {
@@ -527,19 +270,14 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_drawable_get_thumbnail_format")]
-    //#[doc(alias = "get_thumbnail_format")]
-    //fn thumbnail_format(&self) -> /*Ignored*/Option<babl::Object> {
-    //    unsafe { TODO: call ffi:gimp_drawable_get_thumbnail_format() }
-    //}
+    #[doc(alias = "gimp_drawable_get_thumbnail_format")]
+    #[doc(alias = "get_thumbnail_format")]
+    fn thumbnail_format(&self) -> Option<babl::Object> {
+        unsafe {
+            from_glib_none(ffi::gimp_drawable_get_thumbnail_format(self.as_ref().to_glib_none().0))
+        }
+    }
 
-    /// Returns the width of the drawable.
-    ///
-    /// This procedure returns the specified drawable's width in pixels.
-    ///
-    /// # Returns
-    ///
-    /// Width of drawable.
     #[doc(alias = "gimp_drawable_get_width")]
     #[doc(alias = "get_width")]
     fn width(&self) -> i32 {
@@ -548,15 +286,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Returns TRUE if the drawable has an alpha channel.
-    ///
-    /// This procedure returns whether the specified drawable has an alpha
-    /// channel. This can only be true for layers, and the associated type
-    /// will be one of: { RGBA , GRAYA, INDEXEDA }.
-    ///
-    /// # Returns
-    ///
-    /// Does the drawable have an alpha channel?
     #[doc(alias = "gimp_drawable_has_alpha")]
     fn has_alpha(&self) -> bool {
         unsafe {
@@ -564,28 +293,27 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_drawable_histogram")]
-    //fn histogram(&self, channel: /*Ignored*/HistogramChannel, start_range: f64, end_range: f64) -> Option<(f64, f64, f64, f64, f64, f64)> {
-    //    unsafe { TODO: call ffi:gimp_drawable_histogram() }
-    //}
+    #[doc(alias = "gimp_drawable_histogram")]
+    fn histogram(&self, channel: HistogramChannel, start_range: f64, end_range: f64) -> Option<(f64, f64, f64, f64, f64, f64)> {
+        unsafe {
+            let mut mean = std::mem::MaybeUninit::uninit();
+            let mut std_dev = std::mem::MaybeUninit::uninit();
+            let mut median = std::mem::MaybeUninit::uninit();
+            let mut pixels = std::mem::MaybeUninit::uninit();
+            let mut count = std::mem::MaybeUninit::uninit();
+            let mut percentile = std::mem::MaybeUninit::uninit();
+            let ret = from_glib(ffi::gimp_drawable_histogram(self.as_ref().to_glib_none().0, channel.into_glib(), start_range, end_range, mean.as_mut_ptr(), std_dev.as_mut_ptr(), median.as_mut_ptr(), pixels.as_mut_ptr(), count.as_mut_ptr(), percentile.as_mut_ptr()));
+            if ret { Some((mean.assume_init(), std_dev.assume_init(), median.assume_init(), pixels.assume_init(), count.assume_init(), percentile.assume_init())) } else { None }
+        }
+    }
 
-    //#[doc(alias = "gimp_drawable_hue_saturation")]
-    //fn hue_saturation(&self, hue_range: /*Ignored*/HueRange, hue_offset: f64, lightness: f64, saturation: f64, overlap: f64) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_hue_saturation() }
-    //}
+    #[doc(alias = "gimp_drawable_hue_saturation")]
+    fn hue_saturation(&self, hue_range: HueRange, hue_offset: f64, lightness: f64, saturation: f64, overlap: f64) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_drawable_hue_saturation(self.as_ref().to_glib_none().0, hue_range.into_glib(), hue_offset, lightness, saturation, overlap))
+        }
+    }
 
-    /// Invert the contents of the specified drawable.
-    ///
-    /// This procedure inverts the contents of the specified drawable. Each
-    /// intensity channel is inverted independently. The inverted intensity
-    /// is given as inten' = (255 - inten). If 'linear' is TRUE, the
-    /// drawable is inverted in linear space.
-    /// ## `linear`
-    /// Whether to invert in linear space.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_invert")]
     fn invert(&self, linear: bool) -> bool {
         unsafe {
@@ -593,14 +321,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Returns whether the drawable is a grayscale type.
-    ///
-    /// This procedure returns TRUE if the specified drawable is of type {
-    /// Gray, GrayA }.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the drawable is a grayscale type.
     #[doc(alias = "gimp_drawable_is_gray")]
     fn is_gray(&self) -> bool {
         unsafe {
@@ -608,14 +328,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Returns whether the drawable is an indexed type.
-    ///
-    /// This procedure returns TRUE if the specified drawable is of type {
-    /// Indexed, IndexedA }.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the drawable is an indexed type.
     #[doc(alias = "gimp_drawable_is_indexed")]
     fn is_indexed(&self) -> bool {
         unsafe {
@@ -623,14 +335,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Returns whether the drawable is an RGB type.
-    ///
-    /// This procedure returns TRUE if the specified drawable is of type {
-    /// RGB, RGBA }.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the drawable is an RGB type.
     #[doc(alias = "gimp_drawable_is_rgb")]
     fn is_rgb(&self) -> bool {
         unsafe {
@@ -638,20 +342,13 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_drawable_levels")]
-    //fn levels(&self, channel: /*Ignored*/HistogramChannel, low_input: f64, high_input: f64, clamp_input: bool, gamma: f64, low_output: f64, high_output: f64, clamp_output: bool) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_levels() }
-    //}
+    #[doc(alias = "gimp_drawable_levels")]
+    fn levels(&self, channel: HistogramChannel, low_input: f64, high_input: f64, clamp_input: bool, gamma: f64, low_output: f64, high_output: f64, clamp_output: bool) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_drawable_levels(self.as_ref().to_glib_none().0, channel.into_glib(), low_input, high_input, clamp_input.into_glib(), gamma, low_output, high_output, clamp_output.into_glib()))
+        }
+    }
 
-    /// Automatically modifies intensity levels in the specified drawable.
-    ///
-    /// This procedure allows intensity levels in the specified drawable to
-    /// be remapped according to a set of guessed parameters. It is
-    /// equivalent to clicking the \"Auto\" button in the Levels tool.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_levels_stretch")]
     fn levels_stretch(&self) -> bool {
         unsafe {
@@ -659,37 +356,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Find the bounding box of the current selection in relation to the
-    /// specified drawable.
-    ///
-    /// This procedure returns whether there is a selection. If there is
-    /// one, the upper left and lower right-hand corners of its bounding box
-    /// are returned. These coordinates are specified relative to the
-    /// drawable's origin, and bounded by the drawable's extents. Please
-    /// note that the pixel specified by the lower right-hand coordinate of
-    /// the bounding box is not part of the selection. The selection ends at
-    /// the upper left corner of this pixel. This means the width of the
-    /// selection can be calculated as (x2 - x1), its height as (y2 - y1).
-    /// Note that the returned boolean does NOT correspond with the returned
-    /// region being empty or not, it always returns whether the selection
-    /// is non_empty. See [`mask_intersect()`][Self::mask_intersect()] for a boolean
-    /// return value which is more useful in most cases.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if there is a selection.
-    ///
-    /// ## `x1`
-    /// x coordinate of the upper left corner of selection bounds.
-    ///
-    /// ## `y1`
-    /// y coordinate of the upper left corner of selection bounds.
-    ///
-    /// ## `x2`
-    /// x coordinate of the lower right corner of selection bounds.
-    ///
-    /// ## `y2`
-    /// y coordinate of the lower right corner of selection bounds.
     #[doc(alias = "gimp_drawable_mask_bounds")]
     fn mask_bounds(&self) -> Option<(i32, i32, i32, i32)> {
         unsafe {
@@ -702,30 +368,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Find the bounding box of the current selection in relation to the
-    /// specified drawable.
-    ///
-    /// This procedure returns whether there is an intersection between the
-    /// drawable and the selection. Unlike [`mask_bounds()`][Self::mask_bounds()], the
-    /// intersection's bounds are returned as x, y, width, height.
-    /// If there is no selection this function returns TRUE and the returned
-    /// bounds are the extents of the whole drawable.
-    ///
-    /// # Returns
-    ///
-    /// TRUE if the returned area is not empty.
-    ///
-    /// ## `x`
-    /// x coordinate of the upper left corner of the intersection.
-    ///
-    /// ## `y`
-    /// y coordinate of the upper left corner of the intersection.
-    ///
-    /// ## `width`
-    /// width of the intersection.
-    ///
-    /// ## `height`
-    /// height of the intersection.
     #[doc(alias = "gimp_drawable_mask_intersect")]
     fn mask_intersect(&self) -> Option<(i32, i32, i32, i32)> {
         unsafe {
@@ -738,19 +380,13 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_drawable_merge_filter")]
-    //fn merge_filter(&self, filter: /*Ignored*/&DrawableFilter) {
-    //    unsafe { TODO: call ffi:gimp_drawable_merge_filter() }
-    //}
+    #[doc(alias = "gimp_drawable_merge_filter")]
+    fn merge_filter(&self, filter: &DrawableFilter) {
+        unsafe {
+            ffi::gimp_drawable_merge_filter(self.as_ref().to_glib_none().0, filter.to_glib_none().0);
+        }
+    }
 
-    /// Merge the layer effect filters to the specified drawable.
-    ///
-    /// This procedure combines the contents of the drawable's filter stack
-    /// (for export) with the specified drawable.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_merge_filters")]
     fn merge_filters(&self) -> bool {
         unsafe {
@@ -763,18 +399,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
     //    unsafe { TODO: call ffi:gimp_drawable_merge_new_filter() }
     //}
 
-    /// Merge the shadow buffer with the specified drawable.
-    ///
-    /// This procedure combines the contents of the drawable's shadow buffer
-    /// (for temporary processing) with the specified drawable. The 'undo'
-    /// parameter specifies whether to add an undo step for the operation.
-    /// Requesting no undo is useful for such applications as 'auto-apply'.
-    /// ## `undo`
-    /// Push merge to undo stack?
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_merge_shadow")]
     fn merge_shadow(&self, undo: bool) -> bool {
         unsafe {
@@ -782,21 +406,13 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_drawable_offset")]
-    //fn offset(&self, wrap_around: bool, fill_type: /*Ignored*/OffsetType, color: &impl IsA<gegl::Color>, offset_x: i32, offset_y: i32) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_offset() }
-    //}
+    #[doc(alias = "gimp_drawable_offset")]
+    fn offset(&self, wrap_around: bool, fill_type: OffsetType, color: &impl IsA<gegl::Color>, offset_x: i32, offset_y: i32) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_drawable_offset(self.as_ref().to_glib_none().0, wrap_around.into_glib(), fill_type.into_glib(), color.as_ref().to_glib_none().0, offset_x, offset_y))
+        }
+    }
 
-    /// Posterize the specified drawable.
-    ///
-    /// This procedures reduces the number of shades allows in each
-    /// intensity channel to the specified 'levels' parameter.
-    /// ## `levels`
-    /// Levels of posterization.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_posterize")]
     fn posterize(&self, levels: i32) -> bool {
         unsafe {
@@ -804,21 +420,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Sets the value of the pixel at the specified coordinates.
-    ///
-    /// This procedure sets the pixel value at the specified coordinates.
-    /// Note that this function is not undoable, you should use it only on
-    /// drawables you just created yourself.
-    /// ## `x_coord`
-    /// The x coordinate.
-    /// ## `y_coord`
-    /// The y coordinate.
-    /// ## `color`
-    /// The pixel color.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_set_pixel")]
     fn set_pixel(&self, x_coord: i32, y_coord: i32, color: &impl IsA<gegl::Color>) -> bool {
         unsafe {
@@ -826,29 +427,6 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    /// Perform shadows and highlights correction.
-    ///
-    /// This filter allows adjusting shadows and highlights in the image
-    /// separately. The implementation closely follow its counterpart in the
-    /// Darktable photography software.
-    /// ## `shadows`
-    /// Adjust exposure of shadows.
-    /// ## `highlights`
-    /// Adjust exposure of highlights.
-    /// ## `whitepoint`
-    /// Shift white point.
-    /// ## `radius`
-    /// Spatial extent.
-    /// ## `compress`
-    /// Compress the effect on shadows/highlights and preserve midtones.
-    /// ## `shadows_ccorrect`
-    /// Adjust saturation of shadows.
-    /// ## `highlights_ccorrect`
-    /// Adjust saturation of highlights.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_shadows_highlights")]
     fn shadows_highlights(&self, shadows: f64, highlights: f64, whitepoint: f64, radius: f64, compress: f64, shadows_ccorrect: f64, highlights_ccorrect: f64) -> bool {
         unsafe {
@@ -856,40 +434,28 @@ pub trait DrawableExt: IsA<Drawable> + 'static {
         }
     }
 
-    //#[doc(alias = "gimp_drawable_threshold")]
-    //fn threshold(&self, channel: /*Ignored*/HistogramChannel, low_threshold: f64, high_threshold: f64) -> bool {
-    //    unsafe { TODO: call ffi:gimp_drawable_threshold() }
-    //}
+    #[doc(alias = "gimp_drawable_threshold")]
+    fn threshold(&self, channel: HistogramChannel, low_threshold: f64, high_threshold: f64) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_drawable_threshold(self.as_ref().to_glib_none().0, channel.into_glib(), low_threshold, high_threshold))
+        }
+    }
 
-    //#[doc(alias = "gimp_drawable_type")]
-    //#[doc(alias = "type")]
-    //fn type_(&self) -> /*Ignored*/ImageType {
-    //    unsafe { TODO: call ffi:gimp_drawable_type() }
-    //}
+    #[doc(alias = "gimp_drawable_type")]
+    #[doc(alias = "type")]
+    fn type_(&self) -> ImageType {
+        unsafe {
+            from_glib(ffi::gimp_drawable_type(self.as_ref().to_glib_none().0))
+        }
+    }
 
-    //#[doc(alias = "gimp_drawable_type_with_alpha")]
-    //fn type_with_alpha(&self) -> /*Ignored*/ImageType {
-    //    unsafe { TODO: call ffi:gimp_drawable_type_with_alpha() }
-    //}
+    #[doc(alias = "gimp_drawable_type_with_alpha")]
+    fn type_with_alpha(&self) -> ImageType {
+        unsafe {
+            from_glib(ffi::gimp_drawable_type_with_alpha(self.as_ref().to_glib_none().0))
+        }
+    }
 
-    /// Update the specified region of the drawable.
-    ///
-    /// This procedure updates the specified region of the drawable. The (x,
-    /// y) coordinate pair is relative to the drawable's origin, not to the
-    /// image origin. Therefore, the entire drawable can be updated using
-    /// (0, 0, width, height).
-    /// ## `x`
-    /// x coordinate of upper left corner of update region.
-    /// ## `y`
-    /// y coordinate of upper left corner of update region.
-    /// ## `width`
-    /// Width of update region.
-    /// ## `height`
-    /// Height of update region.
-    ///
-    /// # Returns
-    ///
-    /// TRUE on success.
     #[doc(alias = "gimp_drawable_update")]
     fn update(&self, x: i32, y: i32, width: i32, height: i32) -> bool {
         unsafe {

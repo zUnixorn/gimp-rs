@@ -10,23 +10,23 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
 name = "babl"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "24caefd1c233a688221b7add0a92668ab430962991a300aca00198b10c473bcc"
+version = "0.1.0"
 dependencies = [
  "babl-sys",
  "bitflags",
+ "glib",
+ "glib-sys",
+ "gobject-sys",
  "libc",
 ]
 
 [[package]]
 name = "babl-sys"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be0ba58abaf7f9d7a6dd0123cd81b3277f4e21ba4412a5e1ef536c22cb6e0e8e"
+version = "0.0.1"
 dependencies = [
+ "glib-sys",
+ "gobject-sys",
  "libc",
- "pkg-config",
  "system-deps",
 ]
 
@@ -165,28 +165,26 @@ dependencies = [
 
 [[package]]
 name = "gegl"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "29145331ab44c0324a0e5026a9ab6e90e7f01f509251d311fae70dd7f4d80558"
+version = "0.1.0"
 dependencies = [
  "babl",
+ "babl-sys",
+ "bitflags",
  "gegl-sys",
  "glib",
+ "glib-sys",
+ "gobject-sys",
  "libc",
- "pkg-config",
 ]
 
 [[package]]
 name = "gegl-sys"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2ff4c221c98a1c46482f50636635baca5963b255f75bc28dec265390f7ed095c"
+version = "0.0.1"
 dependencies = [
  "babl-sys",
  "glib-sys",
  "gobject-sys",
  "libc",
- "pkg-config",
  "system-deps",
 ]
 

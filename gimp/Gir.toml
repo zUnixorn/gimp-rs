@@ -18,7 +18,6 @@ generate = [
 	"Gimp.ConvertPaletteType",
 	"Gimp.Channel",
 	"Gimp.Path",
-	"Gimp.Layer",
 	"Gimp.Metadata",
 	"Gimp.MetadataSaveFlags",
 	"Gimp.Item",
@@ -27,7 +26,6 @@ generate = [
 	"Gimp.ChannelType",
 	"Gimp.OrientationType",
 	"Gimp.LayerMode",
-	"Gimp.Palette",
 	"Gimp.Selection",
 	"Gimp.PixbufTransparency",
 	"Gimp.Unit",
@@ -37,7 +35,6 @@ generate = [
 	"Gimp.PDBErrorHandler",
 	"Gimp.PDBProcType",
 	"Gimp.ProcedureConfig",
-	"Gimp.ValueArray",
 	"Gimp.Brush",
 	"Gimp.Font",
 	"Gimp.Gradient",
@@ -50,20 +47,114 @@ generate = [
 	"Gimp.RunMode",
 	"Gimp.AddMaskType",
 	"Gimp.LayerMask",
+    "Gimp.ColorArray",
+    "Gimp.CoreObjectArray",
+    "Gimp.Array",
+    "Gimp.BablFormat",
+    "Gimp.ImageType",
+    "Gimp.PathStrokeType",
+    "Gimp.DrawableFilter",
+    "Gimp.GradientSegmentType",
+    "Gimp.BrushGeneratedShape",
+    "Gimp.GradientSegmentColor",
+    "Gimp.DrawableFilterConfig",
+    "Gimp.TransferMode",
+    "Gimp.HistogramChannel",
+    "Gimp.MetadataColorspace",
+    "Gimp.DesaturateMode",
+    "Gimp.FillType",
+    "Gimp.GradientType",
+    "Gimp.ForegroundExtractMode",
+    "Gimp.ColorTag",
+    "Gimp.HueRange",
+    "Gimp.LayerColorSpace",
+    "Gimp.LayerCompositeMode",
+    "Gimp.CheckSize",
+    "Gimp.MaskApplyMode",
+    "Gimp.CheckType",
+    "Gimp.OffsetType",
+    "Gimp.CloneType",
+    "Gimp.GradientBlendColorSpace",
+    "Gimp.RepeatMode",
+    "Gimp.InkBlobType",
+    "Gimp.InterpolationType",
+    "Gimp.CapStyle",
+    "Gimp.JoinStyle",
+    "Gimp.SelectCriterion",
+    "Gimp.StrokeMethod",
+    "Gimp.TransformDirection",
+    "Gimp.TransformResize",
+    "Gimp.ConvolveType",
+    "Gimp.Display",
+    "Gimp.DodgeBurnType",
+    "Gimp.BrushApplicationMode",
+    "Gimp.PaintApplicationMode",
+    "Gimp.ExportOptions",
+    "Gimp.ExportCapabilities",
+    "Gimp.ColorConfig",
+    "Gimp.PDB",
+    "Gimp.ColorManagementMode",
+    "Gimp.MessageHandlerType",
+    "Gimp.ColorManaged",
+    "Gimp.ColorTransform",
+    "Gimp.ColorTransformFlags",
+    "Gimp.ComponentType",
+    "Gimp.ConfigError",
+    "Gimp.ConfigPathType",
+    "Gimp.ExportReturn",
+    "Gimp.Matrix2",
+#    "Gimp.ConfigPath",
+#    "Gimp.Config",
+#    "Gimp.CpuAccelFlags",
+#    "Gimp.EnumDesc",
+#    "Gimp.FlagsDesc",
+#    "Gimp.Vector3",
+#    "Gimp.Matrix3",
+#    "Gimp.PixPipeParams",
+#    "Gimp.CpuAccelFlags",
 ]
 
 manual = [
+    "Babl.Object",
+    "cairo.Context",
+    "cairo.Surface",
+    "cairo.Pattern",
+    "Pango.FontDescription",
 	"Gio.File",
+    "Gio.OutputStream",
+    "GLib.String",
 	"GLib.Bytes",
 	"GLib.Error",
 	"GLib.Quark",
 	"GLib.IOChannel",
+    "GObject.FlagsValue",
+    "GObject.EnumValue",
+    "GObject.Object",
+    "GObject.Value",
 	"GObject.ParamFlags",
 	"GObject.ParamSpec",
+    "Gegl.Rectangle",
 	"Gegl.Color",
 	"Gegl.Buffer",
+    "Gegl.DistanceMetric",
 	"GdkPixbuf.Pixbuf",
+#    "GObject.FlagsClass",
+#    "GObject.EnumClass",
 ]
+
+[[object]]
+name = "Gimp.ConfigWriter"
+status = "generate"
+    [[object.function]]
+    name = "new_from_string"
+    ignore = true
+
+[[object]]
+name = "Gimp.Palette"
+status = "generate"
+    [[object.function]]
+    name = "set_colormap"
+    ignore = true
 
 [[object]]
 name = "Gimp.Procedure"
@@ -84,7 +175,6 @@ manual_traits = ["ImageProcedureExtManual"]
 [[object]]
 name = "Gimp.Parasite"
 status = "generate"
-#manual_traits = ["ParasiteExtManual"]
     [[object.function]]
     name = "compare"
     ignore = true
@@ -157,6 +247,24 @@ status = "generate"
     [[object.function]]
     name = "color_array_get_length"
     ignore = true
+    [[object.function]]
+    name = "core_object_array_get_length"
+    ignore = true
+    [[object.function]]
+    name = "cairo_surface_create_buffer"
+    ignore = true
+    [[object.function]]
+    name = "cairo_surface_get_format"
+    ignore = true
+    [[object.function]]
+    name = "color_is_out_of_gamut"
+    ignore = true
+    [[object.function]]
+    name = "pixbuf_get_format"
+    ignore = true
+    [[object.function]]
+    name = "cairo_checkerboard_create"
+    ignore = true
 
 [[object]]
 name = "Gimp.PlugIn"
@@ -166,4 +274,18 @@ status = "generate"
     ignore = true
     [[object.property]]
     name = "write-channel"
+    ignore = true
+
+[[object]]
+name = "Gimp.ValueArray"
+status = "generate"
+    [[object.function]]
+    name = "new_from_values"
+    ignore = true
+
+[[object]]
+name = "Gimp.Layer"
+status = "generate"
+    [[object.function]]
+    name = "new_from_surface"
     ignore = true

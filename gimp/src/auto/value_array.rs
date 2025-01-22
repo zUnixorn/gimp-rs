@@ -7,10 +7,6 @@ use crate::{ffi};
 use glib::{translate::*};
 
 glib::wrapper! {
-    /// The prime purpose of a [`ValueArray`][crate::ValueArray] is for it to be used as an
-    /// object property that holds an array of values. A [`ValueArray`][crate::ValueArray] wraps
-    /// an array of `GValue` elements in order for it to be used as a boxed
-    /// type through `GIMP_TYPE_VALUE_ARRAY`.
     #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct ValueArray(Shared<ffi::GimpValueArray>);
 
@@ -22,15 +18,6 @@ glib::wrapper! {
 }
 
 impl ValueArray {
-    /// Allocate and initialize a new [`ValueArray`][crate::ValueArray], optionally preserve space
-    /// for `n_prealloced` elements. New arrays always contain 0 elements,
-    /// regardless of the value of `n_prealloced`.
-    /// ## `n_prealloced`
-    /// number of values to preallocate space for
-    ///
-    /// # Returns
-    ///
-    /// a newly allocated [`ValueArray`][crate::ValueArray] with 0 values
     #[doc(alias = "gimp_value_array_new")]
     pub fn new(n_prealloced: i32) -> ValueArray {
         assert_initialized_main_thread!();
@@ -51,17 +38,13 @@ impl ValueArray {
     //    unsafe { TODO: call ffi:gimp_value_array_new_from_types_valist() }
     //}
 
-    //#[doc(alias = "gimp_value_array_new_from_values")]
-    //#[doc(alias = "new_from_values")]
-    //pub fn from_values(values: /*Ignored*/&[&glib::Value]) -> ValueArray {
-    //    unsafe { TODO: call ffi:gimp_value_array_new_from_values() }
-    //}
-
-    //#[doc(alias = "gimp_value_array_append")]
-//#[must_use]
-    //pub fn append(&self, value: /*Ignored*/Option<&glib::Value>) -> Option<ValueArray> {
-    //    unsafe { TODO: call ffi:gimp_value_array_append() }
-    //}
+    #[doc(alias = "gimp_value_array_append")]
+#[must_use]
+    pub fn append(&self, value: Option<&glib::Value>) -> Option<ValueArray> {
+        unsafe {
+            from_glib_none(ffi::gimp_value_array_append(self.to_glib_none().0, value.to_glib_none().0))
+        }
+    }
 
     #[doc(alias = "gimp_value_array_copy")]
 #[must_use]
@@ -71,22 +54,6 @@ impl ValueArray {
         }
     }
 
-    /// Return a pointer to the value at `index` contained in `self`. This value
-    /// is supposed to be a [type`ColorArray`].
-    ///
-    /// *Note*: most of the time, you should use the generic [method`Gimp`.index]
-    /// to retrieve a value, then the relevant `g_value_get_*()` function.
-    /// This alternative function is mostly there for bindings because
-    /// GObject-Introspection is [not able yet to process correctly known
-    /// boxed array types](https://gitlab.gnome.org/GNOME/gobject-introspection/-/issues/492).
-    ///
-    /// There are no reasons to use this function in C code.
-    /// ## `index`
-    /// index of the value of interest
-    ///
-    /// # Returns
-    ///
-    /// the [type`ColorArray`] stored at `index` in `self`.
     #[doc(alias = "gimp_value_array_get_color_array")]
     #[doc(alias = "get_color_array")]
     pub fn color_array(&self, index: i32) -> Vec<gegl::Color> {
@@ -95,22 +62,28 @@ impl ValueArray {
         }
     }
 
-    //#[doc(alias = "gimp_value_array_get_core_object_array")]
-    //#[doc(alias = "get_core_object_array")]
-    //pub fn core_object_array(&self, index: i32) -> /*Ignored*/Vec<glib::Object> {
-    //    unsafe { TODO: call ffi:gimp_value_array_get_core_object_array() }
-    //}
+    #[doc(alias = "gimp_value_array_get_core_object_array")]
+    #[doc(alias = "get_core_object_array")]
+    pub fn core_object_array(&self, index: i32) -> Vec<glib::Object> {
+        unsafe {
+            FromGlibPtrContainer::from_glib_none(ffi::gimp_value_array_get_core_object_array(self.to_glib_none().0, index))
+        }
+    }
 
-    //#[doc(alias = "gimp_value_array_index")]
-    //pub fn index(&self, index: i32) -> /*Ignored*/Option<glib::Value> {
-    //    unsafe { TODO: call ffi:gimp_value_array_index() }
-    //}
+    #[doc(alias = "gimp_value_array_index")]
+    pub fn index(&self, index: i32) -> Option<glib::Value> {
+        unsafe {
+            from_glib_none(ffi::gimp_value_array_index(self.to_glib_none().0, index))
+        }
+    }
 
-    //#[doc(alias = "gimp_value_array_insert")]
-//#[must_use]
-    //pub fn insert(&self, index: i32, value: /*Ignored*/Option<&glib::Value>) -> Option<ValueArray> {
-    //    unsafe { TODO: call ffi:gimp_value_array_insert() }
-    //}
+    #[doc(alias = "gimp_value_array_insert")]
+#[must_use]
+    pub fn insert(&self, index: i32, value: Option<&glib::Value>) -> Option<ValueArray> {
+        unsafe {
+            from_glib_none(ffi::gimp_value_array_insert(self.to_glib_none().0, index, value.to_glib_none().0))
+        }
+    }
 
     #[doc(alias = "gimp_value_array_length")]
     pub fn length(&self) -> i32 {
@@ -119,20 +92,14 @@ impl ValueArray {
         }
     }
 
-    //#[doc(alias = "gimp_value_array_prepend")]
-//#[must_use]
-    //pub fn prepend(&self, value: /*Ignored*/Option<&glib::Value>) -> Option<ValueArray> {
-    //    unsafe { TODO: call ffi:gimp_value_array_prepend() }
-    //}
+    #[doc(alias = "gimp_value_array_prepend")]
+#[must_use]
+    pub fn prepend(&self, value: Option<&glib::Value>) -> Option<ValueArray> {
+        unsafe {
+            from_glib_none(ffi::gimp_value_array_prepend(self.to_glib_none().0, value.to_glib_none().0))
+        }
+    }
 
-    /// Remove the value at position `index` from `self`.
-    /// ## `index`
-    /// position of value to remove, which must be less than
-    ///  [`length()`][Self::length()]
-    ///
-    /// # Returns
-    ///
-    /// the [`ValueArray`][crate::ValueArray] passed in as `self`
     #[doc(alias = "gimp_value_array_remove")]
 #[must_use]
     pub fn remove(&self, index: i32) -> Option<ValueArray> {
