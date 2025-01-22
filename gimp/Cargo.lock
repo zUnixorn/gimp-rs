@@ -11,38 +11,14 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 [[package]]
 name = "babl"
 version = "0.1.0"
-source = "git+ssh://git@github.com/zUnixorn/babl-rs.git#fdd4cfe098fd86612d0a4ce908718c1830e8f642"
-dependencies = [
- "babl-sys 0.0.1 (git+ssh://git@github.com/zUnixorn/babl-rs.git)",
- "bitflags",
- "glib",
- "glib-sys",
- "gobject-sys",
- "libc",
-]
-
-[[package]]
-name = "babl"
-version = "0.1.0"
 source = "git+https://github.com/zUnixorn/babl-rs.git#fdd4cfe098fd86612d0a4ce908718c1830e8f642"
 dependencies = [
- "babl-sys 0.0.1 (git+https://github.com/zUnixorn/babl-rs.git)",
+ "babl-sys",
  "bitflags",
  "glib",
  "glib-sys",
  "gobject-sys",
  "libc",
-]
-
-[[package]]
-name = "babl-sys"
-version = "0.0.1"
-source = "git+ssh://git@github.com/zUnixorn/babl-rs.git#fdd4cfe098fd86612d0a4ce908718c1830e8f642"
-dependencies = [
- "glib-sys",
- "gobject-sys",
- "libc",
- "system-deps",
 ]
 
 [[package]]
@@ -192,10 +168,10 @@ dependencies = [
 [[package]]
 name = "gegl"
 version = "0.1.0"
-source = "git+https://github.com/zUnixorn/gegl-rs.git#801eada68da18193bf1ecd48a02e0c446a8b6559"
+source = "git+https://github.com/zUnixorn/gegl-rs.git#c34dee5785beb0f01dd2b7f93dfab0c7906d89ea"
 dependencies = [
- "babl 0.1.0 (git+ssh://git@github.com/zUnixorn/babl-rs.git)",
- "babl-sys 0.0.1 (git+ssh://git@github.com/zUnixorn/babl-rs.git)",
+ "babl",
+ "babl-sys",
  "bitflags",
  "gegl-sys",
  "glib",
@@ -207,9 +183,9 @@ dependencies = [
 [[package]]
 name = "gegl-sys"
 version = "0.0.1"
-source = "git+https://github.com/zUnixorn/gegl-rs.git#801eada68da18193bf1ecd48a02e0c446a8b6559"
+source = "git+https://github.com/zUnixorn/gegl-rs.git#c34dee5785beb0f01dd2b7f93dfab0c7906d89ea"
 dependencies = [
- "babl-sys 0.0.1 (git+ssh://git@github.com/zUnixorn/babl-rs.git)",
+ "babl-sys",
  "glib-sys",
  "gobject-sys",
  "libc",
@@ -220,8 +196,8 @@ dependencies = [
 name = "gimp"
 version = "0.1.0"
 dependencies = [
- "babl 0.1.0 (git+https://github.com/zUnixorn/babl-rs.git)",
- "babl-sys 0.0.1 (git+https://github.com/zUnixorn/babl-rs.git)",
+ "babl",
+ "babl-sys",
  "bitflags",
  "cairo-rs",
  "cairo-sys-rs",
@@ -249,7 +225,7 @@ version = "0.1.0"
 name = "gimp-sys"
 version = "0.0.1"
 dependencies = [
- "babl-sys 0.0.1 (git+https://github.com/zUnixorn/babl-rs.git)",
+ "babl-sys",
  "cairo-sys-rs",
  "gdk-pixbuf-sys",
  "gegl-sys",
@@ -360,9 +336,9 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 
 [[package]]
 name = "indexmap"
-version = "2.7.0"
+version = "2.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62f822373a4fe84d4bb149bf54e584a7f4abec90e072ed49cda0edea5b95471f"
+checksum = "8c9c992b02b5b4c94ea26e32fe5bccb7aa7d9f390ab5c1221ff895bc7ea8b652"
 dependencies = [
  "equivalent",
  "hashbrown",
