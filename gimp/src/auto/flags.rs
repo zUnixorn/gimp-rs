@@ -7,29 +7,41 @@ use crate::{ffi};
 use glib::{bitflags::bitflags,prelude::*,translate::*};
 
 bitflags! {
+    /// The types of images and layers an export procedure can handle
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
     #[doc(alias = "GimpExportCapabilities")]
     pub struct ExportCapabilities: u32 {
+        /// Handles RGB images
         #[doc(alias = "GIMP_EXPORT_CAN_HANDLE_RGB")]
         const CAN_HANDLE_RGB = ffi::GIMP_EXPORT_CAN_HANDLE_RGB as _;
+        /// Handles grayscale images
         #[doc(alias = "GIMP_EXPORT_CAN_HANDLE_GRAY")]
         const CAN_HANDLE_GRAY = ffi::GIMP_EXPORT_CAN_HANDLE_GRAY as _;
+        /// Handles indexed images
         #[doc(alias = "GIMP_EXPORT_CAN_HANDLE_INDEXED")]
         const CAN_HANDLE_INDEXED = ffi::GIMP_EXPORT_CAN_HANDLE_INDEXED as _;
+        /// Handles two-color indexed images
         #[doc(alias = "GIMP_EXPORT_CAN_HANDLE_BITMAP")]
         const CAN_HANDLE_BITMAP = ffi::GIMP_EXPORT_CAN_HANDLE_BITMAP as _;
+        /// Handles alpha channels
         #[doc(alias = "GIMP_EXPORT_CAN_HANDLE_ALPHA")]
         const CAN_HANDLE_ALPHA = ffi::GIMP_EXPORT_CAN_HANDLE_ALPHA as _;
+        /// Handles layers
         #[doc(alias = "GIMP_EXPORT_CAN_HANDLE_LAYERS")]
         const CAN_HANDLE_LAYERS = ffi::GIMP_EXPORT_CAN_HANDLE_LAYERS as _;
+        /// Handles animation of layers
         #[doc(alias = "GIMP_EXPORT_CAN_HANDLE_LAYERS_AS_ANIMATION")]
         const CAN_HANDLE_LAYERS_AS_ANIMATION = ffi::GIMP_EXPORT_CAN_HANDLE_LAYERS_AS_ANIMATION as _;
+        /// Handles layer masks
         #[doc(alias = "GIMP_EXPORT_CAN_HANDLE_LAYER_MASKS")]
         const CAN_HANDLE_LAYER_MASKS = ffi::GIMP_EXPORT_CAN_HANDLE_LAYER_MASKS as _;
+        /// Handles layer effects
         #[doc(alias = "GIMP_EXPORT_CAN_HANDLE_LAYER_EFFECTS")]
         const CAN_HANDLE_LAYER_EFFECTS = ffi::GIMP_EXPORT_CAN_HANDLE_LAYER_EFFECTS as _;
+        /// Needs alpha channels
         #[doc(alias = "GIMP_EXPORT_NEEDS_ALPHA")]
         const NEEDS_ALPHA = ffi::GIMP_EXPORT_NEEDS_ALPHA as _;
+        /// Needs to crop content to image bounds
         #[doc(alias = "GIMP_EXPORT_NEEDS_CROP")]
         const NEEDS_CROP = ffi::GIMP_EXPORT_NEEDS_CROP as _;
     }
@@ -111,21 +123,31 @@ impl From<ExportCapabilities> for glib::Value {
 }
 
 bitflags! {
+    /// What kinds of metadata to save when exporting images.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
     #[doc(alias = "GimpMetadataSaveFlags")]
     pub struct MetadataSaveFlags: u32 {
+        /// Save EXIF
         #[doc(alias = "GIMP_METADATA_SAVE_EXIF")]
         const EXIF = ffi::GIMP_METADATA_SAVE_EXIF as _;
+        /// Save XMP
         #[doc(alias = "GIMP_METADATA_SAVE_XMP")]
         const XMP = ffi::GIMP_METADATA_SAVE_XMP as _;
+        /// Save IPTC
         #[doc(alias = "GIMP_METADATA_SAVE_IPTC")]
         const IPTC = ffi::GIMP_METADATA_SAVE_IPTC as _;
+        /// Save a thumbnail of the image
         #[doc(alias = "GIMP_METADATA_SAVE_THUMBNAIL")]
         const THUMBNAIL = ffi::GIMP_METADATA_SAVE_THUMBNAIL as _;
+        /// Save the image's color profile
+        ///  Since: 2.10.10
         #[doc(alias = "GIMP_METADATA_SAVE_COLOR_PROFILE")]
         const COLOR_PROFILE = ffi::GIMP_METADATA_SAVE_COLOR_PROFILE as _;
+        /// Save the image's comment
+        ///  Since: 3.0
         #[doc(alias = "GIMP_METADATA_SAVE_COMMENT")]
         const COMMENT = ffi::GIMP_METADATA_SAVE_COMMENT as _;
+        /// Save all of the above
         #[doc(alias = "GIMP_METADATA_SAVE_ALL")]
         const ALL = ffi::GIMP_METADATA_SAVE_ALL as _;
     }
@@ -151,15 +173,20 @@ impl FromGlib<ffi::GimpMetadataSaveFlags> for MetadataSaveFlags {
 }
 
 bitflags! {
+    /// The cases when a [`Procedure`][crate::Procedure] should be shown as sensitive.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
     #[doc(alias = "GimpProcedureSensitivityMask")]
     pub struct ProcedureSensitivityMask: u32 {
+        /// Handles image with one selected drawable.
         #[doc(alias = "GIMP_PROCEDURE_SENSITIVE_DRAWABLE")]
         const DRAWABLE = ffi::GIMP_PROCEDURE_SENSITIVE_DRAWABLE as _;
+        /// Handles image with several selected drawables.
         #[doc(alias = "GIMP_PROCEDURE_SENSITIVE_DRAWABLES")]
         const DRAWABLES = ffi::GIMP_PROCEDURE_SENSITIVE_DRAWABLES as _;
+        /// Handles image with no selected drawables.
         #[doc(alias = "GIMP_PROCEDURE_SENSITIVE_NO_DRAWABLES")]
         const NO_DRAWABLES = ffi::GIMP_PROCEDURE_SENSITIVE_NO_DRAWABLES as _;
+        /// Handles no image.
         #[doc(alias = "GIMP_PROCEDURE_SENSITIVE_NO_IMAGE")]
         const NO_IMAGE = ffi::GIMP_PROCEDURE_SENSITIVE_NO_IMAGE as _;
         #[doc(alias = "GIMP_PROCEDURE_SENSITIVE_ALWAYS")]

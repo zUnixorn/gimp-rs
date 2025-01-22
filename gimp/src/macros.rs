@@ -2,11 +2,6 @@ pub mod private {
     // From https://github.com/MaxXSoft/build_assert
     // This is basically a 1:1 copy, it just adds a panic to the release version and the possibility to add a message to the build error
 
-    /// Raises a build-time error.
-    ///
-    /// This macro will stop the compilation process in release mode, and always
-    /// panic in debug mode.
-    ///
     #[cfg(debug_assertions)]
     macro_rules! build_error {
     () => {

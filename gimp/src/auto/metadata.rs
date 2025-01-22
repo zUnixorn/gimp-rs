@@ -7,6 +7,11 @@ use crate::{ffi,MetadataColorspace,Unit};
 use glib::{prelude::*,translate::*};
 
 glib::wrapper! {
+    /// Basic functions for handling [`Metadata`][crate::Metadata] objects.
+    ///
+    /// # Implements
+    ///
+    /// [`trait@glib::ObjectExt`]
     #[doc(alias = "GimpMetadata")]
     pub struct Metadata(Object<ffi::GimpMetadata, ffi::GimpMetadataClass>);
 
@@ -16,6 +21,11 @@ glib::wrapper! {
 }
 
 impl Metadata {
+    /// Creates a new [`Metadata`][crate::Metadata] instance.
+    ///
+    /// # Returns
+    ///
+    /// The new [`Metadata`][crate::Metadata].
     #[doc(alias = "gimp_metadata_new")]
     pub fn new() -> Metadata {
         assert_initialized_main_thread!();
@@ -31,6 +41,12 @@ impl Metadata {
         }
     }
 
+    /// Duplicates a [`Metadata`][crate::Metadata] instance.
+    ///
+    /// # Returns
+    ///
+    ///
+    ///  The new [`Metadata`][crate::Metadata], or [`None`] if `self` is [`None`].
     #[doc(alias = "gimp_metadata_duplicate")]
 #[must_use]
     pub fn duplicate(&self) -> Option<Metadata> {
@@ -39,6 +55,13 @@ impl Metadata {
         }
     }
 
+    /// Returns values based on Exif.Photo.ColorSpace, Xmp.exif.ColorSpace,
+    /// Exif.Iop.InteroperabilityIndex, Exif.Nikon3.ColorSpace,
+    /// Exif.Canon.ColorSpace of `self`.
+    ///
+    /// # Returns
+    ///
+    /// The colorspace specified by above tags.
     #[doc(alias = "gimp_metadata_get_colorspace")]
     #[doc(alias = "get_colorspace")]
     pub fn colorspace(&self) -> MetadataColorspace {
@@ -47,6 +70,21 @@ impl Metadata {
         }
     }
 
+    /// Returns values based on Exif.Image.XResolution,
+    /// Exif.Image.YResolution and Exif.Image.ResolutionUnit of `self`.
+    ///
+    /// # Returns
+    ///
+    /// [`true`] on success, [`false`] otherwise.
+    ///
+    /// ## `xres`
+    /// Return location for the X Resolution, in ppi
+    ///
+    /// ## `yres`
+    /// Return location for the Y Resolution, in ppi
+    ///
+    /// ## `unit`
+    /// Return location for the unit unit
     #[doc(alias = "gimp_metadata_get_resolution")]
     #[doc(alias = "get_resolution")]
     pub fn resolution(&self) -> Option<(f64, f64, Unit)> {
@@ -59,6 +97,13 @@ impl Metadata {
         }
     }
 
+    /// Saves `self` to `file`.
+    /// ## `file`
+    /// The file to save the metadata to
+    ///
+    /// # Returns
+    ///
+    /// [`true`] on success, [`false`] otherwise.
     #[doc(alias = "gimp_metadata_save_to_file")]
     pub fn save_to_file(&self, file: &impl IsA<gio::File>) -> Result<(), glib::Error> {
         unsafe {
@@ -69,6 +114,12 @@ impl Metadata {
         }
     }
 
+    /// Serializes `self` into an XML string that can later be deserialized
+    /// using [`deserialize()`][Self::deserialize()].
+    ///
+    /// # Returns
+    ///
+    /// The serialized XML string.
     #[doc(alias = "gimp_metadata_serialize")]
     pub fn serialize(&self) -> Option<glib::GString> {
         unsafe {
@@ -76,6 +127,9 @@ impl Metadata {
         }
     }
 
+    /// Sets Exif.Image.BitsPerSample on `self`.
+    /// ## `bits_per_sample`
+    /// Bits per pixel, per component
     #[doc(alias = "gimp_metadata_set_bits_per_sample")]
     pub fn set_bits_per_sample(&self, bits_per_sample: i32) {
         unsafe {
@@ -83,6 +137,11 @@ impl Metadata {
         }
     }
 
+    /// Sets Exif.Photo.ColorSpace, Xmp.exif.ColorSpace,
+    /// Exif.Iop.InteroperabilityIndex, Exif.Nikon3.ColorSpace,
+    /// Exif.Canon.ColorSpace of `self`.
+    /// ## `colorspace`
+    /// The color space.
     #[doc(alias = "gimp_metadata_set_colorspace")]
     pub fn set_colorspace(&self, colorspace: MetadataColorspace) {
         unsafe {
@@ -90,6 +149,13 @@ impl Metadata {
         }
     }
 
+    /// Sets the tags from a piece of Exif data on `self`.
+    /// ## `exif_data`
+    /// The blob of Exif data to set
+    ///
+    /// # Returns
+    ///
+    /// [`true`] on success, [`false`] otherwise.
     #[doc(alias = "gimp_metadata_set_from_exif")]
     pub fn set_from_exif(&self, exif_data: &[u8]) -> Result<(), glib::Error> {
         let exif_data_length = exif_data.len() as _;
@@ -101,6 +167,13 @@ impl Metadata {
         }
     }
 
+    /// Sets the tags from a piece of IPTC data on `self`.
+    /// ## `iptc_data`
+    /// The blob of Iptc data to set
+    ///
+    /// # Returns
+    ///
+    /// [`true`] on success, [`false`] otherwise.
     #[doc(alias = "gimp_metadata_set_from_iptc")]
     pub fn set_from_iptc(&self, iptc_data: &[u8]) -> Result<(), glib::Error> {
         let iptc_data_length = iptc_data.len() as _;
@@ -112,6 +185,13 @@ impl Metadata {
         }
     }
 
+    /// Sets the tags from a piece of XMP data on `self`.
+    /// ## `xmp_data`
+    /// The blob of XMP data to set
+    ///
+    /// # Returns
+    ///
+    /// [`true`] on success, [`false`] otherwise.
     #[doc(alias = "gimp_metadata_set_from_xmp")]
     pub fn set_from_xmp(&self, xmp_data: &[u8]) -> Result<(), glib::Error> {
         let xmp_data_length = xmp_data.len() as _;
@@ -123,6 +203,13 @@ impl Metadata {
         }
     }
 
+    /// Sets Exif.Image.ImageWidth and Exif.Image.ImageLength on `self`.
+    /// If already present, also sets Exif.Photo.PixelXDimension and
+    /// Exif.Photo.PixelYDimension.
+    /// ## `width`
+    /// Width in pixels
+    /// ## `height`
+    /// Height in pixels
     #[doc(alias = "gimp_metadata_set_pixel_size")]
     pub fn set_pixel_size(&self, width: i32, height: i32) {
         unsafe {
@@ -130,6 +217,14 @@ impl Metadata {
         }
     }
 
+    /// Sets Exif.Image.XResolution, Exif.Image.YResolution and
+    /// Exif.Image.ResolutionUnit of `self`.
+    /// ## `xres`
+    /// The image's X Resolution, in ppi
+    /// ## `yres`
+    /// The image's Y Resolution, in ppi
+    /// ## `unit`
+    /// The image's unit
     #[doc(alias = "gimp_metadata_set_resolution")]
     pub fn set_resolution(&self, xres: f64, yres: f64, unit: &Unit) {
         unsafe {
@@ -137,6 +232,14 @@ impl Metadata {
         }
     }
 
+    /// Deserializes a string of XML that has been created by
+    /// [`serialize()`][Self::serialize()].
+    /// ## `metadata_xml`
+    /// A string of serialized metadata XML.
+    ///
+    /// # Returns
+    ///
+    /// The new [`Metadata`][crate::Metadata].
     #[doc(alias = "gimp_metadata_deserialize")]
     pub fn deserialize(metadata_xml: &str) -> Option<Metadata> {
         assert_initialized_main_thread!();
@@ -145,6 +248,11 @@ impl Metadata {
         }
     }
 
+    /// Generate Version 4 UUID/GUID.
+    ///
+    /// # Returns
+    ///
+    /// The new GUID/UUID string.
     #[doc(alias = "gimp_metadata_get_guid")]
     #[doc(alias = "get_guid")]
     pub fn guid() -> Option<glib::GString> {
@@ -154,6 +262,15 @@ impl Metadata {
         }
     }
 
+    /// Returns whether `tag` is supported in a file of type `mime_type`.
+    /// ## `tag`
+    /// A metadata tag name
+    /// ## `mime_type`
+    /// A mime type
+    ///
+    /// # Returns
+    ///
+    /// [`true`] if the `tag` supported with `mime_type`, [`false`] otherwise.
     #[doc(alias = "gimp_metadata_is_tag_supported")]
     pub fn is_tag_supported(tag: &str, mime_type: &str) -> bool {
         assert_initialized_main_thread!();
@@ -162,6 +279,13 @@ impl Metadata {
         }
     }
 
+    /// Loads [`Metadata`][crate::Metadata] from `file`.
+    /// ## `file`
+    /// The [`gio::File`][crate::gio::File] to load the metadata from
+    ///
+    /// # Returns
+    ///
+    /// The loaded [`Metadata`][crate::Metadata].
     #[doc(alias = "gimp_metadata_load_from_file")]
     pub fn load_from_file(file: &impl IsA<gio::File>) -> Result<Metadata, glib::Error> {
         assert_initialized_main_thread!();

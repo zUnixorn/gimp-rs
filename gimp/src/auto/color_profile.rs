@@ -7,6 +7,11 @@ use crate::{ffi,ColorRenderingIntent};
 use glib::{prelude::*,translate::*};
 
 glib::wrapper! {
+    /// Definitions and Functions relating to LCMS.
+    ///
+    /// # Implements
+    ///
+    /// [`trait@glib::ObjectExt`]
     #[doc(alias = "GimpColorProfile")]
     pub struct ColorProfile(Object<ffi::GimpColorProfile, ffi::GimpColorProfileClass>);
 
@@ -16,6 +21,15 @@ glib::wrapper! {
 }
 
 impl ColorProfile {
+    /// This function creates a grayscale [`ColorProfile`][crate::ColorProfile] with the
+    /// D50 ICC profile illuminant as the profile white point and the
+    /// LAB companding curve as the TRC.
+    ///
+    /// # Returns
+    ///
+    /// a gray profile with the D50 ICC profile illuminant
+    /// as the profile white point and the LAB companding curve as the TRC.
+    /// as the TRC.
     #[doc(alias = "gimp_color_profile_new_d50_gray_lab_trc")]
     pub fn new_d50_gray_lab_trc() -> ColorProfile {
         assert_initialized_main_thread!();
@@ -32,6 +46,12 @@ impl ColorProfile {
         }
     }
 
+    /// This function creates a grayscale [`ColorProfile`][crate::ColorProfile] with an
+    /// sRGB TRC. See [`new_rgb_srgb()`][Self::new_rgb_srgb()].
+    ///
+    /// # Returns
+    ///
+    /// the sRGB-gamma grayscale [`ColorProfile`][crate::ColorProfile].
     #[doc(alias = "gimp_color_profile_new_d65_gray_srgb_trc")]
     pub fn new_d65_gray_srgb_trc() -> ColorProfile {
         assert_initialized_main_thread!();
@@ -40,6 +60,14 @@ impl ColorProfile {
         }
     }
 
+    /// This function opens an ICC color profile from `file`.
+    /// ## `file`
+    /// a [`gio::File`][crate::gio::File]
+    ///
+    /// # Returns
+    ///
+    /// the [`ColorProfile`][crate::ColorProfile], or [`None`]. On error, [`None`] is
+    ///  returned and `error` is set.
     #[doc(alias = "gimp_color_profile_new_from_file")]
     #[doc(alias = "new_from_file")]
     pub fn from_file(file: &impl IsA<gio::File>) -> Result<Option<ColorProfile>, glib::Error> {
@@ -51,6 +79,14 @@ impl ColorProfile {
         }
     }
 
+    /// This function opens an ICC color profile from memory. On error,
+    /// [`None`] is returned and `error` is set.
+    /// ## `data`
+    /// The memory containing an ICC profile
+    ///
+    /// # Returns
+    ///
+    /// the [`ColorProfile`][crate::ColorProfile], or [`None`].
     #[doc(alias = "gimp_color_profile_new_from_icc_profile")]
     #[doc(alias = "new_from_icc_profile")]
     pub fn from_icc_profile(data: &[u8]) -> Result<Option<ColorProfile>, glib::Error> {
@@ -69,6 +105,11 @@ impl ColorProfile {
     //    unsafe { TODO: call ffi:gimp_color_profile_new_from_lcms_profile() }
     //}
 
+    /// This function creates a profile compatible with AbobeRGB (1998).
+    ///
+    /// # Returns
+    ///
+    /// the AdobeRGB-compatible [`ColorProfile`][crate::ColorProfile].
     #[doc(alias = "gimp_color_profile_new_rgb_adobe")]
     pub fn new_rgb_adobe() -> ColorProfile {
         assert_initialized_main_thread!();
@@ -77,6 +118,33 @@ impl ColorProfile {
         }
     }
 
+    /// This function is a replacement for cmsCreate_sRGBProfile() and
+    /// returns an sRGB profile that is functionally the same as the
+    /// ArgyllCMS sRGB.icm profile. "Functionally the same" means it has
+    /// the same red, green, and blue colorants and the V4 "chad"
+    /// equivalent of the ArgyllCMS V2 white point. The profile TRC is also
+    /// functionally equivalent to the ArgyllCMS sRGB.icm TRC and is the
+    /// same as the LCMS sRGB built-in profile TRC.
+    ///
+    /// The actual primaries in the sRGB specification are
+    /// red xy: {0.6400, 0.3300, 1.0}
+    /// green xy: {0.3000, 0.6000, 1.0}
+    /// blue xy: {0.1500, 0.0600, 1.0}
+    ///
+    /// The sRGB primaries given below are "pre-quantized" to compensate
+    /// for hexadecimal quantization during the profile-making process.
+    /// Unless the profile-making code compensates for this quantization,
+    /// the resulting profile's red, green, and blue colorants will deviate
+    /// slightly from the correct XYZ values.
+    ///
+    /// LCMS2 doesn't compensate for hexadecimal quantization. The
+    /// "pre-quantized" primaries below were back-calculated from the
+    /// ArgyllCMS sRGB.icm profile. The resulting sRGB profile's colorants
+    /// exactly matches the ArgyllCMS sRGB.icm profile colorants.
+    ///
+    /// # Returns
+    ///
+    /// the sRGB [`ColorProfile`][crate::ColorProfile].
     #[doc(alias = "gimp_color_profile_new_rgb_srgb")]
     pub fn new_rgb_srgb() -> ColorProfile {
         assert_initialized_main_thread!();
@@ -85,6 +153,12 @@ impl ColorProfile {
         }
     }
 
+    /// This function creates a profile for babl_model("RGB"). Please
+    /// somebody write something smarter here.
+    ///
+    /// # Returns
+    ///
+    /// the linear RGB [`ColorProfile`][crate::ColorProfile].
     #[doc(alias = "gimp_color_profile_new_rgb_srgb_linear")]
     pub fn new_rgb_srgb_linear() -> ColorProfile {
         assert_initialized_main_thread!();
@@ -93,6 +167,12 @@ impl ColorProfile {
         }
     }
 
+    ///
+    /// # Returns
+    ///
+    /// a string containing `self`'s copyright. The
+    ///  returned value belongs to `self` and must not be
+    ///  modified or freed.
     #[doc(alias = "gimp_color_profile_get_copyright")]
     #[doc(alias = "get_copyright")]
     pub fn copyright(&self) -> Option<glib::GString> {
@@ -101,6 +181,12 @@ impl ColorProfile {
         }
     }
 
+    ///
+    /// # Returns
+    ///
+    /// a string containing `self`'s description. The
+    ///  returned value belongs to `self` and must not be
+    ///  modified or freed.
     #[doc(alias = "gimp_color_profile_get_description")]
     #[doc(alias = "get_description")]
     pub fn description(&self) -> Option<glib::GString> {
@@ -109,6 +195,17 @@ impl ColorProfile {
         }
     }
 
+    /// This function takes a [`ColorProfile`][crate::ColorProfile] and a `Babl` format and
+    /// returns a new `Babl` format with `self`'s RGB primaries and TRC,
+    /// and `format`'s pixel layout.
+    /// ## `format`
+    /// a `Babl` format
+    /// ## `intent`
+    /// a [`ColorRenderingIntent`][crate::ColorRenderingIntent]
+    ///
+    /// # Returns
+    ///
+    /// the new `Babl` format.
     #[doc(alias = "gimp_color_profile_get_format")]
     #[doc(alias = "get_format")]
     pub fn format(&self, format: &babl::Object, intent: ColorRenderingIntent) -> Result<babl::Object, glib::Error> {
@@ -119,6 +216,12 @@ impl ColorProfile {
         }
     }
 
+    /// This function returns `self` as ICC profile data. The returned
+    /// memory belongs to `self` and must not be modified or freed.
+    ///
+    /// # Returns
+    ///
+    /// a pointer to the IIC profile data.
     #[doc(alias = "gimp_color_profile_get_icc_profile")]
     #[doc(alias = "get_icc_profile")]
     pub fn icc_profile(&self) -> Vec<u8> {
@@ -129,6 +232,16 @@ impl ColorProfile {
         }
     }
 
+    /// This function returns a string containing `self`'s "title", a
+    /// string that can be used to label the profile in a user interface.
+    ///
+    /// Unlike [`description()`][Self::description()], this function always
+    /// returns a string (as a fallback, it returns "(unnamed profile)").
+    ///
+    /// # Returns
+    ///
+    /// the `self`'s label. The returned value belongs to
+    ///  `self` and must not be modified or freed.
     #[doc(alias = "gimp_color_profile_get_label")]
     #[doc(alias = "get_label")]
     pub fn label(&self) -> Option<glib::GString> {
@@ -143,6 +256,12 @@ impl ColorProfile {
     //    unsafe { TODO: call ffi:gimp_color_profile_get_lcms_profile() }
     //}
 
+    ///
+    /// # Returns
+    ///
+    /// a string containing `self`'s manufacturer. The
+    ///  returned value belongs to `self` and must not be
+    ///  modified or freed.
     #[doc(alias = "gimp_color_profile_get_manufacturer")]
     #[doc(alias = "get_manufacturer")]
     pub fn manufacturer(&self) -> Option<glib::GString> {
@@ -151,6 +270,12 @@ impl ColorProfile {
         }
     }
 
+    ///
+    /// # Returns
+    ///
+    /// a string containing `self`'s model. The returned
+    ///  value belongs to `self` and must not be modified or
+    ///  freed.
     #[doc(alias = "gimp_color_profile_get_model")]
     #[doc(alias = "get_model")]
     pub fn model(&self) -> Option<glib::GString> {
@@ -159,6 +284,14 @@ impl ColorProfile {
         }
     }
 
+    /// This function returns the `Babl` space of `self`, for the
+    /// specified `intent`.
+    /// ## `intent`
+    /// a [`ColorRenderingIntent`][crate::ColorRenderingIntent]
+    ///
+    /// # Returns
+    ///
+    /// the new `Babl` space.
     #[doc(alias = "gimp_color_profile_get_space")]
     #[doc(alias = "get_space")]
     pub fn space(&self, intent: ColorRenderingIntent) -> Result<babl::Object, glib::Error> {
@@ -169,6 +302,15 @@ impl ColorProfile {
         }
     }
 
+    /// This function return a string containing a multi-line summary of
+    /// `self`'s description, model, manufacturer and copyright, to be
+    /// used as detailed information about the profile in a user
+    /// interface.
+    ///
+    /// # Returns
+    ///
+    /// the `self`'s summary. The returned value belongs to
+    ///  `self` and must not be modified or freed.
     #[doc(alias = "gimp_color_profile_get_summary")]
     #[doc(alias = "get_summary")]
     pub fn summary(&self) -> Option<glib::GString> {
@@ -177,6 +319,11 @@ impl ColorProfile {
         }
     }
 
+    ///
+    /// # Returns
+    ///
+    /// [`true`] if the profile's color space is CMYK, [`false`]
+    /// otherwise.
     #[doc(alias = "gimp_color_profile_is_cmyk")]
     pub fn is_cmyk(&self) -> bool {
         unsafe {
@@ -191,6 +338,11 @@ impl ColorProfile {
         }
     }
 
+    ///
+    /// # Returns
+    ///
+    /// [`true`] if the profile's color space is grayscale, [`false`]
+    /// otherwise.
     #[doc(alias = "gimp_color_profile_is_gray")]
     pub fn is_gray(&self) -> bool {
         unsafe {
@@ -198,6 +350,14 @@ impl ColorProfile {
         }
     }
 
+    /// This function determines is the ICC profile represented by a GimpColorProfile
+    /// is a linear RGB profile or not, some profiles that are LUTs though linear
+    /// will also return FALSE;
+    ///
+    /// # Returns
+    ///
+    /// [`true`] if the profile is a matrix shaping profile with linear
+    /// TRCs, [`false`] otherwise.
     #[doc(alias = "gimp_color_profile_is_linear")]
     pub fn is_linear(&self) -> bool {
         unsafe {
@@ -205,6 +365,11 @@ impl ColorProfile {
         }
     }
 
+    ///
+    /// # Returns
+    ///
+    /// [`true`] if the profile's color space is RGB, [`false`]
+    /// otherwise.
     #[doc(alias = "gimp_color_profile_is_rgb")]
     pub fn is_rgb(&self) -> bool {
         unsafe {
@@ -212,6 +377,13 @@ impl ColorProfile {
         }
     }
 
+    /// This function creates a new RGB [`ColorProfile`][crate::ColorProfile] with a linear TRC
+    /// and `self`'s RGB chromacities and whitepoint.
+    ///
+    /// # Returns
+    ///
+    /// the new [`ColorProfile`][crate::ColorProfile], or [`None`] if
+    ///  `self` is not an RGB profile or not matrix-based.
     #[doc(alias = "gimp_color_profile_new_linear_from_color_profile")]
 #[must_use]
     pub fn new_linear_from_color_profile(&self) -> Option<ColorProfile> {
@@ -220,6 +392,13 @@ impl ColorProfile {
         }
     }
 
+    /// This function creates a new RGB [`ColorProfile`][crate::ColorProfile] with a sRGB gamma
+    /// TRC and `self`'s RGB chromacities and whitepoint.
+    ///
+    /// # Returns
+    ///
+    /// the new [`ColorProfile`][crate::ColorProfile], or [`None`] if
+    ///  `self` is not an RGB profile or not matrix-based.
     #[doc(alias = "gimp_color_profile_new_srgb_trc_from_color_profile")]
 #[must_use]
     pub fn new_srgb_trc_from_color_profile(&self) -> Option<ColorProfile> {
@@ -228,6 +407,13 @@ impl ColorProfile {
         }
     }
 
+    /// This function saves `self` to `file` as ICC profile.
+    /// ## `file`
+    /// a [`gio::File`][crate::gio::File]
+    ///
+    /// # Returns
+    ///
+    /// [`true`] on success, [`false`] if an error occurred.
     #[doc(alias = "gimp_color_profile_save_to_file")]
     pub fn save_to_file(&self, file: &impl IsA<gio::File>) -> Result<(), glib::Error> {
         unsafe {
@@ -238,6 +424,23 @@ impl ColorProfile {
         }
     }
 
+    /// This function takes a `Babl` format and returns the lcms format to
+    /// be used with that `format`. It also returns a `Babl` format to be
+    /// used instead of the passed `format`, which usually is the same as
+    /// `format`, unless lcms doesn't support `format`.
+    ///
+    /// Note that this function currently only supports RGB, RGBA, R'G'B',
+    /// R'G'B'A, Y, YA, Y', Y'A and the cairo-RGB24 and cairo-ARGB32 formats.
+    /// ## `format`
+    /// a `Babl` format
+    ///
+    /// # Returns
+    ///
+    /// the `Babl` format to be used instead of `format`, or [`None`]
+    ///  if the passed `format` is not supported at all.
+    ///
+    /// ## `lcms_format`
+    /// return location for an lcms format
     #[doc(alias = "gimp_color_profile_get_lcms_format")]
     #[doc(alias = "get_lcms_format")]
     pub fn lcms_format(format: &babl::Object) -> (Option<babl::Object>, u32) {

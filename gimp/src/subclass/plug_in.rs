@@ -77,10 +77,10 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     ///
     /// If you wish to disable localization or localize with another system,
     /// simply set the method to [`None`], or possibly implement this method
-    /// to do something useful for your usage while returning [`None`].
+    /// to do something useful for your usage while returning [`false`].
     ///
     /// If you wish to tweak the `gettext_domain` or the `catalog_dir`, return
-    /// [`Some`] and allocate appropriate `gettext_domain` and/or `catalog_dir`
+    /// [`true`] and allocate appropriate `gettext_domain` and/or `catalog_dir`
     /// (these use the default if set [`None`]).
     ///
     /// Note that `catalog_dir` must be a relative path, encoded as UTF-8,
@@ -100,9 +100,20 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
     ///
     /// # Returns
     ///
-    /// [`Some`] if this plug-in will use Gettext localization. You
-    ///  may return [`None`] if you wish to disable localization or
+    /// [`true`] if this plug-in will use Gettext localization. You
+    ///  may return [`false`] if you wish to disable localization or
     ///  set it up differently.
+    ///
+    /// ## `gettext_domain`
+    /// Gettext domain. If [`None`], it
+    ///  defaults to the plug-in name as determined by the
+    ///  directory the binary is called from.
+    ///
+    /// ## `catalog_dir`
+    /// relative path to a
+    ///  subdirectory of the plug-in folder containing the compiled
+    ///  Gettext message catalogs. If [`None`], it defaults to
+    ///  "locale/".
     #[allow(unused_variables)]
     fn set_i18n(&self, procedure_name: &str) -> Option<SetI18n> {
         build_error!("Use the `object_subclass_impl` macro to implement this trait")
@@ -110,16 +121,7 @@ pub trait PlugInImpl: ObjectImpl + ObjectSubclass<Type: IsA<PlugIn>> {
 }
 
 pub struct SetI18n {
-    /// ## `gettext_domain`
-    /// Gettext domain. If [`None`], it
-    ///  defaults to the plug-in name as determined by the
-    ///  directory the binary is called from.
     pub gettext_domain: Option<String>,
-    /// ## `catalog_dir`
-    /// relative path to a
-    ///  subdirectory of the plug-in folder containing the compiled
-    ///  Gettext message catalogs. If [`None`], it defaults to
-    ///  "locale/".
     pub catalog_dir: Option<String>,
 }
 

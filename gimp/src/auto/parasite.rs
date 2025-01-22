@@ -7,6 +7,7 @@ use crate::{ffi};
 use glib::{translate::*};
 
 glib::wrapper! {
+    /// Arbitrary pieces of data which can be attached to various GIMP objects.
     #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Parasite(Boxed<ffi::GimpParasite>);
 
@@ -29,6 +30,10 @@ impl Parasite {
     //    unsafe { TODO: call ffi:gimp_parasite_get_data() }
     //}
 
+    ///
+    /// # Returns
+    ///
+    /// `self` flags.
     #[doc(alias = "gimp_parasite_get_flags")]
     #[doc(alias = "get_flags")]
     pub fn flags(&self) -> libc::c_ulong {
@@ -37,6 +42,10 @@ impl Parasite {
         }
     }
 
+    ///
+    /// # Returns
+    ///
+    /// `self`'s name.
     #[doc(alias = "gimp_parasite_get_name")]
     #[doc(alias = "get_name")]
     pub fn name(&self) -> Option<glib::GString> {
@@ -45,6 +54,12 @@ impl Parasite {
         }
     }
 
+    /// ## `flag`
+    /// a parasite flag
+    ///
+    /// # Returns
+    ///
+    /// [`true`] if `self` has `flag` set, [`false`] otherwise.
     #[doc(alias = "gimp_parasite_has_flag")]
     pub fn has_flag(&self, flag: libc::c_ulong) -> bool {
         unsafe {
@@ -52,6 +67,10 @@ impl Parasite {
         }
     }
 
+    ///
+    /// # Returns
+    ///
+    /// [`true`] if `self` is persistent, [`false`] otherwise.
     #[doc(alias = "gimp_parasite_is_persistent")]
     pub fn is_persistent(&self) -> bool {
         unsafe {
@@ -59,6 +78,13 @@ impl Parasite {
         }
     }
 
+    /// Compare parasite's names.
+    /// ## `name`
+    /// a parasite name.
+    ///
+    /// # Returns
+    ///
+    /// [`true`] if `self` is named `name`, [`false`] otherwise.
     #[doc(alias = "gimp_parasite_is_type")]
     pub fn is_type(&self, name: &str) -> bool {
         unsafe {
@@ -66,6 +92,10 @@ impl Parasite {
         }
     }
 
+    ///
+    /// # Returns
+    ///
+    /// [`true`] if `self` is undoable, [`false`] otherwise.
     #[doc(alias = "gimp_parasite_is_undoable")]
     pub fn is_undoable(&self) -> bool {
         unsafe {

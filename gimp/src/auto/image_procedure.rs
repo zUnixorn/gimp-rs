@@ -6,6 +6,24 @@
 use crate::{ffi,Procedure};
 
 glib::wrapper! {
+    /// A [class`Procedure`] subclass that makes it easier to write standard plug-in
+    /// procedures that operate on drawables.
+    ///
+    /// It automatically adds the standard
+    ///
+    /// ( [enum`RunMode`], [class`Image`], [class`Drawable`] )
+    ///
+    /// arguments of an image procedure. It is possible to add additional
+    /// arguments.
+    ///
+    /// When invoked via [method`Procedure`], it unpacks these standard
+    /// arguments and calls `run_func` which is a [callback`RunImageFunc`]. The
+    /// "args" [struct`ValueArray`] of [callback`RunImageFunc`] only contains
+    /// additionally added arguments.
+    ///
+    /// # Implements
+    ///
+    /// [`ProcedureExt`][trait@crate::prelude::ProcedureExt], [`trait@glib::ObjectExt`], [`ImageProcedureExtManual`][trait@crate::prelude::ImageProcedureExtManual], [`ProcedureExtManual`][trait@crate::prelude::ProcedureExtManual]
     #[doc(alias = "GimpImageProcedure")]
     pub struct ImageProcedure(Object<ffi::GimpImageProcedure, ffi::GimpImageProcedureClass>) @extends Procedure;
 

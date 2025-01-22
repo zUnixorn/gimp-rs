@@ -8,6 +8,17 @@ use glib::{prelude::*,signal::{connect_raw, SignalHandlerId},translate::*};
 use std::{boxed::Box as Box_};
 
 glib::wrapper! {
+    ///
+    ///
+    /// ## Signals
+    ///
+    ///
+    /// #### `sensitivity-changed`
+    ///
+    ///
+    /// # Implements
+    ///
+    /// [`trait@glib::ObjectExt`]
     #[doc(alias = "GimpChoice")]
     pub struct Choice(Object<ffi::GimpChoice, ffi::GimpChoiceClass>);
 
@@ -17,6 +28,10 @@ glib::wrapper! {
 }
 
 impl Choice {
+    ///
+    /// # Returns
+    ///
+    /// a [`Choice`][crate::Choice].
     #[doc(alias = "gimp_choice_new")]
     pub fn new() -> Choice {
         assert_initialized_main_thread!();
@@ -31,6 +46,17 @@ impl Choice {
     //    unsafe { TODO: call ffi:gimp_choice_new_with_values() }
     //}
 
+    /// This procedure adds a new possible value to `self` list of values.
+    /// The `id` is an optional integer identifier. This can be useful for instance
+    /// when you want to work with different enum values mapped to each `nick`.
+    /// ## `nick`
+    /// the nick of `self`.
+    /// ## `id`
+    /// optional integer ID for `nick`.
+    /// ## `label`
+    /// the label of `self`.
+    /// ## `help`
+    /// optional longer help text for `nick`.
     #[doc(alias = "gimp_choice_add")]
     pub fn add(&self, nick: &str, id: i32, label: &str, help: &str) {
         unsafe {
@@ -38,6 +64,13 @@ impl Choice {
         }
     }
 
+    /// Returns the longer documentation for `nick`.
+    /// ## `nick`
+    /// the nick to lookup.
+    ///
+    /// # Returns
+    ///
+    /// the help text of `nick`.
     #[doc(alias = "gimp_choice_get_help")]
     #[doc(alias = "get_help")]
     pub fn help(&self, nick: &str) -> Option<glib::GString> {
@@ -46,6 +79,12 @@ impl Choice {
         }
     }
 
+    /// ## `nick`
+    /// the nick to lookup.
+    ///
+    /// # Returns
+    ///
+    /// the ID of `nick`.
     #[doc(alias = "gimp_choice_get_id")]
     #[doc(alias = "get_id")]
     pub fn id(&self, nick: &str) -> i32 {
@@ -54,6 +93,12 @@ impl Choice {
         }
     }
 
+    /// ## `nick`
+    /// the nick to lookup.
+    ///
+    /// # Returns
+    ///
+    /// the label of `nick`.
     #[doc(alias = "gimp_choice_get_label")]
     #[doc(alias = "get_label")]
     pub fn label(&self, nick: &str) -> Option<glib::GString> {
@@ -62,6 +107,14 @@ impl Choice {
         }
     }
 
+    /// This procedure checks if the given `nick` is valid and refers to
+    /// an existing choice.
+    /// ## `nick`
+    /// the nick to check.
+    ///
+    /// # Returns
+    ///
+    /// Whether the choice is valid.
     #[doc(alias = "gimp_choice_is_valid")]
     pub fn is_valid(&self, nick: &str) -> bool {
         unsafe {
@@ -69,6 +122,11 @@ impl Choice {
         }
     }
 
+    /// This procedure returns the list of nicks allowed for `self`.
+    ///
+    /// # Returns
+    ///
+    /// The list of `self`'s nicks.
     #[doc(alias = "gimp_choice_list_nicks")]
     pub fn list_nicks(&self) -> Vec<glib::GString> {
         unsafe {
@@ -76,6 +134,12 @@ impl Choice {
         }
     }
 
+    /// Change the sensitivity of a possible `nick`. Technically a non-sensitive `nick`
+    /// means it cannot be chosen anymore (so [method`Gimp`.is_valid] will
+    /// return [`false`]; nevertheless [method`Gimp`.list_nicks] and other
+    /// functions to get information about a choice will still function).
+    /// ## `nick`
+    /// the nick to lookup.
     #[doc(alias = "gimp_choice_set_sensitive")]
     pub fn set_sensitive(&self, nick: &str, sensitive: bool) {
         unsafe {

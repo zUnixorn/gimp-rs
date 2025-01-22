@@ -7,6 +7,11 @@ use crate::{ffi,Resource};
 use glib::{prelude::*,translate::*};
 
 glib::wrapper! {
+    /// Installable object, a small set of colors a user can choose from.
+    ///
+    /// # Implements
+    ///
+    /// [`ResourceExt`][trait@crate::prelude::ResourceExt], [`trait@glib::ObjectExt`]
     #[doc(alias = "GimpPalette")]
     pub struct Palette(Object<ffi::GimpPalette, ffi::GimpPaletteClass>) @extends Resource;
 
@@ -16,6 +21,18 @@ glib::wrapper! {
 }
 
 impl Palette {
+    /// Creates a new palette
+    ///
+    /// Creates a new palette. The new palette has no color entries. You
+    /// must add color entries for a user to choose. The actual name might
+    /// be different than the requested name, when the requested name is
+    /// already in use.
+    /// ## `name`
+    /// The requested name of the new palette.
+    ///
+    /// # Returns
+    ///
+    /// The palette.
     #[doc(alias = "gimp_palette_new")]
     pub fn new(name: &str) -> Palette {
         assert_initialized_main_thread!();
@@ -24,6 +41,23 @@ impl Palette {
         }
     }
 
+    /// Appends an entry to the palette.
+    ///
+    /// Appends an entry to the palette. Neither color nor name must be
+    /// unique within the palette. When name is the empty string, this sets
+    /// the entry name to \"Untitled\". Returns the index of the entry.
+    /// Returns an error when palette is not editable.
+    /// ## `entry_name`
+    /// A name for the entry.
+    /// ## `color`
+    /// The color for the added entry.
+    ///
+    /// # Returns
+    ///
+    /// TRUE on success.
+    ///
+    /// ## `entry_num`
+    /// The index of the added entry.
     #[doc(alias = "gimp_palette_add_entry")]
     pub fn add_entry(&self, entry_name: &str, color: &impl IsA<gegl::Color>) -> Option<i32> {
         unsafe {
@@ -33,6 +67,18 @@ impl Palette {
         }
     }
 
+    /// Deletes an entry from the palette.
+    ///
+    /// This function will fail and return [`false`] if the index is out or
+    /// range or if the palette is not editable.
+    /// Additionally if the palette belongs to an indexed image, it will
+    /// only be possible to delete palette colors not in use in the image.
+    /// ## `entry_num`
+    /// The index of the entry to delete.
+    ///
+    /// # Returns
+    ///
+    /// TRUE on success.
     #[doc(alias = "gimp_palette_delete_entry")]
     pub fn delete_entry(&self, entry_num: i32) -> bool {
         unsafe {
@@ -40,6 +86,13 @@ impl Palette {
         }
     }
 
+    /// Get the count of colors in the palette.
+    ///
+    /// Returns the number of colors in the palette.
+    ///
+    /// # Returns
+    ///
+    /// The number of colors in the palette.
     #[doc(alias = "gimp_palette_get_color_count")]
     #[doc(alias = "get_color_count")]
     pub fn color_count(&self) -> i32 {
@@ -48,6 +101,31 @@ impl Palette {
         }
     }
 
+    /// This procedure returns a palette's colormap as an array of bytes with
+    /// all colors converted to a given Babl `format`.
+    ///
+    /// The byte-size of the returned colormap depends on the number of
+    /// colors and on the bytes-per-pixel size of `format`. E.g. that the
+    /// following equality is ensured:
+    ///
+    /// **⚠️ The following code is in C ⚠️**
+    ///
+    /// ```C
+    /// num_bytes == num_colors * babl_format_get_bytes_per_pixel (format)
+    /// ```
+    ///
+    /// Therefore `num_colors` and `num_bytes` are kinda redundant since both
+    /// indicate the size of the return value in a different way. You may
+    /// both set them to [`None`] but not at the same time.
+    /// ## `format`
+    /// The desired color format.
+    ///
+    /// # Returns
+    ///
+    /// The palette's colormap.
+    ///
+    /// ## `num_colors`
+    /// The number of colors in the palette.
     #[doc(alias = "gimp_palette_get_colormap")]
     #[doc(alias = "get_colormap")]
     pub fn colormap(&self, format: &babl::Object) -> (Vec<u8>, i32) {
@@ -59,6 +137,16 @@ impl Palette {
         }
     }
 
+    /// Gets colors in the palette.
+    ///
+    /// Returns an array of colors in the palette. Free the returned array
+    /// with `gimp_color_array_free()`.
+    ///
+    /// # Returns
+    ///
+    ///
+    ///  The colors in the palette.
+    ///  The returned value must be freed with `gimp_color_array_free()`.
     #[doc(alias = "gimp_palette_get_colors")]
     #[doc(alias = "get_colors")]
     pub fn colors(&self) -> Vec<gegl::Color> {
@@ -67,6 +155,13 @@ impl Palette {
         }
     }
 
+    /// Gets the number of columns used to display the palette
+    ///
+    /// Gets the preferred number of columns to display the palette.
+    ///
+    /// # Returns
+    ///
+    /// The number of columns used to display this palette.
     #[doc(alias = "gimp_palette_get_columns")]
     #[doc(alias = "get_columns")]
     pub fn columns(&self) -> i32 {
@@ -75,6 +170,16 @@ impl Palette {
         }
     }
 
+    /// Gets the color of an entry in the palette.
+    ///
+    /// Returns the color of the entry at the given zero-based index into
+    /// the palette. Returns [`None`] when the index is out of range.
+    /// ## `entry_num`
+    /// The index of the entry to get the color of.
+    ///
+    /// # Returns
+    ///
+    /// The color at the index.
     #[doc(alias = "gimp_palette_get_entry_color")]
     #[doc(alias = "get_entry_color")]
     pub fn entry_color(&self, entry_num: i32) -> Option<gegl::Color> {
@@ -83,6 +188,19 @@ impl Palette {
         }
     }
 
+    /// Gets the name of an entry in the palette.
+    ///
+    /// Gets the name of the entry at the zero-based index into the palette.
+    /// Returns an error when the index is out of range.
+    /// ## `entry_num`
+    /// The entry to get.
+    ///
+    /// # Returns
+    ///
+    /// TRUE on success.
+    ///
+    /// ## `entry_name`
+    /// The name of the entry.
     #[doc(alias = "gimp_palette_get_entry_name")]
     #[doc(alias = "get_entry_name")]
     pub fn entry_name(&self, entry_num: i32) -> Option<glib::GString> {
@@ -93,6 +211,17 @@ impl Palette {
         }
     }
 
+    /// Sets the number of columns used to display the palette
+    ///
+    /// Set the number of colors shown per row when the palette is
+    /// displayed. Returns an error when the palette is not editable. The
+    /// maximum allowed value is 64.
+    /// ## `columns`
+    /// The new number of columns.
+    ///
+    /// # Returns
+    ///
+    /// TRUE on success.
     #[doc(alias = "gimp_palette_set_columns")]
     pub fn set_columns(&self, columns: i32) -> bool {
         unsafe {
@@ -100,6 +229,19 @@ impl Palette {
         }
     }
 
+    /// Sets the color of an entry in the palette.
+    ///
+    /// Sets the color of the entry at the zero-based index into the
+    /// palette. Returns an error when the index is out of range. Returns an
+    /// error when the palette is not editable.
+    /// ## `entry_num`
+    /// The entry to get.
+    /// ## `color`
+    /// The new color.
+    ///
+    /// # Returns
+    ///
+    /// TRUE on success.
     #[doc(alias = "gimp_palette_set_entry_color")]
     pub fn set_entry_color(&self, entry_num: i32, color: &impl IsA<gegl::Color>) -> bool {
         unsafe {
@@ -107,6 +249,19 @@ impl Palette {
         }
     }
 
+    /// Sets the name of an entry in the palette.
+    ///
+    /// Sets the name of the entry at the zero-based index into the palette.
+    /// Returns an error if the index is out or range. Returns an error if
+    /// the palette is not editable.
+    /// ## `entry_num`
+    /// The entry to get.
+    /// ## `entry_name`
+    /// The new name.
+    ///
+    /// # Returns
+    ///
+    /// TRUE on success.
     #[doc(alias = "gimp_palette_set_entry_name")]
     pub fn set_entry_name(&self, entry_num: i32, entry_name: &str) -> bool {
         unsafe {
@@ -114,6 +269,16 @@ impl Palette {
         }
     }
 
+    /// Returns the palette with the given name.
+    ///
+    /// Returns an existing palette having the given name. Returns [`None`]
+    /// when no palette exists of that name.
+    /// ## `name`
+    /// The name of the palette.
+    ///
+    /// # Returns
+    ///
+    /// The palette.
     #[doc(alias = "gimp_palette_get_by_name")]
     #[doc(alias = "get_by_name")]
     pub fn by_name(name: &str) -> Option<Palette> {
