@@ -26,16 +26,16 @@ cairo-sys-rs = "0.20.7"
 pango-sys = "0.20.7"
 
 [dependencies.gegl]
-path = "/home/jonas/devel/rust/gegl-rs/gegl"
+git = "ssh://git@github.com/zUnixorn/gegl.git"
 
 [dependencies.babl]
-path = "/home/jonas/devel/rust/babl-rs/babl"
+git = "ssh://git@github.com/zUnixorn/babl.git"
 
 [dependencies.gegl-sys]
-path = "/home/jonas/devel/rust/gegl-rs/gegl/sys"
+git = "ssh://git@github.com/zUnixorn/gegl.git"
 
 [dependencies.babl-sys]
-path = "/home/jonas/devel/rust/babl-rs/babl/sys"
+git = "ssh://git@github.com/zUnixorn/babl.git"
 
 [dependencies.ffi]
 package = "gimp-sys"
