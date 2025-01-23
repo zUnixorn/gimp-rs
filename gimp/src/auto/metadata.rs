@@ -149,6 +149,21 @@ impl Metadata {
         }
     }
 
+    /// Sets `Iptc.Application2.DateCreated`, `Iptc.Application2.TimeCreated`,
+    /// `Exif.Image.DateTime`, `Exif.Image.DateTimeOriginal`,
+    /// `Exif.Photo.DateTimeOriginal`, `Exif.Photo.DateTimeDigitized`,
+    /// `Exif.Photo.OffsetTime`, `Exif.Photo.OffsetTimeOriginal`,
+    /// `Exif.Photo.OffsetTimeDigitized`, `Xmp.xmp.CreateDate`, `Xmp.xmp.ModifyDate`,
+    /// `Xmp.xmp.MetadataDate`, `Xmp.photoshop.DateCreated` of `self`.
+    /// ## `datetime`
+    /// A [`glib::DateTime`][crate::glib::DateTime] value
+    #[doc(alias = "gimp_metadata_set_creation_date")]
+    pub fn set_creation_date(&self, datetime: &glib::DateTime) {
+        unsafe {
+            ffi::gimp_metadata_set_creation_date(self.to_glib_none().0, datetime.to_glib_none().0);
+        }
+    }
+
     /// Sets the tags from a piece of Exif data on `self`.
     /// ## `exif_data`
     /// The blob of Exif data to set

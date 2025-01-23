@@ -26,15 +26,16 @@ impl Layer {
 
     /// Create a new layer.
     ///
-    /// This procedure creates a new layer with the specified `width`, `height`, and
-    /// `type_`. If `name` is [`None`], a default layer name will be used.
-    /// `opacity` and `mode` are also supplied parameters.
+    /// This procedure creates a new layer with the specified `width`,
+    /// `height` and `type_`. If `name` is [`None`], a default layer name will be
+    /// used. `opacity` and `mode` are also supplied parameters.
     ///
-    /// The new layer still needs to be added to the image, as this is not automatic.
-    /// Add the new layer with the [method`Image`] method.
+    /// The new layer still needs to be added to the image as this is not
+    /// automatic. Add the new layer with the [method`Image`]
+    /// method.
     ///
-    /// Other attributes such as layer mask modes, and offsets should be set with
-    /// explicit procedure calls.
+    /// Other attributes such as layer mask modes and offsets should be set
+    /// with explicit procedure calls.
     /// ## `image`
     /// The image to which to add the layer.
     /// ## `name`
@@ -52,8 +53,8 @@ impl Layer {
     ///
     /// # Returns
     ///
-    /// The newly created layer.
-    ///  The object belongs to libgimp and you should not free it.
+    ///
+    ///  The newly created layer. The object belongs to libgimp and you should not free it.
     #[doc(alias = "gimp_layer_new")]
     pub fn new(image: &Image, name: Option<&str>, width: i32, height: i32, type_: ImageType, opacity: f64, mode: LayerMode) -> Layer {
         skip_assert_initialized!();
@@ -142,7 +143,7 @@ impl Layer {
     /// The newly created layer.
     #[doc(alias = "gimp_layer_new_from_visible")]
     #[doc(alias = "new_from_visible")]
-    pub fn from_visible(image: &Image, dest_image: &Image, name: &str) -> Layer {
+    pub fn from_visible(image: &Image, dest_image: &Image, name: Option<&str>) -> Layer {
         skip_assert_initialized!();
         unsafe {
             from_glib_none(ffi::gimp_layer_new_from_visible(image.to_glib_none().0, dest_image.to_glib_none().0, name.to_glib_none().0))
@@ -193,7 +194,7 @@ impl Layer {
 ///
 /// # Implementors
 ///
-/// [`Layer`][struct@crate::Layer]
+/// [`GroupLayer`][struct@crate::GroupLayer], [`Layer`][struct@crate::Layer], [`TextLayer`][struct@crate::TextLayer]
 pub trait LayerExt: IsA<Layer> + 'static {
     /// Add an alpha channel to the layer if it doesn't already have one.
     ///

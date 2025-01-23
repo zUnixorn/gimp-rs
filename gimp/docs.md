@@ -253,23 +253,6 @@ the first element of a path to a file in the
 
 
  a new [`gio::File`][crate::gio::File] for the path, Free with `g_object_unref()`.
-<!-- fn param_spec_matrix3 -->
-Creates a param spec to hold a `GimpMatrix3` value.
-See [`glib::ParamSpec::internal()`][crate::glib::ParamSpec::internal()] for more information.
-## `name`
-Canonical name of the param
-## `nick`
-Nickname of the param
-## `blurb`
-Brief description of param.
-## `default_value`
-Value to use if none is assigned.
-## `flags`
-a combination of [`glib::ParamFlags`][crate::glib::ParamFlags]
-
-# Returns
-
-a newly allocated [`glib::ParamSpec`][crate::glib::ParamSpec] instance
 <!-- fn progress_init_printf -->
 Initializes the progress bar for the current plug-in.
 
@@ -345,82 +328,6 @@ the first element of a path to a file in the
 
 
  a new [`gio::File`][crate::gio::File] for the path, Free with `g_object_unref()`.
-<!-- fn vector_2d_to_3d -->
-\"Compute screen (sx, sy) - (sx + w, sy + h) to 3D unit square
-mapping. The plane to map to is given in the z field of p. The
-observer is located at position vp (vp->z != 0.0).\"
-
-In other words, this computes the projection of the point (`x`, `y`)
-to the plane z = `p`->z (parallel to XY), from the `vp` point of view
-through the screen (`sx`, `sy`)->(`sx` + `w`, `sy` + `h`)
-## `sx`
-the abscissa of the upper-left screen rectangle.
-## `sy`
-the ordinate of the upper-left screen rectangle.
-## `w`
-the width of the screen rectangle.
-## `h`
-the height of the screen rectangle.
-## `x`
-the abscissa of the point in the screen rectangle to map.
-## `y`
-the ordinate of the point in the screen rectangle to map.
-## `vp`
-the position of the observer.
-## `p`
-the resulting point.
-<!-- fn vector_2d_to_3d_val -->
-This function is identical to `gimp_vector_2d_to_3d()` but the
-position of the `observer` and the resulting point `p` are passed by
-value rather than by reference.
-## `sx`
-the abscissa of the upper-left screen rectangle.
-## `sy`
-the ordinate of the upper-left screen rectangle.
-## `w`
-the width of the screen rectangle.
-## `h`
-the height of the screen rectangle.
-## `x`
-the abscissa of the point in the screen rectangle to map.
-## `y`
-the ordinate of the point in the screen rectangle to map.
-## `vp`
-position of the observer.
-## `p`
-the resulting point.
-
-# Returns
-
-the computed `GimpVector3` point.
-<!-- fn vector_3d_to_2d -->
-Convert the given 3D point to 2D (project it onto the viewing
-plane, (sx, sy, 0) - (sx + w, sy + h, 0). The input is assumed to
-be in the unit square (0, 0, z) - (1, 1, z). The viewpoint of the
-observer is passed in vp.
-
-This is basically the opposite of `gimp_vector_2d_to_3d()`.
-## `sx`
-the abscissa of the upper-left screen rectangle.
-## `sy`
-the ordinate of the upper-left screen rectangle.
-## `w`
-the width of the screen rectangle.
-## `h`
-the height of the screen rectangle.
-## `vp`
-position of the observer.
-## `p`
-the 3D point to project to the plane.
-
-# Returns
-
-
-## `x`
-the abscissa of the point in the screen rectangle to map.
-
-## `y`
-the ordinate of the point in the screen rectangle to map.
 <!-- const CHECK_DARK -->
 The dark gray value for the default checkerboard pattern.
 <!-- const CHECK_LIGHT -->
@@ -644,6 +551,33 @@ the image.
 # Returns
 
 An enum of [`ExportReturn`][crate::ExportReturn].
+<!-- impl LoadProcedure::fn new -->
+Creates a new load procedure named `name` which will call `run_func`
+when invoked.
+
+See [`Procedure::new()`][crate::Procedure::new()] for information about `proc_type`.
+## `plug_in`
+a [`PlugIn`][crate::PlugIn].
+## `name`
+the new procedure's name.
+## `proc_type`
+the new procedure's [`PDBProcType`][crate::PDBProcType].
+## `run_func`
+the run function for the new procedure.
+## `run_data`
+user data passed to `run_func`.
+## `run_data_destroy`
+free function for `run_data`, or [`None`].
+
+# Returns
+
+a new [`Procedure`][crate::Procedure].
+<!-- trait ModuleExt::fn info -->
+
+# Returns
+
+The `self`'s `GimpModuleInfo` as provided
+ by the actual module, or [`None`].
 <!-- impl Parasite::fn new -->
 Creates a new parasite and save `data` which may be a proper text (in
 which case you may want to set `size` as strlen(`data`) + 1) or not.
@@ -769,3 +703,391 @@ a va_list of GTypes and values, terminated by `G_TYPE_NONE`
 
 a newly allocated [`ValueArray`][crate::ValueArray], or [`None`] if
  an error happened.
+<!-- impl Vector2::fn new -->
+Creates a [struct`Vector2`] of coordinates `x` and `y`.
+## `x`
+the X coordinate.
+## `y`
+the Y coordinate.
+
+# Returns
+
+the resulting vector
+<!-- impl Vector2::fn add_val -->
+This function is identical to [`add()`][Self::add()] but the vectors
+are passed by value rather than by reference.
+## `vector2`
+the second [`Vector2`][crate::Vector2].
+
+# Returns
+
+the resulting [`Vector2`][crate::Vector2].
+<!-- impl Vector2::fn cross_product -->
+Compute the cross product of two vectors. The result is a
+[`Vector2`][crate::Vector2] which is orthogonal to both `self` and `vector2`. If
+`self` and `vector2` are parallel, the result will be the nul
+vector.
+
+Note that in 2D, this function is useful to test if two vectors are
+parallel or not, or to compute the area spawned by two vectors.
+## `vector2`
+a pointer to the second [`Vector2`][crate::Vector2].
+
+# Returns
+
+The cross product.
+<!-- impl Vector2::fn cross_product_val -->
+Identical to [method`Vector2`], but the
+vectors are passed by value rather than by reference.
+## `vector2`
+the second [`Vector2`][crate::Vector2].
+
+# Returns
+
+The cross product.
+<!-- impl Vector2::fn inner_product -->
+Computes the inner (dot) product of two 2D vectors.
+This product is zero if and only if the two vectors are orthogonal.
+## `vector2`
+a pointer to the second [`Vector2`][crate::Vector2].
+
+# Returns
+
+The inner product.
+<!-- impl Vector2::fn inner_product_val -->
+Identical to [method`Vector2`], but the
+vectors are passed by value rather than by reference.
+## `vector2`
+the second [`Vector2`][crate::Vector2].
+
+# Returns
+
+The inner product.
+<!-- impl Vector2::fn length -->
+Computes the length of a 2D vector.
+
+# Returns
+
+the length of `self` (a positive gdouble).
+<!-- impl Vector2::fn length_val -->
+Identical to [method`Vector2`], but the vector is passed by value
+rather than by reference.
+
+# Returns
+
+the length of `self` (a positive gdouble).
+<!-- impl Vector2::fn mul -->
+Multiplies each component of the `self` by `factor`. Note that this
+is equivalent to multiplying the vectors length by `factor`.
+## `factor`
+a scalar.
+<!-- impl Vector2::fn mul_val -->
+Identical to [method`Vector2`], but the vector is passed by value rather
+than by reference.
+## `factor`
+a scalar.
+
+# Returns
+
+the resulting [`Vector2`][crate::Vector2].
+<!-- impl Vector2::fn neg -->
+Negates the `self` (i.e. negate all its coordinates).
+<!-- impl Vector2::fn neg_val -->
+Identical to [method`Vector2`], but the vector
+is passed by value rather than by reference.
+
+# Returns
+
+the negated [`Vector2`][crate::Vector2].
+<!-- impl Vector2::fn normal -->
+Compute a normalized perpendicular vector to `self`
+
+# Returns
+
+a [`Vector2`][crate::Vector2] perpendicular to `self`, with a length of 1.0.
+<!-- impl Vector2::fn normal_val -->
+Identical to [method`Vector2`], but the vector
+is passed by value rather than by reference.
+
+# Returns
+
+a [`Vector2`][crate::Vector2] perpendicular to `self`, with a length of 1.0.
+<!-- impl Vector2::fn normalize -->
+Normalizes the `self` so the length of the `self` is 1.0. The nul
+vector will not be changed.
+<!-- impl Vector2::fn normalize_val -->
+Identical to [method`Vector2`], but the
+vector is passed by value rather than by reference.
+
+# Returns
+
+a [`Vector2`][crate::Vector2] parallel to `self`, pointing in the same
+direction but with a length of 1.0.
+<!-- impl Vector2::fn rotate -->
+Rotates the `self` counterclockwise by `alpha` radians.
+## `alpha`
+an angle (in radians).
+<!-- impl Vector2::fn rotate_val -->
+Identical to [method`Vector2`], but the vector
+is passed by value rather than by reference.
+## `alpha`
+an angle (in radians).
+
+# Returns
+
+a [`Vector2`][crate::Vector2] representing `self` rotated by `alpha`
+radians.
+<!-- impl Vector2::fn set -->
+Sets the X and Y coordinates of `self` to `x` and `y`.
+## `x`
+the X coordinate.
+## `y`
+the Y coordinate.
+<!-- impl Vector2::fn sub_val -->
+This function is identical to [`sub()`][Self::sub()] but the vectors
+are passed by value rather than by reference.
+## `vector2`
+the second [`Vector2`][crate::Vector2].
+
+# Returns
+
+the resulting [`Vector2`][crate::Vector2].
+<!-- impl Vector2::fn add -->
+Computes the sum of two 2D vectors. The resulting [`Vector2`][crate::Vector2] is
+stored in `result`.
+## `vector1`
+a pointer to the first [`Vector2`][crate::Vector2].
+## `vector2`
+a pointer to the second [`Vector2`][crate::Vector2].
+
+# Returns
+
+
+## `result`
+destination for the resulting [`Vector2`][crate::Vector2].
+<!-- impl Vector2::fn sub -->
+Computes the difference of two 2D vectors (`vector1` minus `vector2`).
+The resulting [`Vector2`][crate::Vector2] is stored in `result`.
+## `vector1`
+a pointer to the first [`Vector2`][crate::Vector2].
+## `vector2`
+a pointer to the second [`Vector2`][crate::Vector2].
+
+# Returns
+
+
+## `result`
+the destination for the resulting [`Vector2`][crate::Vector2].
+<!-- impl Vector3::fn new -->
+Creates a [`Vector3`][crate::Vector3] of coordinate `x`, `y` and `z`.
+## `x`
+the X coordinate.
+## `y`
+the Y coordinate.
+## `z`
+the Z coordinate.
+
+# Returns
+
+the resulting [`Vector3`][crate::Vector3].
+<!-- impl Vector3::fn add_val -->
+This function is identical to [`add()`][Self::add()] but the vectors
+are passed by value rather than by reference.
+## `vector2`
+a [`Vector3`][crate::Vector3].
+
+# Returns
+
+the resulting [`Vector3`][crate::Vector3].
+<!-- impl Vector3::fn cross_product -->
+Compute the cross product of two vectors. The result is a
+[`Vector3`][crate::Vector3] which is orthogonal to both `self` and `vector2`. If
+`self` and `vector2` and parallel, the result will be the nul
+vector.
+
+This function can be used to compute the normal of the plane
+defined by `self` and `vector2`.
+## `vector2`
+a pointer to the second [`Vector3`][crate::Vector3].
+
+# Returns
+
+The cross product.
+<!-- impl Vector3::fn cross_product_val -->
+Identical to [method`Vector3`], but the
+vectors are passed by value rather than by reference.
+## `vector2`
+the second [`Vector3`][crate::Vector3].
+
+# Returns
+
+The cross product.
+<!-- impl Vector3::fn inner_product -->
+Computes the inner (dot) product of two 3D vectors. This product
+is zero if and only if the two vectors are orthogonal.
+## `vector2`
+a pointer to the second [`Vector3`][crate::Vector3].
+
+# Returns
+
+The inner product.
+<!-- impl Vector3::fn inner_product_val -->
+Identical to [method`Vector3`], but the
+vectors are passed by value rather than by reference.
+## `vector2`
+the second [`Vector3`][crate::Vector3].
+
+# Returns
+
+The inner product.
+<!-- impl Vector3::fn length -->
+Computes the length of a 3D vector.
+
+# Returns
+
+the length of `self` (a positive gdouble).
+<!-- impl Vector3::fn length_val -->
+Identical to [method`Vector3`], but the vector
+is passed by value rather than by reference.
+
+# Returns
+
+the length of `self` (a positive gdouble).
+<!-- impl Vector3::fn mul -->
+Multiplies each component of the `self` by `factor`. Note that
+this is equivalent to multiplying the vectors length by `factor`.
+## `factor`
+a scalar.
+<!-- impl Vector3::fn mul_val -->
+Identical to [method`Vector3`], but the vector is
+passed by value rather than by reference.
+## `factor`
+a scalar.
+
+# Returns
+
+the resulting [`Vector3`][crate::Vector3].
+<!-- impl Vector3::fn neg -->
+Negates the `self` (i.e. negate all its coordinates).
+<!-- impl Vector3::fn neg_val -->
+Identical to [method`Vector3`], but the vector
+is passed by value rather than by reference.
+
+# Returns
+
+the negated [`Vector3`][crate::Vector3].
+<!-- impl Vector3::fn normalize -->
+Normalizes the `self` so the length of the `self` is 1.0. The nul
+vector will not be changed.
+<!-- impl Vector3::fn normalize_val -->
+Identical to [method`Vector3`], but the
+vector is passed by value rather than by reference.
+
+# Returns
+
+a [`Vector3`][crate::Vector3] parallel to `self`, pointing in the same
+direction but with a length of 1.0.
+<!-- impl Vector3::fn rotate -->
+Rotates the `self` around the three axis (Z, Y, and X) by `alpha`,
+`beta` and `gamma`, respectively.
+
+Note that the order of the rotation is very important. If you
+expect a vector to be rotated around X, and then around Y, you will
+have to call this function twice. Also, it is often wise to call
+this function with only one of `alpha`, `beta` and `gamma` non-zero.
+## `alpha`
+the angle (in radian) of rotation around the Z axis.
+## `beta`
+the angle (in radian) of rotation around the Y axis.
+## `gamma`
+the angle (in radian) of rotation around the X axis.
+<!-- impl Vector3::fn rotate_val -->
+Identical to [method`Vector3`], but the vectors
+are passed by value rather than by reference.
+## `alpha`
+the angle (in radian) of rotation around the Z axis.
+## `beta`
+the angle (in radian) of rotation around the Y axis.
+## `gamma`
+the angle (in radian) of rotation around the X axis.
+
+# Returns
+
+the rotated vector.
+<!-- impl Vector3::fn set -->
+Sets the X, Y and Z coordinates of `self` to `x`, `y` and `z`.
+## `x`
+the X coordinate.
+## `y`
+the Y coordinate.
+## `z`
+the Z coordinate.
+<!-- impl Vector3::fn sub_val -->
+This function is identical to [`sub()`][Self::sub()] but the vectors
+are passed by value rather than by reference.
+## `vector2`
+a [`Vector3`][crate::Vector3].
+
+# Returns
+
+the resulting [`Vector3`][crate::Vector3].
+<!-- impl Vector3::fn add -->
+Computes the sum of two 3D vectors. The resulting [`Vector3`][crate::Vector3] is
+stored in `result`.
+## `vector1`
+a pointer to the first [`Vector3`][crate::Vector3].
+## `vector2`
+a pointer to the second [`Vector3`][crate::Vector3].
+
+# Returns
+
+
+## `result`
+destination for the resulting [`Vector3`][crate::Vector3].
+<!-- impl Vector3::fn sub -->
+Computes the difference of two 3D vectors (`vector1` minus `vector2`).
+The resulting [`Vector3`][crate::Vector3] is stored in `result`.
+## `vector1`
+a pointer to the first [`Vector3`][crate::Vector3].
+## `vector2`
+a pointer to the second [`Vector3`][crate::Vector3].
+
+# Returns
+
+
+## `result`
+the destination for the resulting [`Vector3`][crate::Vector3].
+<!-- impl VectorLoadProcedure::fn new -->
+Creates a new load procedure named `name` which will call `run_func`
+when invoked.
+
+See [`Procedure::new()`][crate::Procedure::new()] for information about `proc_type`.
+## `plug_in`
+a [`PlugIn`][crate::PlugIn].
+## `name`
+the new procedure's name.
+## `proc_type`
+the new procedure's [`PDBProcType`][crate::PDBProcType].
+## `run_func`
+the run function for the new procedure.
+## `run_data`
+user data passed to `run_func`.
+## `run_data_destroy`
+free function for `run_data`, or [`None`].
+
+# Returns
+
+a new [`Procedure`][crate::Procedure].
+<!-- impl VectorLoadProcedure::fn extract_dimensions -->
+Extracts native or suggested dimensions from `file`, which must be a vector
+file in the right format supported by `self`. It is considered a
+programming error to pass a file of invalid format.
+## `file`
+a [iface`Gio`] which can be processed by `self`.
+
+# Returns
+
+[`true`] if dimensions could be extracted.
+
+## `data`
+the returned dimension data.

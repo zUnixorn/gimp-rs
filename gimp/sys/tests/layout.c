@@ -54,6 +54,7 @@ int main() {
     printf("%s;%zu;%zu\n", "GimpExportOptionsClass", sizeof(GimpExportOptionsClass), alignof(GimpExportOptionsClass));
     printf("%s;%zu;%zu\n", "GimpExportProcedureClass", sizeof(GimpExportProcedureClass), alignof(GimpExportProcedureClass));
     printf("%s;%zu;%zu\n", "GimpExportReturn", sizeof(GimpExportReturn), alignof(GimpExportReturn));
+    printf("%s;%zu;%zu\n", "GimpFileChooserAction", sizeof(GimpFileChooserAction), alignof(GimpFileChooserAction));
     printf("%s;%zu;%zu\n", "GimpFileProcedure", sizeof(GimpFileProcedure), alignof(GimpFileProcedure));
     printf("%s;%zu;%zu\n", "GimpFileProcedureClass", sizeof(GimpFileProcedureClass), alignof(GimpFileProcedureClass));
     printf("%s;%zu;%zu\n", "GimpFillType", sizeof(GimpFillType), alignof(GimpFillType));
@@ -113,6 +114,7 @@ int main() {
     printf("%s;%zu;%zu\n", "GimpParamSpecCoreObjectArray", sizeof(GimpParamSpecCoreObjectArray), alignof(GimpParamSpecCoreObjectArray));
     printf("%s;%zu;%zu\n", "GimpParamSpecDisplay", sizeof(GimpParamSpecDisplay), alignof(GimpParamSpecDisplay));
     printf("%s;%zu;%zu\n", "GimpParamSpecDrawableFilter", sizeof(GimpParamSpecDrawableFilter), alignof(GimpParamSpecDrawableFilter));
+    printf("%s;%zu;%zu\n", "GimpParamSpecFile", sizeof(GimpParamSpecFile), alignof(GimpParamSpecFile));
     printf("%s;%zu;%zu\n", "GimpParamSpecImage", sizeof(GimpParamSpecImage), alignof(GimpParamSpecImage));
     printf("%s;%zu;%zu\n", "GimpParamSpecItem", sizeof(GimpParamSpecItem), alignof(GimpParamSpecItem));
     printf("%s;%zu;%zu\n", "GimpParamSpecObject", sizeof(GimpParamSpecObject), alignof(GimpParamSpecObject));

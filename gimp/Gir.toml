@@ -103,15 +103,52 @@ generate = [
     "Gimp.ConfigPathType",
     "Gimp.ExportReturn",
     "Gimp.Matrix2",
+    "Gimp.Matrix3",
+    "Gimp.RenderFunc",
+    "Gimp.PutPixelFunc",
+    "Gimp.ProgressFunc",
+    "Gimp.FileChooserAction",
+    "Gimp.RunImageFunc",
+    "Gimp.RunFunc",
+    "Gimp.FileProcedure",
+    "Gimp.GroupLayer",
+    "Gimp.LoadProcedure",
+    "Gimp.MetadataLoadFlags",
+    "Gimp.Module",
+    "Gimp.ModuleState",
+    "Gimp.ModuleDB",
+    "Gimp.ModuleError",
+    "Gimp.RunLoadFunc",
+    "Gimp.ProgressCommand",
+    "Gimp.SizeType",
+    "Gimp.StackTraceMode",
+    "Gimp.TextDirection",
+    "Gimp.TextHintStyle",
+    "Gimp.TextLayer",
+    "Gimp.TextJustification",
+    "Gimp.ThumbnailProcedure",
+    "Gimp.UnitID",
+    "Gimp.VectorLoadProcedure",
+    "Gimp.RunThumbnailFunc",
+    "Gimp.ExtractVectorFunc",
+    "Gimp.RunVectorLoadFunc",
+
+#    "Gimp.BatchProcedure",
 #    "Gimp.ConfigPath",
 #    "Gimp.Config",
 #    "Gimp.CpuAccelFlags",
 #    "Gimp.EnumDesc",
+#    "Gimp.ExportProcedure",
+#    "Gimp.VectorLoadData",
 #    "Gimp.FlagsDesc",
-#    "Gimp.Vector3",
-#    "Gimp.Matrix3",
+#    "Gimp.Matrix4",
+#    "Gimp.Memsize",
 #    "Gimp.PixPipeParams",
-#    "Gimp.CpuAccelFlags",
+#    "Gimp.ProgressVtable",
+#    "Gimp.ModuleInfo",
+#    "Gimp.Scanner",
+#    "Gimp.Vector4",
+#    "Gimp.ConfigInterface",
 ]
 
 manual = [
@@ -122,24 +159,40 @@ manual = [
     "Pango.FontDescription",
 	"Gio.File",
     "Gio.OutputStream",
+    "Gio.ListModel",
     "GLib.String",
 	"GLib.Bytes",
 	"GLib.Error",
 	"GLib.Quark",
 	"GLib.IOChannel",
+    "GLib.TokenType",
+    "GLib.Scanner",
+    "GLib.DestroyNotify",
+    "GLib.DateTime",
     "GObject.FlagsValue",
     "GObject.EnumValue",
     "GObject.Object",
     "GObject.Value",
 	"GObject.ParamFlags",
 	"GObject.ParamSpec",
+    "GObject.ParamSpecBoxed",
+    "GObject.ParamSpecObject",
+    "GObject.ParamSpecString",
+    "GObject.ParamSpecUInt64",
     "Gegl.Rectangle",
 	"Gegl.Color",
 	"Gegl.Buffer",
     "Gegl.DistanceMetric",
 	"GdkPixbuf.Pixbuf",
+
+    # TODO check impl and add methods
+    "Gimp.Vector2",
+    "Gimp.Vector3",
+
 #    "GObject.FlagsClass",
 #    "GObject.EnumClass",
+#    "GObject.TypeModule",
+#    "GObject.TypePlugin",
 ]
 
 [[object]]
@@ -265,6 +318,9 @@ status = "generate"
     [[object.function]]
     name = "cairo_checkerboard_create"
     ignore = true
+    [[object.function]]
+    name = "vector_2d_to_3d_val"
+    ignore = true
 
 [[object]]
 name = "Gimp.PlugIn"
@@ -289,3 +345,187 @@ status = "generate"
     [[object.function]]
     name = "new_from_surface"
     ignore = true
+
+[[object]]
+name = "Gimp.ParamArray"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamResource"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamBrush"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamDrawable"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamChannel"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamChoice"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamObject"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamColor"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamConfigPath"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamCoreObjectArray"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamDisplay"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamDoubleArray"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamItem"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamDrawableFilter"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamExportOptions"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamFile"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamFont"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamGradient"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamLayer"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamGroupLayer"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamImage"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamInt32Array"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamLayerMask"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamMatrix2"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamMatrix3"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamMemsize"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamPalette"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamParasite"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamPath"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamPattern"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSelection"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecChoice"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecColor"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecCoreObjectArray"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecDisplay"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecDrawableFilter"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecObject"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecFile"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecImage"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecItem"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecResource"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecUnit"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamSpecValueArray"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamTextLayer"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamUnit"
+status = "ignore"
+
+[[object]]
+name = "Gimp.ParamValueArray"
+status = "ignore"

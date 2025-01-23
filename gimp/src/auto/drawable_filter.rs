@@ -47,7 +47,7 @@ impl DrawableFilter {
     ///
     /// The newly created filter.
     #[doc(alias = "gimp_drawable_filter_new")]
-    pub fn new(drawable: &impl IsA<Drawable>, operation_name: &str, name: &str) -> DrawableFilter {
+    pub fn new(drawable: &impl IsA<Drawable>, operation_name: &str, name: Option<&str>) -> DrawableFilter {
         skip_assert_initialized!();
         unsafe {
             from_glib_none(ffi::gimp_drawable_filter_new(drawable.as_ref().to_glib_none().0, operation_name.to_glib_none().0, name.to_glib_none().0))

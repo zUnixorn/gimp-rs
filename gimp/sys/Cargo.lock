@@ -4,12 +4,12 @@ version = 4
 
 [[package]]
 name = "babl-sys"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be0ba58abaf7f9d7a6dd0123cd81b3277f4e21ba4412a5e1ef536c22cb6e0e8e"
+version = "0.0.1"
+source = "git+https://github.com/zUnixorn/babl-rs.git#262906162343b70b3574ace283377bc0778acb8b"
 dependencies = [
+ "glib-sys",
+ "gobject-sys",
  "libc",
- "pkg-config",
  "system-deps",
 ]
 
@@ -82,15 +82,13 @@ dependencies = [
 
 [[package]]
 name = "gegl-sys"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2ff4c221c98a1c46482f50636635baca5963b255f75bc28dec265390f7ed095c"
+version = "0.0.1"
+source = "git+https://github.com/zUnixorn/gegl-rs.git#80652e52b0ad79a58bd77ba2566a4c537d725dd4"
 dependencies = [
  "babl-sys",
  "glib-sys",
  "gobject-sys",
  "libc",
- "pkg-config",
  "system-deps",
 ]
 

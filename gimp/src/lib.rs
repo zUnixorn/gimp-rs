@@ -12,6 +12,8 @@ macro_rules! assert_initialized_main_thread {
 mod auto;
 mod procedure;
 mod image_procedure;
+mod vector2;
+mod vector3;
 mod macros;
 pub mod prelude;
 pub mod subclass;
@@ -23,6 +25,8 @@ pub mod functions {
 use ffi;
 pub use auto::*;
 pub use prelude::*;
+pub use vector2::Vector2;
+pub use vector3::Vector3;
 pub use cairo;
 pub use gdk_pixbuf;
 pub use gegl;

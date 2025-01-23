@@ -3,7 +3,7 @@
 // from ../gir-files
 // DO NOT EDIT
 
-use crate::{ffi,Brush,BrushApplicationMode,CapStyle,CheckSize,CheckType,Choice,CloneType,ColorConfig,ConfigPathType,ConvolveType,Display,DodgeBurnType,Drawable,ExportOptions,Font,Gradient,GradientBlendColorSpace,Image,ImageType,InkBlobType,InterpolationType,JoinStyle,Layer,LayerMode,Matrix2,MessageHandlerType,PDB,PaintApplicationMode,Palette,Parasite,Pattern,PlugIn,RepeatMode,Resource,RunMode,SelectCriterion,StrokeMethod,TransferMode,TransformDirection,TransformResize,Unit};
+use crate::{ffi,Brush,BrushApplicationMode,CapStyle,CheckSize,CheckType,Choice,CloneType,ColorConfig,ConfigPathType,ConvolveType,Display,DodgeBurnType,Drawable,ExportOptions,FileChooserAction,Font,Gradient,GradientBlendColorSpace,Image,ImageType,InkBlobType,InterpolationType,JoinStyle,Layer,LayerMode,Matrix2,Matrix3,MessageHandlerType,PDB,PaintApplicationMode,Palette,Parasite,Pattern,PlugIn,RepeatMode,Resource,RunMode,SelectCriterion,StrokeMethod,TransferMode,TransformDirection,TransformResize,Unit,Vector3};
 use glib::{prelude::*,translate::*};
 
 
@@ -186,8 +186,8 @@ pub fn brushes_get_list(filter: &str) -> Vec<Brush> {
 ///
 /// TRUE on success.
 #[doc(alias = "gimp_brushes_popup")]
-pub fn brushes_popup(brush_callback: &str, popup_title: &str, initial_brush: &Brush, parent_window: &glib::Bytes) -> bool {
-    skip_assert_initialized!();
+pub fn brushes_popup(brush_callback: &str, popup_title: &str, initial_brush: Option<&Brush>, parent_window: Option<&glib::Bytes>) -> bool {
+    assert_initialized_main_thread!();
     unsafe {
         from_glib(ffi::gimp_brushes_popup(brush_callback.to_glib_none().0, popup_title.to_glib_none().0, initial_brush.to_glib_none().0, parent_window.to_glib_none().0))
     }
@@ -346,7 +346,7 @@ pub fn buffer_rename(buffer_name: &str, new_name: &str) -> Option<glib::GString>
 ///  The list of buffer names.
 ///  The returned value must be freed with `g_strfreev()`.
 #[doc(alias = "gimp_buffers_get_name_list")]
-pub fn buffers_get_name_list(filter: &str) -> Vec<glib::GString> {
+pub fn buffers_get_name_list(filter: Option<&str>) -> Vec<glib::GString> {
     assert_initialized_main_thread!();
     unsafe {
         FromGlibPtrContainer::from_glib_full(ffi::gimp_buffers_get_name_list(filter.to_glib_none().0))
@@ -3107,10 +3107,10 @@ pub fn drawables_close_popup(callback: &str) -> bool {
 ///
 /// TRUE on success.
 #[doc(alias = "gimp_drawables_popup")]
-pub fn drawables_popup(callback: &str, popup_title: &str, drawable_type: &str, initial_drawable: &impl IsA<Drawable>, parent_window: &glib::Bytes) -> bool {
-    skip_assert_initialized!();
+pub fn drawables_popup(callback: &str, popup_title: &str, drawable_type: &str, initial_drawable: Option<&impl IsA<Drawable>>, parent_window: Option<&glib::Bytes>) -> bool {
+    assert_initialized_main_thread!();
     unsafe {
-        from_glib(ffi::gimp_drawables_popup(callback.to_glib_none().0, popup_title.to_glib_none().0, drawable_type.to_glib_none().0, initial_drawable.as_ref().to_glib_none().0, parent_window.to_glib_none().0))
+        from_glib(ffi::gimp_drawables_popup(callback.to_glib_none().0, popup_title.to_glib_none().0, drawable_type.to_glib_none().0, initial_drawable.map(|p| p.as_ref()).to_glib_none().0, parent_window.to_glib_none().0))
     }
 }
 
@@ -3146,7 +3146,7 @@ pub fn drawables_set_popup(callback: &str, drawable: &impl IsA<Drawable>) -> boo
 ///  The list of paint dynamics names.
 ///  The returned value must be freed with `g_strfreev()`.
 #[doc(alias = "gimp_dynamics_get_name_list")]
-pub fn dynamics_get_name_list(filter: &str) -> Vec<glib::GString> {
+pub fn dynamics_get_name_list(filter: Option<&str>) -> Vec<glib::GString> {
     assert_initialized_main_thread!();
     unsafe {
         FromGlibPtrContainer::from_glib_full(ffi::gimp_dynamics_get_name_list(filter.to_glib_none().0))
@@ -3527,6 +3527,34 @@ pub fn export_xmp() -> bool {
     }
 }
 
+/// Creates a thumbnail of `image` for the given `file`
+///
+/// This procedure creates a thumbnail for the given `file` and stores it
+/// according to relevant standards.
+/// In particular, it will follow the [Free Desktop Thumbnail Managing
+/// Standard](https://specifications.freedesktop.org/thumbnail-spec/late
+/// st/thumbsave.html) when relevant.
+///
+/// The thumbnail is stored so that it belongs to the given `file`. This
+/// means you have to save `image` under this name first. As a fallback,
+/// the call will work if `image` was exported or imported as `file`. In
+/// any other case, this procedure will fail.
+/// ## `image`
+/// The image.
+/// ## `file`
+/// The file the thumbnail belongs to.
+///
+/// # Returns
+///
+/// TRUE on success.
+#[doc(alias = "gimp_file_create_thumbnail")]
+pub fn file_create_thumbnail(image: &Image, file: &impl IsA<gio::File>) -> bool {
+    skip_assert_initialized!();
+    unsafe {
+        from_glib(ffi::gimp_file_create_thumbnail(image.to_glib_none().0, file.as_ref().to_glib_none().0))
+    }
+}
+
 /// Unexpands `file`'s path using `gimp_config_path_unexpand()` and
 /// returns the unexpanded path.
 ///
@@ -3687,10 +3715,11 @@ pub fn file_new_for_config_path(path: &str) -> Result<Option<gio::File>, glib::E
     }
 }
 
-/// Saves a file by extension.
+/// Saves to XCF or export `image` to any supported format by extension.
 ///
-/// This procedure invokes the correct file save handler according to
-/// the file's extension and/or prefix.
+/// This procedure invokes the correct file save/export handler
+/// according to `file`'s extension and/or prefix.
+///
 /// The `options` argument is currently unused and should be set to [`None`]
 /// right now.
 /// ## `run_mode`
@@ -3698,7 +3727,7 @@ pub fn file_new_for_config_path(path: &str) -> Result<Option<gio::File>, glib::E
 /// ## `image`
 /// Input image.
 /// ## `file`
-/// The file to save the image in.
+/// The file to save or export the image in.
 /// ## `options`
 /// Export option settings.
 ///
@@ -3710,30 +3739,6 @@ pub fn file_save(run_mode: RunMode, image: &Image, file: &impl IsA<gio::File>, o
     skip_assert_initialized!();
     unsafe {
         from_glib(ffi::gimp_file_save(run_mode.into_glib(), image.to_glib_none().0, file.as_ref().to_glib_none().0, options.to_glib_none().0))
-    }
-}
-
-/// Saves a thumbnail for the given image
-///
-/// This procedure saves a thumbnail for the given image according to
-/// the Free Desktop Thumbnail Managing Standard. The thumbnail is saved
-/// so that it belongs to the given file. This means you have to save
-/// the image under this name first, otherwise this procedure will fail.
-/// This procedure may become useful if you want to explicitly save a
-/// thumbnail with a file.
-/// ## `image`
-/// The image.
-/// ## `file`
-/// The file the thumbnail belongs to.
-///
-/// # Returns
-///
-/// TRUE on success.
-#[doc(alias = "gimp_file_save_thumbnail")]
-pub fn file_save_thumbnail(image: &Image, file: &impl IsA<gio::File>) -> bool {
-    skip_assert_initialized!();
-    unsafe {
-        from_glib(ffi::gimp_file_save_thumbnail(image.to_glib_none().0, file.as_ref().to_glib_none().0))
     }
 }
 
@@ -3924,7 +3929,7 @@ pub fn fonts_close_popup(font_callback: &str) -> bool {
 ///  The list of fonts.
 ///  The returned value must be freed with `g_free()`.
 #[doc(alias = "gimp_fonts_get_list")]
-pub fn fonts_get_list(filter: &str) -> Vec<Font> {
+pub fn fonts_get_list(filter: Option<&str>) -> Vec<Font> {
     assert_initialized_main_thread!();
     unsafe {
         FromGlibPtrContainer::from_glib_container(ffi::gimp_fonts_get_list(filter.to_glib_none().0))
@@ -3947,8 +3952,8 @@ pub fn fonts_get_list(filter: &str) -> Vec<Font> {
 ///
 /// TRUE on success.
 #[doc(alias = "gimp_fonts_popup")]
-pub fn fonts_popup(font_callback: &str, popup_title: &str, initial_font: &Font, parent_window: &glib::Bytes) -> bool {
-    skip_assert_initialized!();
+pub fn fonts_popup(font_callback: &str, popup_title: &str, initial_font: Option<&Font>, parent_window: Option<&glib::Bytes>) -> bool {
+    assert_initialized_main_thread!();
     unsafe {
         from_glib(ffi::gimp_fonts_popup(font_callback.to_glib_none().0, popup_title.to_glib_none().0, initial_font.to_glib_none().0, parent_window.to_glib_none().0))
     }
@@ -4293,7 +4298,7 @@ pub fn gradients_close_popup(gradient_callback: &str) -> bool {
 ///  The list of gradients.
 ///  The returned value must be freed with `g_free()`.
 #[doc(alias = "gimp_gradients_get_list")]
-pub fn gradients_get_list(filter: &str) -> Vec<Gradient> {
+pub fn gradients_get_list(filter: Option<&str>) -> Vec<Gradient> {
     assert_initialized_main_thread!();
     unsafe {
         FromGlibPtrContainer::from_glib_container(ffi::gimp_gradients_get_list(filter.to_glib_none().0))
@@ -4316,8 +4321,8 @@ pub fn gradients_get_list(filter: &str) -> Vec<Gradient> {
 ///
 /// TRUE on success.
 #[doc(alias = "gimp_gradients_popup")]
-pub fn gradients_popup(gradient_callback: &str, popup_title: &str, initial_gradient: &Gradient, parent_window: &glib::Bytes) -> bool {
-    skip_assert_initialized!();
+pub fn gradients_popup(gradient_callback: &str, popup_title: &str, initial_gradient: Option<&Gradient>, parent_window: Option<&glib::Bytes>) -> bool {
+    assert_initialized_main_thread!();
     unsafe {
         from_glib(ffi::gimp_gradients_popup(gradient_callback.to_glib_none().0, popup_title.to_glib_none().0, initial_gradient.to_glib_none().0, parent_window.to_glib_none().0))
     }
@@ -4431,7 +4436,7 @@ pub fn heal_default(drawable: &impl IsA<Drawable>, strokes: &[f64]) -> bool {
 ///
 /// TRUE on success.
 #[doc(alias = "gimp_help")]
-pub fn help(help_domain: &str, help_id: &str) -> bool {
+pub fn help(help_domain: Option<&str>, help_id: &str) -> bool {
     assert_initialized_main_thread!();
     unsafe {
         from_glib(ffi::gimp_help(help_domain.to_glib_none().0, help_id.to_glib_none().0))
@@ -4751,7 +4756,7 @@ pub fn palettes_close_popup(palette_callback: &str) -> bool {
 ///  The list of palettes.
 ///  The returned value must be freed with `g_free()`.
 #[doc(alias = "gimp_palettes_get_list")]
-pub fn palettes_get_list(filter: &str) -> Vec<Palette> {
+pub fn palettes_get_list(filter: Option<&str>) -> Vec<Palette> {
     assert_initialized_main_thread!();
     unsafe {
         FromGlibPtrContainer::from_glib_container(ffi::gimp_palettes_get_list(filter.to_glib_none().0))
@@ -4774,8 +4779,8 @@ pub fn palettes_get_list(filter: &str) -> Vec<Palette> {
 ///
 /// TRUE on success.
 #[doc(alias = "gimp_palettes_popup")]
-pub fn palettes_popup(palette_callback: &str, popup_title: &str, initial_palette: &Palette, parent_window: &glib::Bytes) -> bool {
-    skip_assert_initialized!();
+pub fn palettes_popup(palette_callback: &str, popup_title: &str, initial_palette: Option<&Palette>, parent_window: Option<&glib::Bytes>) -> bool {
+    assert_initialized_main_thread!();
     unsafe {
         from_glib(ffi::gimp_palettes_popup(palette_callback.to_glib_none().0, popup_title.to_glib_none().0, initial_palette.to_glib_none().0, parent_window.to_glib_none().0))
     }
@@ -5144,6 +5149,34 @@ pub fn param_spec_export_options(name: &str, nick: &str, blurb: &str, flags: gli
     }
 }
 
+/// Creates a param spec to hold a file param.
+/// See [`glib::ParamSpec::internal()`][crate::glib::ParamSpec::internal()] for more information.
+/// ## `name`
+/// Canonical name of the param
+/// ## `nick`
+/// Nickname of the param
+/// ## `blurb`
+/// Brief description of param.
+/// ## `action`
+/// The type of file to expect.
+/// ## `none_ok`
+/// Whether [`None`] is allowed.
+/// ## `default_value`
+/// File to use if none is assigned.
+/// ## `flags`
+/// a combination of [`glib::ParamFlags`][crate::glib::ParamFlags]
+///
+/// # Returns
+///
+/// a newly allocated [`glib::ParamSpec`][crate::glib::ParamSpec] instance
+#[doc(alias = "gimp_param_spec_file")]
+pub fn param_spec_file(name: &str, nick: &str, blurb: &str, action: FileChooserAction, none_ok: bool, default_value: Option<&impl IsA<gio::File>>, flags: glib::ParamFlags) -> Option<glib::ParamSpec> {
+    assert_initialized_main_thread!();
+    unsafe {
+        from_glib_full(ffi::gimp_param_spec_file(name.to_glib_none().0, nick.to_glib_none().0, blurb.to_glib_none().0, action.into_glib(), none_ok.into_glib(), default_value.map(|p| p.as_ref()).to_glib_none().0, flags.into_glib()))
+    }
+}
+
 /// Creates a new `GimpParamSpecFont` specifying a
 /// [type`Font`] property. See also [func`Gimp`].
 /// ## `name`
@@ -5378,10 +5411,29 @@ pub fn param_spec_matrix2(name: &str, nick: &str, blurb: &str, default_value: &M
     }
 }
 
-//#[doc(alias = "gimp_param_spec_matrix3")]
-//pub fn param_spec_matrix3(name: &str, nick: &str, blurb: &str, default_value: /*Ignored*/&Matrix3, flags: glib::ParamFlags) -> Option<glib::ParamSpec> {
-//    unsafe { TODO: call ffi:gimp_param_spec_matrix3() }
-//}
+/// Creates a param spec to hold a [`Matrix3`][crate::Matrix3] value.
+/// See [`glib::ParamSpec::internal()`][crate::glib::ParamSpec::internal()] for more information.
+/// ## `name`
+/// Canonical name of the param
+/// ## `nick`
+/// Nickname of the param
+/// ## `blurb`
+/// Brief description of param.
+/// ## `default_value`
+/// Value to use if none is assigned.
+/// ## `flags`
+/// a combination of [`glib::ParamFlags`][crate::glib::ParamFlags]
+///
+/// # Returns
+///
+/// a newly allocated [`glib::ParamSpec`][crate::glib::ParamSpec] instance
+#[doc(alias = "gimp_param_spec_matrix3")]
+pub fn param_spec_matrix3(name: &str, nick: &str, blurb: &str, default_value: &Matrix3, flags: glib::ParamFlags) -> Option<glib::ParamSpec> {
+    assert_initialized_main_thread!();
+    unsafe {
+        from_glib_full(ffi::gimp_param_spec_matrix3(name.to_glib_none().0, nick.to_glib_none().0, blurb.to_glib_none().0, default_value.to_glib_none().0, flags.into_glib()))
+    }
+}
 
 /// Creates a param spec to hold a memory size value.
 /// See [`glib::ParamSpec::internal()`][crate::glib::ParamSpec::internal()] for more information.
@@ -5693,7 +5745,7 @@ pub fn patterns_close_popup(pattern_callback: &str) -> bool {
 ///  The list of patterns.
 ///  The returned value must be freed with `g_free()`.
 #[doc(alias = "gimp_patterns_get_list")]
-pub fn patterns_get_list(filter: &str) -> Vec<Pattern> {
+pub fn patterns_get_list(filter: Option<&str>) -> Vec<Pattern> {
     assert_initialized_main_thread!();
     unsafe {
         FromGlibPtrContainer::from_glib_container(ffi::gimp_patterns_get_list(filter.to_glib_none().0))
@@ -5716,8 +5768,8 @@ pub fn patterns_get_list(filter: &str) -> Vec<Pattern> {
 ///
 /// TRUE on success.
 #[doc(alias = "gimp_patterns_popup")]
-pub fn patterns_popup(pattern_callback: &str, popup_title: &str, initial_pattern: &Pattern, parent_window: &glib::Bytes) -> bool {
-    skip_assert_initialized!();
+pub fn patterns_popup(pattern_callback: &str, popup_title: &str, initial_pattern: Option<&Pattern>, parent_window: Option<&glib::Bytes>) -> bool {
+    assert_initialized_main_thread!();
     unsafe {
         from_glib(ffi::gimp_patterns_popup(pattern_callback.to_glib_none().0, popup_title.to_glib_none().0, initial_pattern.to_glib_none().0, parent_window.to_glib_none().0))
     }
@@ -5976,7 +6028,7 @@ pub fn progress_pulse() -> bool {
 ///
 /// TRUE on success.
 #[doc(alias = "gimp_progress_set_text")]
-pub fn progress_set_text(message: &str) -> bool {
+pub fn progress_set_text(message: Option<&str>) -> bool {
     assert_initialized_main_thread!();
     unsafe {
         from_glib(ffi::gimp_progress_set_text(message.to_glib_none().0))
@@ -6363,7 +6415,7 @@ pub fn temp_directory() -> Option<glib::GString> {
 ///
 /// The new temp file.
 #[doc(alias = "gimp_temp_file")]
-pub fn temp_file(extension: &str) -> Option<gio::File> {
+pub fn temp_file(extension: Option<&str>) -> Option<gio::File> {
     assert_initialized_main_thread!();
     unsafe {
         from_glib_full(ffi::gimp_temp_file(extension.to_glib_none().0))
@@ -6789,20 +6841,74 @@ pub fn value_take_int32_array(value: &mut glib::Value, data: &[i32]) {
     }
 }
 
-//#[doc(alias = "gimp_vector_2d_to_3d")]
-//pub fn vector_2d_to_3d(sx: i32, sy: i32, w: i32, h: i32, x: i32, y: i32, vp: /*Ignored*/&Vector3, p: /*Ignored*/&mut Vector3) {
-//    unsafe { TODO: call ffi:gimp_vector_2d_to_3d() }
-//}
+/// \"Compute screen (sx, sy) - (sx + w, sy + h) to 3D unit square
+/// mapping. The plane to map to is given in the z field of p. The
+/// observer is located at position vp (vp->z != 0.0).\"
+///
+/// In other words, this computes the projection of the point (`x`, `y`)
+/// to the plane z = `p`->z (parallel to XY), from the `vp` point of view
+/// through the screen (`sx`, `sy`)->(`sx` + `w`, `sy` + `h`)
+/// ## `sx`
+/// the abscissa of the upper-left screen rectangle.
+/// ## `sy`
+/// the ordinate of the upper-left screen rectangle.
+/// ## `w`
+/// the width of the screen rectangle.
+/// ## `h`
+/// the height of the screen rectangle.
+/// ## `x`
+/// the abscissa of the point in the screen rectangle to map.
+/// ## `y`
+/// the ordinate of the point in the screen rectangle to map.
+/// ## `vp`
+/// the position of the observer.
+/// ## `p`
+/// the resulting point.
+#[doc(alias = "gimp_vector_2d_to_3d")]
+pub fn vector_2d_to_3d(sx: i32, sy: i32, w: i32, h: i32, x: i32, y: i32, vp: &Vector3, p: &mut Vector3) {
+    assert_initialized_main_thread!();
+    unsafe {
+        ffi::gimp_vector_2d_to_3d(sx, sy, w, h, x, y, vp.to_glib_none().0, p.to_glib_none_mut().0);
+    }
+}
 
-//#[doc(alias = "gimp_vector_2d_to_3d_val")]
-//pub fn vector_2d_to_3d_val(sx: i32, sy: i32, w: i32, h: i32, x: i32, y: i32, vp: /*Ignored*/&Vector3, p: /*Ignored*/&Vector3) -> /*Ignored*/Option<Vector3> {
-//    unsafe { TODO: call ffi:gimp_vector_2d_to_3d_val() }
-//}
-
-//#[doc(alias = "gimp_vector_3d_to_2d")]
-//pub fn vector_3d_to_2d(sx: i32, sy: i32, w: i32, h: i32, vp: /*Ignored*/&Vector3, p: /*Ignored*/&Vector3) -> (f64, f64) {
-//    unsafe { TODO: call ffi:gimp_vector_3d_to_2d() }
-//}
+/// Convert the given 3D point to 2D (project it onto the viewing
+/// plane, (sx, sy, 0) - (sx + w, sy + h, 0). The input is assumed to
+/// be in the unit square (0, 0, z) - (1, 1, z). The viewpoint of the
+/// observer is passed in vp.
+///
+/// This is basically the opposite of [`vector_2d_to_3d()`][crate::vector_2d_to_3d()].
+/// ## `sx`
+/// the abscissa of the upper-left screen rectangle.
+/// ## `sy`
+/// the ordinate of the upper-left screen rectangle.
+/// ## `w`
+/// the width of the screen rectangle.
+/// ## `h`
+/// the height of the screen rectangle.
+/// ## `vp`
+/// position of the observer.
+/// ## `p`
+/// the 3D point to project to the plane.
+///
+/// # Returns
+///
+///
+/// ## `x`
+/// the abscissa of the point in the screen rectangle to map.
+///
+/// ## `y`
+/// the ordinate of the point in the screen rectangle to map.
+#[doc(alias = "gimp_vector_3d_to_2d")]
+pub fn vector_3d_to_2d(sx: i32, sy: i32, w: i32, h: i32, vp: &Vector3, p: &Vector3) -> (f64, f64) {
+    assert_initialized_main_thread!();
+    unsafe {
+        let mut x = std::mem::MaybeUninit::uninit();
+        let mut y = std::mem::MaybeUninit::uninit();
+        ffi::gimp_vector_3d_to_2d(sx, sy, w, h, x.as_mut_ptr(), y.as_mut_ptr(), vp.to_glib_none().0, p.to_glib_none().0);
+        (x.assume_init(), y.assume_init())
+    }
+}
 
 /// Returns the host GIMP version.
 ///

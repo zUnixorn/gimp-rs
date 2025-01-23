@@ -59,7 +59,7 @@ impl Palette {
     /// ## `entry_num`
     /// The index of the added entry.
     #[doc(alias = "gimp_palette_add_entry")]
-    pub fn add_entry(&self, entry_name: &str, color: &impl IsA<gegl::Color>) -> Option<i32> {
+    pub fn add_entry(&self, entry_name: Option<&str>, color: &impl IsA<gegl::Color>) -> Option<i32> {
         unsafe {
             let mut entry_num = std::mem::MaybeUninit::uninit();
             let ret = from_glib(ffi::gimp_palette_add_entry(self.to_glib_none().0, entry_name.to_glib_none().0, color.as_ref().to_glib_none().0, entry_num.as_mut_ptr()));
@@ -263,7 +263,7 @@ impl Palette {
     ///
     /// TRUE on success.
     #[doc(alias = "gimp_palette_set_entry_name")]
-    pub fn set_entry_name(&self, entry_num: i32, entry_name: &str) -> bool {
+    pub fn set_entry_name(&self, entry_num: i32, entry_name: Option<&str>) -> bool {
         unsafe {
             from_glib(ffi::gimp_palette_set_entry_name(self.to_glib_none().0, entry_num, entry_name.to_glib_none().0))
         }

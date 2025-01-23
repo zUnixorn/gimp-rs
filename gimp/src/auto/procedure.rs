@@ -3,7 +3,7 @@
 // from ../gir-files
 // DO NOT EDIT
 
-use crate::{ffi,ArgumentSync,Brush,Choice,Font,Gradient,IconType,PDBProcType,PDBStatusType,Palette,Pattern,PlugIn,ProcedureConfig,Resource,Unit,ValueArray};
+use crate::{ffi,ArgumentSync,Brush,Choice,FileChooserAction,Font,Gradient,IconType,PDBProcType,PDBStatusType,Palette,Pattern,PlugIn,ProcedureConfig,Resource,Unit,ValueArray};
 use glib::{prelude::*,translate::*};
 use std::{boxed::Box as Box_};
 
@@ -121,7 +121,7 @@ impl Procedure {
 ///
 /// # Implementors
 ///
-/// [`ImageProcedure`][struct@crate::ImageProcedure], [`Procedure`][struct@crate::Procedure]
+/// [`FileProcedure`][struct@crate::FileProcedure], [`ImageProcedure`][struct@crate::ImageProcedure], [`Procedure`][struct@crate::Procedure], [`ThumbnailProcedure`][struct@crate::ThumbnailProcedure]
 pub trait ProcedureExt: IsA<Procedure> + 'static {
     /// Add a new boolean argument to `self`.
     /// ## `name`
@@ -852,33 +852,45 @@ pub trait ProcedureExt: IsA<Procedure> + 'static {
 
     /// Add a new [`gio::File`][crate::gio::File] argument to `self`.
     /// ## `name`
-    /// the name of the argument to be created.
+    /// The name of the argument to be created.
     /// ## `nick`
-    /// the label used in `GimpProcedureDialog`.
+    /// The label used in `GimpProcedureDialog`.
     /// ## `blurb`
-    /// a more detailed help description.
+    /// A more detailed help description.
+    /// ## `action`
+    /// The type of file to expect.
+    /// ## `none_ok`
+    /// Whether [`None`] is allowed.
+    /// ## `default_file`
+    /// File to use if none is assigned.
     /// ## `flags`
-    /// argument flags.
+    /// Argument flags.
     #[doc(alias = "gimp_procedure_add_file_argument")]
-    fn add_file_argument(&self, name: &str, nick: &str, blurb: &str, flags: glib::ParamFlags) {
+    fn add_file_argument(&self, name: &str, nick: &str, blurb: &str, action: FileChooserAction, none_ok: bool, default_file: Option<&impl IsA<gio::File>>, flags: glib::ParamFlags) {
         unsafe {
-            ffi::gimp_procedure_add_file_argument(self.as_ref().to_glib_none().0, name.to_glib_none().0, nick.to_glib_none().0, blurb.to_glib_none().0, flags.into_glib());
+            ffi::gimp_procedure_add_file_argument(self.as_ref().to_glib_none().0, name.to_glib_none().0, nick.to_glib_none().0, blurb.to_glib_none().0, action.into_glib(), none_ok.into_glib(), default_file.map(|p| p.as_ref()).to_glib_none().0, flags.into_glib());
         }
     }
 
     /// Add a new [`gio::File`][crate::gio::File] auxiliary argument to `self`.
     /// ## `name`
-    /// the name of the argument to be created.
+    /// The name of the argument to be created.
     /// ## `nick`
-    /// the label used in `GimpProcedureDialog`.
+    /// The label used in `GimpProcedureDialog`.
     /// ## `blurb`
-    /// a more detailed help description.
+    /// A more detailed help description.
+    /// ## `action`
+    /// The type of file to expect.
+    /// ## `none_ok`
+    /// Whether [`None`] is allowed.
+    /// ## `default_file`
+    /// File to use if none is assigned.
     /// ## `flags`
-    /// argument flags.
+    /// Argument flags.
     #[doc(alias = "gimp_procedure_add_file_aux_argument")]
-    fn add_file_aux_argument(&self, name: &str, nick: &str, blurb: &str, flags: glib::ParamFlags) {
+    fn add_file_aux_argument(&self, name: &str, nick: &str, blurb: &str, action: FileChooserAction, none_ok: bool, default_file: Option<&impl IsA<gio::File>>, flags: glib::ParamFlags) {
         unsafe {
-            ffi::gimp_procedure_add_file_aux_argument(self.as_ref().to_glib_none().0, name.to_glib_none().0, nick.to_glib_none().0, blurb.to_glib_none().0, flags.into_glib());
+            ffi::gimp_procedure_add_file_aux_argument(self.as_ref().to_glib_none().0, name.to_glib_none().0, nick.to_glib_none().0, blurb.to_glib_none().0, action.into_glib(), none_ok.into_glib(), default_file.map(|p| p.as_ref()).to_glib_none().0, flags.into_glib());
         }
     }
 
@@ -1920,7 +1932,7 @@ pub trait ProcedureExt: IsA<Procedure> + 'static {
         }
     }
 
-    /// Add a new `GimpTextLayer` argument to `self`.
+    /// Add a new [`TextLayer`][crate::TextLayer] argument to `self`.
     /// ## `name`
     /// the name of the argument to be created.
     /// ## `nick`
@@ -1938,7 +1950,7 @@ pub trait ProcedureExt: IsA<Procedure> + 'static {
         }
     }
 
-    /// Add a new `GimpTextLayer` auxiliary argument to `self`.
+    /// Add a new [`TextLayer`][crate::TextLayer] auxiliary argument to `self`.
     /// ## `name`
     /// the name of the argument to be created.
     /// ## `nick`
@@ -1956,7 +1968,7 @@ pub trait ProcedureExt: IsA<Procedure> + 'static {
         }
     }
 
-    /// Add a new `GimpTextLayer` return value to `self`.
+    /// Add a new [`TextLayer`][crate::TextLayer] return value to `self`.
     /// ## `name`
     /// the name of the argument to be created.
     /// ## `nick`
@@ -2449,6 +2461,13 @@ pub trait ProcedureExt: IsA<Procedure> + 'static {
         }
     }
 
+    #[doc(alias = "gimp_procedure_is_core")]
+    fn is_core(&self) -> bool {
+        unsafe {
+            from_glib(ffi::gimp_procedure_is_core(self.as_ref().to_glib_none().0))
+        }
+    }
+
     /// Format the expected return values from procedures.
     /// ## `status`
     /// the success status of the procedure run.
@@ -2524,7 +2543,7 @@ pub trait ProcedureExt: IsA<Procedure> + 'static {
     /// In order to enable this, set `sync` to [`ArgumentSync::Parasite`][crate::ArgumentSync::Parasite].
     ///
     /// Currently, it is possible to sync a string argument of type
-    /// `GParamSpecString` with an image parasite of the same name, for
+    /// [`glib::ParamSpecString`][crate::glib::ParamSpecString] with an image parasite of the same name, for
     /// example the "gimp-comment" parasite in file save procedures.
     /// ## `arg_name`
     /// the name of one of `self`'s arguments or auxiliary arguments.

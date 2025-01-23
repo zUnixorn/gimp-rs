@@ -123,6 +123,51 @@ impl From<ExportCapabilities> for glib::Value {
 }
 
 bitflags! {
+    /// What metadata to load when importing images.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+    #[doc(alias = "GimpMetadataLoadFlags")]
+    pub struct MetadataLoadFlags: u32 {
+        /// Do not load the metadata
+        #[doc(alias = "GIMP_METADATA_LOAD_NONE")]
+        const NONE = ffi::GIMP_METADATA_LOAD_NONE as _;
+        /// Load the comment
+        #[doc(alias = "GIMP_METADATA_LOAD_COMMENT")]
+        const COMMENT = ffi::GIMP_METADATA_LOAD_COMMENT as _;
+        /// Load the resolution
+        #[doc(alias = "GIMP_METADATA_LOAD_RESOLUTION")]
+        const RESOLUTION = ffi::GIMP_METADATA_LOAD_RESOLUTION as _;
+        /// Load the orientation (rotation)
+        #[doc(alias = "GIMP_METADATA_LOAD_ORIENTATION")]
+        const ORIENTATION = ffi::GIMP_METADATA_LOAD_ORIENTATION as _;
+        /// Load the colorspace
+        #[doc(alias = "GIMP_METADATA_LOAD_COLORSPACE")]
+        const COLORSPACE = ffi::GIMP_METADATA_LOAD_COLORSPACE as _;
+        /// Load all of the above
+        #[doc(alias = "GIMP_METADATA_LOAD_ALL")]
+        const ALL = ffi::GIMP_METADATA_LOAD_ALL as _;
+    }
+}
+
+#[doc(hidden)]
+impl IntoGlib for MetadataLoadFlags {
+    type GlibType = ffi::GimpMetadataLoadFlags;
+
+    #[inline]
+    fn into_glib(self) -> ffi::GimpMetadataLoadFlags {
+        self.bits()
+    }
+}
+
+#[doc(hidden)]
+impl FromGlib<ffi::GimpMetadataLoadFlags> for MetadataLoadFlags {
+    #[inline]
+    unsafe fn from_glib(value: ffi::GimpMetadataLoadFlags) -> Self {
+        skip_assert_initialized!();
+        Self::from_bits_truncate(value)
+    }
+}
+
+bitflags! {
     /// What kinds of metadata to save when exporting images.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
     #[doc(alias = "GimpMetadataSaveFlags")]

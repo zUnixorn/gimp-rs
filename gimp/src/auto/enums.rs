@@ -2282,6 +2282,124 @@ match value {
 }
 }
 
+/// A type of file to choose from when actions are expected to choose a
+/// file. This is basically a mapping to `GtkFileChooserAction` except for
+/// [enum`Gimp`.ANY] which should not be used for any
+/// GUI functions since we can't know what you are looking for.
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy)]
+#[non_exhaustive]
+#[doc(alias = "GimpFileChooserAction")]
+pub enum FileChooserAction {
+    /// No restriction.
+    #[doc(alias = "GIMP_FILE_CHOOSER_ACTION_ANY")]
+    Any,
+    /// Opens an existing file.
+    #[doc(alias = "GIMP_FILE_CHOOSER_ACTION_OPEN")]
+    Open,
+    /// Saves a file (over a new file or an existing one.
+    #[doc(alias = "GIMP_FILE_CHOOSER_ACTION_SAVE")]
+    Save,
+    /// Picks an existing folder.
+    #[doc(alias = "GIMP_FILE_CHOOSER_ACTION_SELECT_FOLDER")]
+    SelectFolder,
+    /// Picks an existing or new folder.
+    #[doc(alias = "GIMP_FILE_CHOOSER_ACTION_CREATE_FOLDER")]
+    CreateFolder,
+#[doc(hidden)]
+    __Unknown(i32),
+}
+
+#[doc(hidden)]
+impl IntoGlib for FileChooserAction {
+    type GlibType = ffi::GimpFileChooserAction;
+
+    #[inline]
+fn into_glib(self) -> ffi::GimpFileChooserAction {
+match self {
+            Self::Any => ffi::GIMP_FILE_CHOOSER_ACTION_ANY,
+            Self::Open => ffi::GIMP_FILE_CHOOSER_ACTION_OPEN,
+            Self::Save => ffi::GIMP_FILE_CHOOSER_ACTION_SAVE,
+            Self::SelectFolder => ffi::GIMP_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+            Self::CreateFolder => ffi::GIMP_FILE_CHOOSER_ACTION_CREATE_FOLDER,
+            Self::__Unknown(value) => value,
+}
+}
+}
+
+#[doc(hidden)]
+impl FromGlib<ffi::GimpFileChooserAction> for FileChooserAction {
+    #[inline]
+unsafe fn from_glib(value: ffi::GimpFileChooserAction) -> Self {
+        skip_assert_initialized!();
+        
+match value {
+            ffi::GIMP_FILE_CHOOSER_ACTION_ANY => Self::Any,
+            ffi::GIMP_FILE_CHOOSER_ACTION_OPEN => Self::Open,
+            ffi::GIMP_FILE_CHOOSER_ACTION_SAVE => Self::Save,
+            ffi::GIMP_FILE_CHOOSER_ACTION_SELECT_FOLDER => Self::SelectFolder,
+            ffi::GIMP_FILE_CHOOSER_ACTION_CREATE_FOLDER => Self::CreateFolder,
+            value => Self::__Unknown(value),
+}
+}
+}
+
+impl StaticType for FileChooserAction {
+                #[inline]
+    #[doc(alias = "gimp_file_chooser_action_get_type")]
+   fn static_type() -> glib::Type {
+                    unsafe { from_glib(ffi::gimp_file_chooser_action_get_type()) }
+                }
+            }
+
+impl glib::HasParamSpec for FileChooserAction {
+                type ParamSpec = glib::ParamSpecEnum;
+                type SetValue = Self;
+                type BuilderFn = fn(&str, Self) -> glib::ParamSpecEnumBuilder<Self>;
+    
+                fn param_spec_builder() -> Self::BuilderFn {
+                    Self::ParamSpec::builder_with_default
+                }
+}
+
+impl glib::value::ValueType for FileChooserAction {
+    type Type = Self;
+}
+
+unsafe impl<'a> glib::value::FromValue<'a> for FileChooserAction {
+    type Checker = glib::value::GenericValueTypeChecker<Self>;
+
+    #[inline]
+    unsafe fn from_value(value: &'a glib::Value) -> Self {
+        skip_assert_initialized!();
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl ToValue for FileChooserAction {
+    #[inline]
+    fn to_value(&self) -> glib::Value {
+        let mut value = glib::Value::for_value_type::<Self>();
+        unsafe {
+            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
+        }
+        value
+    }
+
+    #[inline]
+    fn value_type(&self) -> glib::Type {
+        Self::static_type()
+    }
+}
+
+impl From<FileChooserAction> for glib::Value {
+    #[inline]
+    fn from(v: FileChooserAction) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
+    }
+}
+
 /// Types of filling.
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
@@ -4989,6 +5107,102 @@ match value {
 }
 }
 
+/// Types of errors returned by modules
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy)]
+#[non_exhaustive]
+#[doc(alias = "GimpModuleError")]
+pub enum ModuleError {
+    /// Generic error condition
+    #[doc(alias = "GIMP_MODULE_FAILED")]
+    ModuleFailed,
+#[doc(hidden)]
+    __Unknown(i32),
+}
+
+#[doc(hidden)]
+impl IntoGlib for ModuleError {
+    type GlibType = ffi::GimpModuleError;
+
+    #[inline]
+fn into_glib(self) -> ffi::GimpModuleError {
+match self {
+            Self::ModuleFailed => ffi::GIMP_MODULE_FAILED,
+            Self::__Unknown(value) => value,
+}
+}
+}
+
+#[doc(hidden)]
+impl FromGlib<ffi::GimpModuleError> for ModuleError {
+    #[inline]
+unsafe fn from_glib(value: ffi::GimpModuleError) -> Self {
+        skip_assert_initialized!();
+        
+match value {
+            ffi::GIMP_MODULE_FAILED => Self::ModuleFailed,
+            value => Self::__Unknown(value),
+}
+}
+}
+
+/// The possible states a [`Module`][crate::Module] can be in.
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy)]
+#[non_exhaustive]
+#[doc(alias = "GimpModuleState")]
+pub enum ModuleState {
+    /// Missing `gimp_module_register()` function
+    ///  or other error.
+    #[doc(alias = "GIMP_MODULE_STATE_ERROR")]
+    Error,
+    /// An instance of a type implemented by
+    ///  this module is allocated.
+    #[doc(alias = "GIMP_MODULE_STATE_LOADED")]
+    Loaded,
+    /// `gimp_module_register()` returned [`false`].
+    #[doc(alias = "GIMP_MODULE_STATE_LOAD_FAILED")]
+    LoadFailed,
+    /// There are no instances allocated of
+    ///  types implemented by this module.
+    #[doc(alias = "GIMP_MODULE_STATE_NOT_LOADED")]
+    NotLoaded,
+#[doc(hidden)]
+    __Unknown(i32),
+}
+
+#[doc(hidden)]
+impl IntoGlib for ModuleState {
+    type GlibType = ffi::GimpModuleState;
+
+    #[inline]
+fn into_glib(self) -> ffi::GimpModuleState {
+match self {
+            Self::Error => ffi::GIMP_MODULE_STATE_ERROR,
+            Self::Loaded => ffi::GIMP_MODULE_STATE_LOADED,
+            Self::LoadFailed => ffi::GIMP_MODULE_STATE_LOAD_FAILED,
+            Self::NotLoaded => ffi::GIMP_MODULE_STATE_NOT_LOADED,
+            Self::__Unknown(value) => value,
+}
+}
+}
+
+#[doc(hidden)]
+impl FromGlib<ffi::GimpModuleState> for ModuleState {
+    #[inline]
+unsafe fn from_glib(value: ffi::GimpModuleState) -> Self {
+        skip_assert_initialized!();
+        
+match value {
+            ffi::GIMP_MODULE_STATE_ERROR => Self::Error,
+            ffi::GIMP_MODULE_STATE_LOADED => Self::Loaded,
+            ffi::GIMP_MODULE_STATE_LOAD_FAILED => Self::LoadFailed,
+            ffi::GIMP_MODULE_STATE_NOT_LOADED => Self::NotLoaded,
+            value => Self::__Unknown(value),
+}
+}
+}
+
 /// Background fill types for the offset operation.
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
@@ -5947,6 +6161,126 @@ impl From<Precision> for glib::Value {
     }
 }
 
+/// Commands for the progress API.
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy)]
+#[non_exhaustive]
+#[doc(alias = "GimpProgressCommand")]
+pub enum ProgressCommand {
+    /// Start a progress
+    #[doc(alias = "GIMP_PROGRESS_COMMAND_START")]
+    Start,
+    /// End the progress
+    #[doc(alias = "GIMP_PROGRESS_COMMAND_END")]
+    End,
+    /// Set the text
+    #[doc(alias = "GIMP_PROGRESS_COMMAND_SET_TEXT")]
+    SetText,
+    /// Set the percentage
+    #[doc(alias = "GIMP_PROGRESS_COMMAND_SET_VALUE")]
+    SetValue,
+    /// Pulse the progress
+    #[doc(alias = "GIMP_PROGRESS_COMMAND_PULSE")]
+    Pulse,
+    /// Get the window where the progress is shown
+    #[doc(alias = "GIMP_PROGRESS_COMMAND_GET_WINDOW")]
+    GetWindow,
+#[doc(hidden)]
+    __Unknown(i32),
+}
+
+#[doc(hidden)]
+impl IntoGlib for ProgressCommand {
+    type GlibType = ffi::GimpProgressCommand;
+
+    #[inline]
+fn into_glib(self) -> ffi::GimpProgressCommand {
+match self {
+            Self::Start => ffi::GIMP_PROGRESS_COMMAND_START,
+            Self::End => ffi::GIMP_PROGRESS_COMMAND_END,
+            Self::SetText => ffi::GIMP_PROGRESS_COMMAND_SET_TEXT,
+            Self::SetValue => ffi::GIMP_PROGRESS_COMMAND_SET_VALUE,
+            Self::Pulse => ffi::GIMP_PROGRESS_COMMAND_PULSE,
+            Self::GetWindow => ffi::GIMP_PROGRESS_COMMAND_GET_WINDOW,
+            Self::__Unknown(value) => value,
+}
+}
+}
+
+#[doc(hidden)]
+impl FromGlib<ffi::GimpProgressCommand> for ProgressCommand {
+    #[inline]
+unsafe fn from_glib(value: ffi::GimpProgressCommand) -> Self {
+        skip_assert_initialized!();
+        
+match value {
+            ffi::GIMP_PROGRESS_COMMAND_START => Self::Start,
+            ffi::GIMP_PROGRESS_COMMAND_END => Self::End,
+            ffi::GIMP_PROGRESS_COMMAND_SET_TEXT => Self::SetText,
+            ffi::GIMP_PROGRESS_COMMAND_SET_VALUE => Self::SetValue,
+            ffi::GIMP_PROGRESS_COMMAND_PULSE => Self::Pulse,
+            ffi::GIMP_PROGRESS_COMMAND_GET_WINDOW => Self::GetWindow,
+            value => Self::__Unknown(value),
+}
+}
+}
+
+impl StaticType for ProgressCommand {
+                #[inline]
+    #[doc(alias = "gimp_progress_command_get_type")]
+   fn static_type() -> glib::Type {
+                    unsafe { from_glib(ffi::gimp_progress_command_get_type()) }
+                }
+            }
+
+impl glib::HasParamSpec for ProgressCommand {
+                type ParamSpec = glib::ParamSpecEnum;
+                type SetValue = Self;
+                type BuilderFn = fn(&str, Self) -> glib::ParamSpecEnumBuilder<Self>;
+    
+                fn param_spec_builder() -> Self::BuilderFn {
+                    Self::ParamSpec::builder_with_default
+                }
+}
+
+impl glib::value::ValueType for ProgressCommand {
+    type Type = Self;
+}
+
+unsafe impl<'a> glib::value::FromValue<'a> for ProgressCommand {
+    type Checker = glib::value::GenericValueTypeChecker<Self>;
+
+    #[inline]
+    unsafe fn from_value(value: &'a glib::Value) -> Self {
+        skip_assert_initialized!();
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl ToValue for ProgressCommand {
+    #[inline]
+    fn to_value(&self) -> glib::Value {
+        let mut value = glib::Value::for_value_type::<Self>();
+        unsafe {
+            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
+        }
+        value
+    }
+
+    #[inline]
+    fn value_type(&self) -> glib::Type {
+        Self::static_type()
+    }
+}
+
+impl From<ProgressCommand> for glib::Value {
+    #[inline]
+    fn from(v: ProgressCommand) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
+    }
+}
+
 /// Repeat modes for example for gradients.
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
@@ -6412,6 +6746,211 @@ impl From<SelectCriterion> for glib::Value {
     }
 }
 
+/// Size types for the old-style text API.
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy)]
+#[non_exhaustive]
+#[doc(alias = "GimpSizeType")]
+pub enum SizeType {
+    /// Pixels
+    #[doc(alias = "GIMP_PIXELS")]
+    Pixels,
+    /// Points
+    #[doc(alias = "GIMP_POINTS")]
+    Points,
+#[doc(hidden)]
+    __Unknown(i32),
+}
+
+#[doc(hidden)]
+impl IntoGlib for SizeType {
+    type GlibType = ffi::GimpSizeType;
+
+    #[inline]
+fn into_glib(self) -> ffi::GimpSizeType {
+match self {
+            Self::Pixels => ffi::GIMP_PIXELS,
+            Self::Points => ffi::GIMP_POINTS,
+            Self::__Unknown(value) => value,
+}
+}
+}
+
+#[doc(hidden)]
+impl FromGlib<ffi::GimpSizeType> for SizeType {
+    #[inline]
+unsafe fn from_glib(value: ffi::GimpSizeType) -> Self {
+        skip_assert_initialized!();
+        
+match value {
+            ffi::GIMP_PIXELS => Self::Pixels,
+            ffi::GIMP_POINTS => Self::Points,
+            value => Self::__Unknown(value),
+}
+}
+}
+
+impl StaticType for SizeType {
+                #[inline]
+    #[doc(alias = "gimp_size_type_get_type")]
+   fn static_type() -> glib::Type {
+                    unsafe { from_glib(ffi::gimp_size_type_get_type()) }
+                }
+            }
+
+impl glib::HasParamSpec for SizeType {
+                type ParamSpec = glib::ParamSpecEnum;
+                type SetValue = Self;
+                type BuilderFn = fn(&str, Self) -> glib::ParamSpecEnumBuilder<Self>;
+    
+                fn param_spec_builder() -> Self::BuilderFn {
+                    Self::ParamSpec::builder_with_default
+                }
+}
+
+impl glib::value::ValueType for SizeType {
+    type Type = Self;
+}
+
+unsafe impl<'a> glib::value::FromValue<'a> for SizeType {
+    type Checker = glib::value::GenericValueTypeChecker<Self>;
+
+    #[inline]
+    unsafe fn from_value(value: &'a glib::Value) -> Self {
+        skip_assert_initialized!();
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl ToValue for SizeType {
+    #[inline]
+    fn to_value(&self) -> glib::Value {
+        let mut value = glib::Value::for_value_type::<Self>();
+        unsafe {
+            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
+        }
+        value
+    }
+
+    #[inline]
+    fn value_type(&self) -> glib::Type {
+        Self::static_type()
+    }
+}
+
+impl From<SizeType> for glib::Value {
+    #[inline]
+    fn from(v: SizeType) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
+    }
+}
+
+/// When to generate stack traces in case of an error.
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy)]
+#[non_exhaustive]
+#[doc(alias = "GimpStackTraceMode")]
+pub enum StackTraceMode {
+    /// Never
+    #[doc(alias = "GIMP_STACK_TRACE_NEVER")]
+    Never,
+    /// Ask each time
+    #[doc(alias = "GIMP_STACK_TRACE_QUERY")]
+    Query,
+    /// Always
+    #[doc(alias = "GIMP_STACK_TRACE_ALWAYS")]
+    Always,
+#[doc(hidden)]
+    __Unknown(i32),
+}
+
+#[doc(hidden)]
+impl IntoGlib for StackTraceMode {
+    type GlibType = ffi::GimpStackTraceMode;
+
+    #[inline]
+fn into_glib(self) -> ffi::GimpStackTraceMode {
+match self {
+            Self::Never => ffi::GIMP_STACK_TRACE_NEVER,
+            Self::Query => ffi::GIMP_STACK_TRACE_QUERY,
+            Self::Always => ffi::GIMP_STACK_TRACE_ALWAYS,
+            Self::__Unknown(value) => value,
+}
+}
+}
+
+#[doc(hidden)]
+impl FromGlib<ffi::GimpStackTraceMode> for StackTraceMode {
+    #[inline]
+unsafe fn from_glib(value: ffi::GimpStackTraceMode) -> Self {
+        skip_assert_initialized!();
+        
+match value {
+            ffi::GIMP_STACK_TRACE_NEVER => Self::Never,
+            ffi::GIMP_STACK_TRACE_QUERY => Self::Query,
+            ffi::GIMP_STACK_TRACE_ALWAYS => Self::Always,
+            value => Self::__Unknown(value),
+}
+}
+}
+
+impl StaticType for StackTraceMode {
+                #[inline]
+    #[doc(alias = "gimp_stack_trace_mode_get_type")]
+   fn static_type() -> glib::Type {
+                    unsafe { from_glib(ffi::gimp_stack_trace_mode_get_type()) }
+                }
+            }
+
+impl glib::HasParamSpec for StackTraceMode {
+                type ParamSpec = glib::ParamSpecEnum;
+                type SetValue = Self;
+                type BuilderFn = fn(&str, Self) -> glib::ParamSpecEnumBuilder<Self>;
+    
+                fn param_spec_builder() -> Self::BuilderFn {
+                    Self::ParamSpec::builder_with_default
+                }
+}
+
+impl glib::value::ValueType for StackTraceMode {
+    type Type = Self;
+}
+
+unsafe impl<'a> glib::value::FromValue<'a> for StackTraceMode {
+    type Checker = glib::value::GenericValueTypeChecker<Self>;
+
+    #[inline]
+    unsafe fn from_value(value: &'a glib::Value) -> Self {
+        skip_assert_initialized!();
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl ToValue for StackTraceMode {
+    #[inline]
+    fn to_value(&self) -> glib::Value {
+        let mut value = glib::Value::for_value_type::<Self>();
+        unsafe {
+            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
+        }
+        value
+    }
+
+    #[inline]
+    fn value_type(&self) -> glib::Type {
+        Self::static_type()
+    }
+}
+
+impl From<StackTraceMode> for glib::Value {
+    #[inline]
+    fn from(v: StackTraceMode) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
+    }
+}
+
 /// Methods of stroking selections and paths.
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
@@ -6507,6 +7046,346 @@ impl ToValue for StrokeMethod {
 impl From<StrokeMethod> for glib::Value {
     #[inline]
     fn from(v: StrokeMethod) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
+    }
+}
+
+/// Text directions.
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy)]
+#[non_exhaustive]
+#[doc(alias = "GimpTextDirection")]
+pub enum TextDirection {
+    /// From left to right
+    #[doc(alias = "GIMP_TEXT_DIRECTION_LTR")]
+    Ltr,
+    /// From right to left
+    #[doc(alias = "GIMP_TEXT_DIRECTION_RTL")]
+    Rtl,
+    /// Characters are from top to bottom, Lines are from right to left
+    #[doc(alias = "GIMP_TEXT_DIRECTION_TTB_RTL")]
+    TtbRtl,
+    /// Upright characters are from top to bottom, Lines are from right to left
+    #[doc(alias = "GIMP_TEXT_DIRECTION_TTB_RTL_UPRIGHT")]
+    TtbRtlUpright,
+    /// Characters are from top to bottom, Lines are from left to right
+    #[doc(alias = "GIMP_TEXT_DIRECTION_TTB_LTR")]
+    TtbLtr,
+    /// Upright characters are from top to bottom, Lines are from left to right
+    #[doc(alias = "GIMP_TEXT_DIRECTION_TTB_LTR_UPRIGHT")]
+    TtbLtrUpright,
+#[doc(hidden)]
+    __Unknown(i32),
+}
+
+#[doc(hidden)]
+impl IntoGlib for TextDirection {
+    type GlibType = ffi::GimpTextDirection;
+
+    #[inline]
+fn into_glib(self) -> ffi::GimpTextDirection {
+match self {
+            Self::Ltr => ffi::GIMP_TEXT_DIRECTION_LTR,
+            Self::Rtl => ffi::GIMP_TEXT_DIRECTION_RTL,
+            Self::TtbRtl => ffi::GIMP_TEXT_DIRECTION_TTB_RTL,
+            Self::TtbRtlUpright => ffi::GIMP_TEXT_DIRECTION_TTB_RTL_UPRIGHT,
+            Self::TtbLtr => ffi::GIMP_TEXT_DIRECTION_TTB_LTR,
+            Self::TtbLtrUpright => ffi::GIMP_TEXT_DIRECTION_TTB_LTR_UPRIGHT,
+            Self::__Unknown(value) => value,
+}
+}
+}
+
+#[doc(hidden)]
+impl FromGlib<ffi::GimpTextDirection> for TextDirection {
+    #[inline]
+unsafe fn from_glib(value: ffi::GimpTextDirection) -> Self {
+        skip_assert_initialized!();
+        
+match value {
+            ffi::GIMP_TEXT_DIRECTION_LTR => Self::Ltr,
+            ffi::GIMP_TEXT_DIRECTION_RTL => Self::Rtl,
+            ffi::GIMP_TEXT_DIRECTION_TTB_RTL => Self::TtbRtl,
+            ffi::GIMP_TEXT_DIRECTION_TTB_RTL_UPRIGHT => Self::TtbRtlUpright,
+            ffi::GIMP_TEXT_DIRECTION_TTB_LTR => Self::TtbLtr,
+            ffi::GIMP_TEXT_DIRECTION_TTB_LTR_UPRIGHT => Self::TtbLtrUpright,
+            value => Self::__Unknown(value),
+}
+}
+}
+
+impl StaticType for TextDirection {
+                #[inline]
+    #[doc(alias = "gimp_text_direction_get_type")]
+   fn static_type() -> glib::Type {
+                    unsafe { from_glib(ffi::gimp_text_direction_get_type()) }
+                }
+            }
+
+impl glib::HasParamSpec for TextDirection {
+                type ParamSpec = glib::ParamSpecEnum;
+                type SetValue = Self;
+                type BuilderFn = fn(&str, Self) -> glib::ParamSpecEnumBuilder<Self>;
+    
+                fn param_spec_builder() -> Self::BuilderFn {
+                    Self::ParamSpec::builder_with_default
+                }
+}
+
+impl glib::value::ValueType for TextDirection {
+    type Type = Self;
+}
+
+unsafe impl<'a> glib::value::FromValue<'a> for TextDirection {
+    type Checker = glib::value::GenericValueTypeChecker<Self>;
+
+    #[inline]
+    unsafe fn from_value(value: &'a glib::Value) -> Self {
+        skip_assert_initialized!();
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl ToValue for TextDirection {
+    #[inline]
+    fn to_value(&self) -> glib::Value {
+        let mut value = glib::Value::for_value_type::<Self>();
+        unsafe {
+            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
+        }
+        value
+    }
+
+    #[inline]
+    fn value_type(&self) -> glib::Type {
+        Self::static_type()
+    }
+}
+
+impl From<TextDirection> for glib::Value {
+    #[inline]
+    fn from(v: TextDirection) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
+    }
+}
+
+/// Text hint strengths.
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy)]
+#[non_exhaustive]
+#[doc(alias = "GimpTextHintStyle")]
+pub enum TextHintStyle {
+    /// None
+    #[doc(alias = "GIMP_TEXT_HINT_STYLE_NONE")]
+    None,
+    /// Slight
+    #[doc(alias = "GIMP_TEXT_HINT_STYLE_SLIGHT")]
+    Slight,
+    /// Medium
+    #[doc(alias = "GIMP_TEXT_HINT_STYLE_MEDIUM")]
+    Medium,
+    /// Full
+    #[doc(alias = "GIMP_TEXT_HINT_STYLE_FULL")]
+    Full,
+#[doc(hidden)]
+    __Unknown(i32),
+}
+
+#[doc(hidden)]
+impl IntoGlib for TextHintStyle {
+    type GlibType = ffi::GimpTextHintStyle;
+
+    #[inline]
+fn into_glib(self) -> ffi::GimpTextHintStyle {
+match self {
+            Self::None => ffi::GIMP_TEXT_HINT_STYLE_NONE,
+            Self::Slight => ffi::GIMP_TEXT_HINT_STYLE_SLIGHT,
+            Self::Medium => ffi::GIMP_TEXT_HINT_STYLE_MEDIUM,
+            Self::Full => ffi::GIMP_TEXT_HINT_STYLE_FULL,
+            Self::__Unknown(value) => value,
+}
+}
+}
+
+#[doc(hidden)]
+impl FromGlib<ffi::GimpTextHintStyle> for TextHintStyle {
+    #[inline]
+unsafe fn from_glib(value: ffi::GimpTextHintStyle) -> Self {
+        skip_assert_initialized!();
+        
+match value {
+            ffi::GIMP_TEXT_HINT_STYLE_NONE => Self::None,
+            ffi::GIMP_TEXT_HINT_STYLE_SLIGHT => Self::Slight,
+            ffi::GIMP_TEXT_HINT_STYLE_MEDIUM => Self::Medium,
+            ffi::GIMP_TEXT_HINT_STYLE_FULL => Self::Full,
+            value => Self::__Unknown(value),
+}
+}
+}
+
+impl StaticType for TextHintStyle {
+                #[inline]
+    #[doc(alias = "gimp_text_hint_style_get_type")]
+   fn static_type() -> glib::Type {
+                    unsafe { from_glib(ffi::gimp_text_hint_style_get_type()) }
+                }
+            }
+
+impl glib::HasParamSpec for TextHintStyle {
+                type ParamSpec = glib::ParamSpecEnum;
+                type SetValue = Self;
+                type BuilderFn = fn(&str, Self) -> glib::ParamSpecEnumBuilder<Self>;
+    
+                fn param_spec_builder() -> Self::BuilderFn {
+                    Self::ParamSpec::builder_with_default
+                }
+}
+
+impl glib::value::ValueType for TextHintStyle {
+    type Type = Self;
+}
+
+unsafe impl<'a> glib::value::FromValue<'a> for TextHintStyle {
+    type Checker = glib::value::GenericValueTypeChecker<Self>;
+
+    #[inline]
+    unsafe fn from_value(value: &'a glib::Value) -> Self {
+        skip_assert_initialized!();
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl ToValue for TextHintStyle {
+    #[inline]
+    fn to_value(&self) -> glib::Value {
+        let mut value = glib::Value::for_value_type::<Self>();
+        unsafe {
+            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
+        }
+        value
+    }
+
+    #[inline]
+    fn value_type(&self) -> glib::Type {
+        Self::static_type()
+    }
+}
+
+impl From<TextHintStyle> for glib::Value {
+    #[inline]
+    fn from(v: TextHintStyle) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
+    }
+}
+
+/// Text justifications.
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy)]
+#[non_exhaustive]
+#[doc(alias = "GimpTextJustification")]
+pub enum TextJustification {
+    /// Left justified
+    #[doc(alias = "GIMP_TEXT_JUSTIFY_LEFT")]
+    Left,
+    /// Right justified
+    #[doc(alias = "GIMP_TEXT_JUSTIFY_RIGHT")]
+    Right,
+    /// Centered
+    #[doc(alias = "GIMP_TEXT_JUSTIFY_CENTER")]
+    Center,
+    /// Filled
+    #[doc(alias = "GIMP_TEXT_JUSTIFY_FILL")]
+    Fill,
+#[doc(hidden)]
+    __Unknown(i32),
+}
+
+#[doc(hidden)]
+impl IntoGlib for TextJustification {
+    type GlibType = ffi::GimpTextJustification;
+
+    #[inline]
+fn into_glib(self) -> ffi::GimpTextJustification {
+match self {
+            Self::Left => ffi::GIMP_TEXT_JUSTIFY_LEFT,
+            Self::Right => ffi::GIMP_TEXT_JUSTIFY_RIGHT,
+            Self::Center => ffi::GIMP_TEXT_JUSTIFY_CENTER,
+            Self::Fill => ffi::GIMP_TEXT_JUSTIFY_FILL,
+            Self::__Unknown(value) => value,
+}
+}
+}
+
+#[doc(hidden)]
+impl FromGlib<ffi::GimpTextJustification> for TextJustification {
+    #[inline]
+unsafe fn from_glib(value: ffi::GimpTextJustification) -> Self {
+        skip_assert_initialized!();
+        
+match value {
+            ffi::GIMP_TEXT_JUSTIFY_LEFT => Self::Left,
+            ffi::GIMP_TEXT_JUSTIFY_RIGHT => Self::Right,
+            ffi::GIMP_TEXT_JUSTIFY_CENTER => Self::Center,
+            ffi::GIMP_TEXT_JUSTIFY_FILL => Self::Fill,
+            value => Self::__Unknown(value),
+}
+}
+}
+
+impl StaticType for TextJustification {
+                #[inline]
+    #[doc(alias = "gimp_text_justification_get_type")]
+   fn static_type() -> glib::Type {
+                    unsafe { from_glib(ffi::gimp_text_justification_get_type()) }
+                }
+            }
+
+impl glib::HasParamSpec for TextJustification {
+                type ParamSpec = glib::ParamSpecEnum;
+                type SetValue = Self;
+                type BuilderFn = fn(&str, Self) -> glib::ParamSpecEnumBuilder<Self>;
+    
+                fn param_spec_builder() -> Self::BuilderFn {
+                    Self::ParamSpec::builder_with_default
+                }
+}
+
+impl glib::value::ValueType for TextJustification {
+    type Type = Self;
+}
+
+unsafe impl<'a> glib::value::FromValue<'a> for TextJustification {
+    type Checker = glib::value::GenericValueTypeChecker<Self>;
+
+    #[inline]
+    unsafe fn from_value(value: &'a glib::Value) -> Self {
+        skip_assert_initialized!();
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl ToValue for TextJustification {
+    #[inline]
+    fn to_value(&self) -> glib::Value {
+        let mut value = glib::Value::for_value_type::<Self>();
+        unsafe {
+            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
+        }
+        value
+    }
+
+    #[inline]
+    fn value_type(&self) -> glib::Type {
+        Self::static_type()
+    }
+}
+
+impl From<TextJustification> for glib::Value {
+    #[inline]
+    fn from(v: TextJustification) -> Self {
         skip_assert_initialized!();
         ToValue::to_value(&v)
     }
@@ -6825,5 +7704,76 @@ impl From<TransformResize> for glib::Value {
         skip_assert_initialized!();
         ToValue::to_value(&v)
     }
+}
+
+/// Integer IDs of built-in units used for dimensions in images. These
+/// IDs are meant to stay stable but user-created units IDs may change
+/// from one session to another.
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy)]
+#[non_exhaustive]
+#[doc(alias = "GimpUnitID")]
+pub enum UnitID {
+    /// Pixels
+    #[doc(alias = "GIMP_UNIT_PIXEL")]
+    Pixel,
+    /// Inches
+    #[doc(alias = "GIMP_UNIT_INCH")]
+    Inch,
+    /// Millimeters
+    #[doc(alias = "GIMP_UNIT_MM")]
+    Mm,
+    /// Points
+    #[doc(alias = "GIMP_UNIT_POINT")]
+    Point,
+    /// Picas
+    #[doc(alias = "GIMP_UNIT_PICA")]
+    Pica,
+    /// Marker for end-of-builtin-units
+    #[doc(alias = "GIMP_UNIT_END")]
+    End,
+    /// Pseudo-unit percent
+    #[doc(alias = "GIMP_UNIT_PERCENT")]
+    Percent,
+#[doc(hidden)]
+    __Unknown(i32),
+}
+
+#[doc(hidden)]
+impl IntoGlib for UnitID {
+    type GlibType = ffi::GimpUnitID;
+
+    #[inline]
+fn into_glib(self) -> ffi::GimpUnitID {
+match self {
+            Self::Pixel => ffi::GIMP_UNIT_PIXEL,
+            Self::Inch => ffi::GIMP_UNIT_INCH,
+            Self::Mm => ffi::GIMP_UNIT_MM,
+            Self::Point => ffi::GIMP_UNIT_POINT,
+            Self::Pica => ffi::GIMP_UNIT_PICA,
+            Self::End => ffi::GIMP_UNIT_END,
+            Self::Percent => ffi::GIMP_UNIT_PERCENT,
+            Self::__Unknown(value) => value,
+}
+}
+}
+
+#[doc(hidden)]
+impl FromGlib<ffi::GimpUnitID> for UnitID {
+    #[inline]
+unsafe fn from_glib(value: ffi::GimpUnitID) -> Self {
+        skip_assert_initialized!();
+        
+match value {
+            ffi::GIMP_UNIT_PIXEL => Self::Pixel,
+            ffi::GIMP_UNIT_INCH => Self::Inch,
+            ffi::GIMP_UNIT_MM => Self::Mm,
+            ffi::GIMP_UNIT_POINT => Self::Point,
+            ffi::GIMP_UNIT_PICA => Self::Pica,
+            ffi::GIMP_UNIT_END => Self::End,
+            ffi::GIMP_UNIT_PERCENT => Self::Percent,
+            value => Self::__Unknown(value),
+}
+}
 }
 

@@ -251,6 +251,7 @@ const RUST_LAYOUTS: &[(&str, Layout)] = &[
     ("GimpExportOptionsClass", Layout {size: size_of::<GimpExportOptionsClass>(), alignment: align_of::<GimpExportOptionsClass>()}),
     ("GimpExportProcedureClass", Layout {size: size_of::<GimpExportProcedureClass>(), alignment: align_of::<GimpExportProcedureClass>()}),
     ("GimpExportReturn", Layout {size: size_of::<GimpExportReturn>(), alignment: align_of::<GimpExportReturn>()}),
+    ("GimpFileChooserAction", Layout {size: size_of::<GimpFileChooserAction>(), alignment: align_of::<GimpFileChooserAction>()}),
     ("GimpFileProcedure", Layout {size: size_of::<GimpFileProcedure>(), alignment: align_of::<GimpFileProcedure>()}),
     ("GimpFileProcedureClass", Layout {size: size_of::<GimpFileProcedureClass>(), alignment: align_of::<GimpFileProcedureClass>()}),
     ("GimpFillType", Layout {size: size_of::<GimpFillType>(), alignment: align_of::<GimpFillType>()}),
@@ -310,6 +311,7 @@ const RUST_LAYOUTS: &[(&str, Layout)] = &[
     ("GimpParamSpecCoreObjectArray", Layout {size: size_of::<GimpParamSpecCoreObjectArray>(), alignment: align_of::<GimpParamSpecCoreObjectArray>()}),
     ("GimpParamSpecDisplay", Layout {size: size_of::<GimpParamSpecDisplay>(), alignment: align_of::<GimpParamSpecDisplay>()}),
     ("GimpParamSpecDrawableFilter", Layout {size: size_of::<GimpParamSpecDrawableFilter>(), alignment: align_of::<GimpParamSpecDrawableFilter>()}),
+    ("GimpParamSpecFile", Layout {size: size_of::<GimpParamSpecFile>(), alignment: align_of::<GimpParamSpecFile>()}),
     ("GimpParamSpecImage", Layout {size: size_of::<GimpParamSpecImage>(), alignment: align_of::<GimpParamSpecImage>()}),
     ("GimpParamSpecItem", Layout {size: size_of::<GimpParamSpecItem>(), alignment: align_of::<GimpParamSpecItem>()}),
     ("GimpParamSpecObject", Layout {size: size_of::<GimpParamSpecObject>(), alignment: align_of::<GimpParamSpecObject>()}),
@@ -483,6 +485,11 @@ const RUST_CONSTANTS: &[(&str, &str)] = &[
     ("(gint) GIMP_EXPORT_IGNORE", "0"),
     ("(guint) GIMP_EXPORT_NEEDS_ALPHA", "512"),
     ("(guint) GIMP_EXPORT_NEEDS_CROP", "1024"),
+    ("(gint) GIMP_FILE_CHOOSER_ACTION_ANY", "-1"),
+    ("(gint) GIMP_FILE_CHOOSER_ACTION_CREATE_FOLDER", "3"),
+    ("(gint) GIMP_FILE_CHOOSER_ACTION_OPEN", "0"),
+    ("(gint) GIMP_FILE_CHOOSER_ACTION_SAVE", "1"),
+    ("(gint) GIMP_FILE_CHOOSER_ACTION_SELECT_FOLDER", "2"),
     ("(gint) GIMP_FILL_BACKGROUND", "1"),
     ("(gint) GIMP_FILL_CIELAB_MIDDLE_GRAY", "2"),
     ("(gint) GIMP_FILL_FOREGROUND", "0"),
@@ -787,7 +794,7 @@ const RUST_CONSTANTS: &[(&str, &str)] = &[
     ("(gint) GIMP_UNIT_PICA", "4"),
     ("(gint) GIMP_UNIT_PIXEL", "0"),
     ("(gint) GIMP_UNIT_POINT", "3"),
-    ("GIMP_VERSION", "3.0.0-RC2"),
+    ("GIMP_VERSION", "3.0.0-RC2+git"),
 ];
 
 

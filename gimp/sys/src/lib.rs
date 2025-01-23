@@ -172,6 +172,13 @@ pub type GimpExportReturn = c_int;
 pub const GIMP_EXPORT_IGNORE: GimpExportReturn = 0;
 pub const GIMP_EXPORT_EXPORT: GimpExportReturn = 1;
 
+pub type GimpFileChooserAction = c_int;
+pub const GIMP_FILE_CHOOSER_ACTION_ANY: GimpFileChooserAction = -1;
+pub const GIMP_FILE_CHOOSER_ACTION_OPEN: GimpFileChooserAction = 0;
+pub const GIMP_FILE_CHOOSER_ACTION_SAVE: GimpFileChooserAction = 1;
+pub const GIMP_FILE_CHOOSER_ACTION_SELECT_FOLDER: GimpFileChooserAction = 2;
+pub const GIMP_FILE_CHOOSER_ACTION_CREATE_FOLDER: GimpFileChooserAction = 3;
+
 pub type GimpFillType = c_int;
 pub const GIMP_FILL_FOREGROUND: GimpFillType = 0;
 pub const GIMP_FILL_BACKGROUND: GimpFillType = 1;
@@ -574,7 +581,7 @@ pub const GIMP_PARASITE_PARENT_UNDOABLE: c_int = 0;
 pub const GIMP_PARASITE_PERSISTENT: c_int = 1;
 pub const GIMP_PARASITE_UNDOABLE: c_int = 2;
 pub const GIMP_PIXPIPE_MAXDIM: c_int = 4;
-pub const GIMP_VERSION: &[u8] = b"3.0.0-RC2\0";
+pub const GIMP_VERSION: &[u8] = b"3.0.0-RC2+git\0";
 
 // Flags
 pub type GimpExportCapabilities = c_uint;
@@ -1130,7 +1137,6 @@ impl ::std::fmt::Debug for GimpItemClass {
 #[repr(C)]
 pub struct GimpLayerClass {
     pub parent_class: GimpDrawableClass,
-    pub copy: Option<unsafe extern "C" fn(*mut GimpLayer) -> *mut GimpLayer>,
     pub _gimp_reserved0: Option<unsafe extern "C" fn()>,
     pub _gimp_reserved1: Option<unsafe extern "C" fn()>,
     pub _gimp_reserved2: Option<unsafe extern "C" fn()>,
@@ -1147,7 +1153,6 @@ impl ::std::fmt::Debug for GimpLayerClass {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("GimpLayerClass @ {self:p}"))
          .field("parent_class", &self.parent_class)
-         .field("copy", &self.copy)
          .field("_gimp_reserved0", &self._gimp_reserved0)
          .field("_gimp_reserved1", &self._gimp_reserved1)
          .field("_gimp_reserved2", &self._gimp_reserved2)
@@ -1435,6 +1440,22 @@ impl ::std::fmt::Debug for GimpParamSpecDrawableFilter {
         f.debug_struct(&format!("GimpParamSpecDrawableFilter @ {self:p}"))
          .field("parent_instance", &self.parent_instance)
          .field("none_ok", &self.none_ok)
+         .finish()
+    }
+}
+
+#[derive(Copy, Clone)]
+#[repr(C)]
+pub struct GimpParamSpecFile {
+    pub parent_instance: GimpParamSpecObject,
+    pub action: GimpFileChooserAction,
+    pub none_ok: gboolean,
+}
+
+impl ::std::fmt::Debug for GimpParamSpecFile {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        f.debug_struct(&format!("GimpParamSpecFile @ {self:p}"))
+         .field("parent_instance", &self.parent_instance)
          .finish()
     }
 }
@@ -2635,6 +2656,20 @@ impl ::std::fmt::Debug for GimpParamExportOptions {
 
 #[repr(C)]
 #[allow(dead_code)]
+pub struct GimpParamFile {
+    _data: [u8; 0],
+    _marker: core::marker::PhantomData<(*mut u8, core::marker::PhantomPinned)>,
+}
+
+impl ::std::fmt::Debug for GimpParamFile {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        f.debug_struct(&format!("GimpParamFile @ {self:p}"))
+         .finish()
+    }
+}
+
+#[repr(C)]
+#[allow(dead_code)]
 pub struct GimpParamFont {
     _data: [u8; 0],
     _marker: core::marker::PhantomData<(*mut u8, core::marker::PhantomPinned)>,
@@ -3200,6 +3235,11 @@ extern "C" {
     // GimpDodgeBurnType
     //=========================================================================
     pub fn gimp_dodge_burn_type_get_type() -> GType;
+
+    //=========================================================================
+    // GimpFileChooserAction
+    //=========================================================================
+    pub fn gimp_file_chooser_action_get_type() -> GType;
 
     //=========================================================================
     // GimpFillType
@@ -4290,6 +4330,7 @@ extern "C" {
     pub fn gimp_metadata_serialize(metadata: *mut GimpMetadata) -> *mut c_char;
     pub fn gimp_metadata_set_bits_per_sample(metadata: *mut GimpMetadata, bits_per_sample: c_int);
     pub fn gimp_metadata_set_colorspace(metadata: *mut GimpMetadata, colorspace: GimpMetadataColorspace);
+    pub fn gimp_metadata_set_creation_date(metadata: *mut GimpMetadata, datetime: *mut glib::GDateTime);
     pub fn gimp_metadata_set_from_exif(metadata: *mut GimpMetadata, exif_data: *const u8, exif_data_length: c_int, error: *mut *mut glib::GError) -> gboolean;
     pub fn gimp_metadata_set_from_iptc(metadata: *mut GimpMetadata, iptc_data: *const u8, iptc_data_length: c_int, error: *mut *mut glib::GError) -> gboolean;
     pub fn gimp_metadata_set_from_xmp(metadata: *mut GimpMetadata, xmp_data: *const u8, xmp_data_length: c_int, error: *mut *mut glib::GError) -> gboolean;
@@ -4416,6 +4457,11 @@ extern "C" {
     // GimpParamExportOptions
     //=========================================================================
     pub fn gimp_param_export_options_get_type() -> GType;
+
+    //=========================================================================
+    // GimpParamFile
+    //=========================================================================
+    pub fn gimp_param_file_get_type() -> GType;
 
     //=========================================================================
     // GimpParamFont
@@ -4624,8 +4670,8 @@ extern "C" {
     pub fn gimp_procedure_add_enum_argument(procedure: *mut GimpProcedure, name: *const c_char, nick: *const c_char, blurb: *const c_char, enum_type: GType, value: c_int, flags: gobject::GParamFlags);
     pub fn gimp_procedure_add_enum_aux_argument(procedure: *mut GimpProcedure, name: *const c_char, nick: *const c_char, blurb: *const c_char, enum_type: GType, value: c_int, flags: gobject::GParamFlags);
     pub fn gimp_procedure_add_enum_return_value(procedure: *mut GimpProcedure, name: *const c_char, nick: *const c_char, blurb: *const c_char, enum_type: GType, value: c_int, flags: gobject::GParamFlags);
-    pub fn gimp_procedure_add_file_argument(procedure: *mut GimpProcedure, name: *const c_char, nick: *const c_char, blurb: *const c_char, flags: gobject::GParamFlags);
-    pub fn gimp_procedure_add_file_aux_argument(procedure: *mut GimpProcedure, name: *const c_char, nick: *const c_char, blurb: *const c_char, flags: gobject::GParamFlags);
+    pub fn gimp_procedure_add_file_argument(procedure: *mut GimpProcedure, name: *const c_char, nick: *const c_char, blurb: *const c_char, action: GimpFileChooserAction, none_ok: gboolean, default_file: *mut gio::GFile, flags: gobject::GParamFlags);
+    pub fn gimp_procedure_add_file_aux_argument(procedure: *mut GimpProcedure, name: *const c_char, nick: *const c_char, blurb: *const c_char, action: GimpFileChooserAction, none_ok: gboolean, default_file: *mut gio::GFile, flags: gobject::GParamFlags);
     pub fn gimp_procedure_add_file_return_value(procedure: *mut GimpProcedure, name: *const c_char, nick: *const c_char, blurb: *const c_char, flags: gobject::GParamFlags);
     pub fn gimp_procedure_add_font_argument(procedure: *mut GimpProcedure, name: *const c_char, nick: *const c_char, blurb: *const c_char, none_ok: gboolean, default_value: *mut GimpFont, default_to_context: gboolean, flags: gobject::GParamFlags);
     pub fn gimp_procedure_add_font_aux_argument(procedure: *mut GimpProcedure, name: *const c_char, nick: *const c_char, blurb: *const c_char, default_value: *mut GimpFont, default_to_context: gboolean, flags: gobject::GParamFlags);
@@ -4716,6 +4762,7 @@ extern "C" {
     pub fn gimp_procedure_get_proc_type(procedure: *mut GimpProcedure) -> GimpPDBProcType;
     pub fn gimp_procedure_get_return_values(procedure: *mut GimpProcedure, n_return_values: *mut c_int) -> *mut *mut gobject::GParamSpec;
     pub fn gimp_procedure_get_sensitivity_mask(procedure: *mut GimpProcedure) -> c_int;
+    pub fn gimp_procedure_is_core(procedure: *mut GimpProcedure) -> gboolean;
     pub fn gimp_procedure_new_return_values(procedure: *mut GimpProcedure, status: GimpPDBStatusType, error: *mut glib::GError) -> *mut GimpValueArray;
     pub fn gimp_procedure_persistent_ready(procedure: *mut GimpProcedure);
     pub fn gimp_procedure_run(procedure: *mut GimpProcedure, first_arg_name: *const c_char, ...) -> *mut GimpValueArray;
@@ -5117,6 +5164,7 @@ extern "C" {
     pub fn gimp_export_iptc() -> gboolean;
     pub fn gimp_export_thumbnail() -> gboolean;
     pub fn gimp_export_xmp() -> gboolean;
+    pub fn gimp_file_create_thumbnail(image: *mut GimpImage, file: *mut gio::GFile) -> gboolean;
     pub fn gimp_file_get_config_path(file: *mut gio::GFile, error: *mut *mut glib::GError) -> *mut c_char;
     pub fn gimp_file_get_utf8_name(file: *mut gio::GFile) -> *const c_char;
     pub fn gimp_file_has_extension(file: *mut gio::GFile, extension: *const c_char) -> gboolean;
@@ -5125,7 +5173,6 @@ extern "C" {
     pub fn gimp_file_load_layers(run_mode: GimpRunMode, image: *mut GimpImage, file: *mut gio::GFile) -> *mut *mut GimpLayer;
     pub fn gimp_file_new_for_config_path(path: *const c_char, error: *mut *mut glib::GError) -> *mut gio::GFile;
     pub fn gimp_file_save(run_mode: GimpRunMode, image: *mut GimpImage, file: *mut gio::GFile, options: *mut GimpExportOptions) -> gboolean;
-    pub fn gimp_file_save_thumbnail(image: *mut GimpImage, file: *mut gio::GFile) -> gboolean;
     pub fn gimp_file_show_in_file_manager(file: *mut gio::GFile, error: *mut *mut glib::GError) -> gboolean;
     pub fn gimp_filename_to_utf8(filename: *const c_char) -> *const c_char;
     pub fn gimp_flags_get_first_desc(flags_class: *mut gobject::GFlagsClass, value: c_uint) -> *const GimpFlagsDesc;
@@ -5199,6 +5246,7 @@ extern "C" {
     pub fn gimp_param_spec_drawable(name: *const c_char, nick: *const c_char, blurb: *const c_char, none_ok: gboolean, flags: gobject::GParamFlags) -> *mut gobject::GParamSpec;
     pub fn gimp_param_spec_drawable_filter(name: *const c_char, nick: *const c_char, blurb: *const c_char, none_ok: gboolean, flags: gobject::GParamFlags) -> *mut gobject::GParamSpec;
     pub fn gimp_param_spec_export_options(name: *const c_char, nick: *const c_char, blurb: *const c_char, flags: gobject::GParamFlags) -> *mut gobject::GParamSpec;
+    pub fn gimp_param_spec_file(name: *const c_char, nick: *const c_char, blurb: *const c_char, action: GimpFileChooserAction, none_ok: gboolean, default_value: *mut gio::GFile, flags: gobject::GParamFlags) -> *mut gobject::GParamSpec;
     pub fn gimp_param_spec_font(name: *const c_char, nick: *const c_char, blurb: *const c_char, none_ok: gboolean, default_value: *mut GimpFont, default_to_context: gboolean, flags: gobject::GParamFlags) -> *mut gobject::GParamSpec;
     pub fn gimp_param_spec_gradient(name: *const c_char, nick: *const c_char, blurb: *const c_char, none_ok: gboolean, default_value: *mut GimpGradient, default_to_context: gboolean, flags: gobject::GParamFlags) -> *mut gobject::GParamSpec;
     pub fn gimp_param_spec_group_layer(name: *const c_char, nick: *const c_char, blurb: *const c_char, none_ok: gboolean, flags: gobject::GParamFlags) -> *mut gobject::GParamSpec;
